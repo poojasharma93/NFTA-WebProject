@@ -2,37 +2,124 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 100%;
+  align-items: stretch;
 }
 
-.App-link {
-  color: #61dafb;
+#sidebar {
+  min-width: 300px;
+  max-width: 300px;
+  min-height: 100vh;
+  background: #7386D5;
+  color: #fff;
+}
+ 
+.sidebar-header {
+  padding: 50px;
+  background: #6d7fcc;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+#sidebar ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+#sidebar ul li a {
+  padding: 20px;
+  font-size: 1.3em;
+  display: block;
+}
+
+#sidebar ul li a:hover {
+  color: #7386D5;
+  background: #fff;
+}
+
+ul ul a {
+  font-size: 0.9em !important;
+  padding-left: 30px !important;
+  background: #6d7fcc;
+}
+
+@media (max-width: 768px) {
+  #sidebar {
+      margin-left: -250px;
   }
-  to {
-    transform: rotate(360deg);
-  }
+}
+
+a, a:hover, a:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+#sidebar li.active {
+  text-align: center;
+  margin-right:  0;
+  display: block;
+  background: #6374c2;
+}
+
+
+.table, tr, th, td, thead {
+  width: 20cm;
+  margin-top: 2cm;
+  margin-left: 5cm;
+}
+
+.navbar   {
+  min-height: 80px;
+  background-color: rgb(247, 242, 242);
+  width: 100%;
+  margin-left: 0mm;
+  font-size: 7mm;
+  
+}
+
+.navbar li {
+  padding-left: 3cm;
+  padding-right: 3cm;
+
+}
+
+.navbar2_li--active {
+  background-origin: border-box;
+  background-color: rgb(238, 226, 226);
+  background-size: 40px 30px;
+  font-weight: bold ;
+  padding: 20px;
+}
+
+.navbar__link--active {
+  text-align: center;
+  margin-right:  0;
+  display: block;
+  background: #6374c2;
+  border-bottom: 3px solid #29b6f6;
+  transition: border-bottom .5s ease-in-out;
+}
+
+.filterForm{
+  margin-top: 1cm;
+  font-size: 4.5mm;
+  font-style: italic;
+  
+}
+
+.filterForm .row{
+  margin-top: 1cm;
+}
+
+.filterForm .col{
+  margin-left: 0cm;
+}
+
+#link{
+  font-style: italic;
+  text-decoration: underline;
+  text-decoration-color: blue;
+  color: blue;
 }
