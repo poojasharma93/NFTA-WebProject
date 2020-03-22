@@ -7,18 +7,18 @@ class OpenServiceRequest extends Component{
     constructor() {
         super();
         this.state={
-            transactions:[]
+            serviceRequests:[]
         };
     }
 
     componentDidMount(){
         
-        fetch('http://localhost:8080/transactions')
+        fetch('http://localhost:8080/serviceRequests')
         .then(results => results.json())
         .then(
             (data) => {
                 this.setState({ 
-                    transactions: data
+                    serviceRequests: data
                 });
             },
             (error) => {
@@ -33,31 +33,31 @@ class OpenServiceRequest extends Component{
         
 
     render(){
-        const {transactions} = this.state;
-        console.log(this.props);
+        const {serviceRequests} = this.state;
         
         return(
             <div>
                 <FilterFormServReq/>
-                
+
             <table className="table">
                 <thead>
                     <tr>
-                        <th scope="col">TransactionID</th>
-                        <th scope="col">StopID</th>
-                        <th scope="col">Direction</th>
-                        <th scope="col">County</th>
                         <th scope="col">Request ID</th>
+                        <th scope="col">Stop ID</th>
+                        <th scope="col">Direction</th>
+                        <th scope="col">Request Type</th>
+                        <th scope="col">Admin User</th>
+                        <th scope="col"></th>
                         <th></th>
                     </tr>
-                        {transactions.map(trans => (
-                        <tr key={trans.transaction_no}>
-                        <td> {trans.transaction_no} </td>
-                        <td> {trans.stop_id}</td>
-                        <td> {trans.direction}</td>
-                        <td> {trans.county}</td>
-                        <td> {trans.request_id}</td>
-                        <td> <a href={`/transactionDetail/${trans.transaction_no}`} id="link">View Details</a> </td>
+                        {serviceRequests.map(servReq => (
+                        <tr key={servReq.request_id}>
+                        <td> {servReq.request_id}</td>
+                        <td> {servReq.stopId} </td>
+                        <td> {servReq.direction} </td>
+                        <td> {servReq.request_type}</td>
+                        <td> {servReq.admin_user_id}</td>
+                        <td> <a href={`/serviceRequestDetail/${servReq.request_id}`} id="link">View Details</a> </td>
                         </tr>
                         ))}
                 </thead>

@@ -4,7 +4,7 @@ import TransactionHome from './TransactionHome';
 import ServiceRequest from './ServiceRequest';
 import {BrowserRouter, Router, Switch, Route, NavLink, HashRouter} from 'react-router-dom';
 import TransactionDetail from './TransactionDetail';
-
+import ServiceRequestDetail from './ServiceRequestDetail';
 
 class App extends Component {
 
@@ -48,6 +48,7 @@ class App extends Component {
                 <Route path="/" component={TransactionHome} exact/>
                 <Route path="/serviceRequest" component={ServiceRequest} exact />
                 <Route path="/transactionDetail/:trans" component={TransactionDetail} exact/>
+                <Route path="/serviceRequestDetail/:servReq" component={ServiceRequestDetail} exact/>
               </Switch>
               
         </div>

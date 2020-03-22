@@ -63,12 +63,38 @@ a, a:hover, a:focus {
   background: #6374c2;
 }
 
+.heading{
+  padding-top: 3cm;
+  font-family: sans-serif;
+  color: #152c92;
+}
+
+.tableService, .tdStyle, .tdOtherStyle{
+  width: 15cm;
+  margin:auto;
+  margin-top: 1cm;
+  padding: 5px;
+  border-spacing: 0 20px;
+  padding-bottom:25px;
+  font-size: 5mm;
+}
+
+.tdStyle{
+  font-weight: bold;
+  font-style: italic;
+  
+}
 
 .table, tr, th, td, thead {
   width: 20cm;
+  margin: auto;
   margin-top: 2cm;
-  margin-left: 5cm;
 }
+
+
+
+
+
 
 .navbar   {
   min-height: 80px;
