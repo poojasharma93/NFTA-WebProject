@@ -1,77 +1,106 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
+class FilterFormServReq extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      requestUser: "",
+      stopID: "",
+      direction: "",
+      requestType: "",
+      requestID: ""
+    };
+  }
 
-class FilterFormServReq extends Component{
+  submitForm = e => {
+    e.preventDefault();
+    this.props.handleOnClick(this.state);
+  };
 
-    constructor(props){
-        super(props);
-        this.state = {
-          requestUser: '',
-          stopID: '',
-          direction: '',
-          requestType: '',
-          requestID:''  
-        }
-    }   
-
-    submitForm = (e) => {
-        e.preventDefault();
-        this.props.handleOnClick(this.state);
-      } 
-
-    handleRequestUserChange = (e) => {
+  handleRequestUserChange = e => {
     console.log(e.target.value);
     this.setState({
-        requestUser: e.target.value
+      requestUser: e.target.value
     });
-    }
+  };
 
-    handleStopIDChange = (e) => {
+  handleStopIDChange = e => {
     console.log(e.target.value);
     this.setState({
-        stopID: e.target.value
+      stopID: e.target.value
     });
-    }
+    // console.log(this.stopID);
+  };
 
-    handleDirectionChange = (e) => {
+  handleDirectionChange = e => {
     console.log(e.target.value);
     this.setState({
-        direction: e.target.value
+      direction: e.target.value
     });
-    }
+  };
 
-    handleRequestTypeChange = (e) => {
+  handleRequestTypeChange = e => {
     console.log(e.target.value);
     this.setState({
-        requestType: e.target.value
+      requestType: e.target.value
     });
-    }
+  };
 
-    handleRequestIDChange = (e) => {
+  handleRequestIDChange = e => {
     console.log(e.target.value);
     this.setState({
-        requestID: e.target.value
+      requestID: e.target.value
     });
-    }
+  };
 
-    render(){
-        return(
-            <div className="filterForm">
-                <form className="form-inline justify-content-center">
-                    <div className="row">
-                            Request ID  <input type="text" className="form-control ml-2 mb-2 mr-sm-4" onChange={this.handleRequestIDChange}/>
-                            Stop ID  <input type="text" className="form-control ml-2 mb-2 mr-sm-4" onChange={this.handleStopIDChange}/>
-                            Direction <input type="text" className="form-control ml-2 mb-2 mr-sm-4" onChange={this.handleDirectionChange}/>
-                    </div>
-                    <div className="row">
-                            Request Type <input type="text" className="form-control ml-2 mb-2 mr-sm-4" onChange={this.handleRequestTypeChange}/>
-                            Request User <input type="text" className="form-control ml-2 mb-2 mr-sm-4" onChange={this.handleRequestUserChange}/>
-                        <input type="button" value ="Submit" className="form-control ml-2 mb-2 mr-sm-4" onClick={this.submitForm}/>   
-                    </div>
-                </form>
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div className="filterForm">
+        <form className="form-inline justify-content-center">
+          <div className="row">
+            Request ID{" "}
+            <input
+              type="text"
+              className="form-control ml-2 mb-2 mr-sm-4"
+              onChange={this.handleRequestIDChange}
+            />
+            Stop ID{" "}
+            <input
+              type="text"
+              className="form-control ml-2 mb-2 mr-sm-4"
+              onChange={this.handleStopIDChange}
+            />
+            Direction{" "}
+            <input
+              type="text"
+              className="form-control ml-2 mb-2 mr-sm-4"
+              onChange={this.handleDirectionChange}
+            />
+          </div>
+          <div className="row">
+            Request Type{" "}
+            <input
+              type="text"
+              className="form-control ml-2 mb-2 mr-sm-4"
+              onChange={this.handleRequestTypeChange}
+            />
+            Request User{" "}
+            <input
+              type="text"
+              className="form-control ml-2 mb-2 mr-sm-4"
+              onChange={this.handleRequestUserChange}
+            />
+            <input
+              type="button"
+              value="Submit"
+              className="form-control ml-2 mb-2 mr-sm-4"
+              onClick={this.submitForm}
+            />
+          </div>
+        </form>
+      </div>
+    );
+  }
 }
 
 export default FilterFormServReq;
