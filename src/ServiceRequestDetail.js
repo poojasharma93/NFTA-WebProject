@@ -1,42 +1,48 @@
-import React from 'react';
-import {BrowserRouter as Router, Route, NavLink, Redirect,useParams} from 'react-router-dom';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Redirect,
+  useParams
+} from "react-router-dom";
 
 class ServiceRequestDetail extends React.Component {
-    constructor() {
-        super();
-        this.state={
-            serviceRequest:[]
-        };
-    }
+  constructor() {
+    super();
+    this.state = {
+      serviceRequest: []
+    };
+  }
 
-    componentDidMount(){
-        let id=this.props.match.params.servReq;
-        let url="http://localhost:8080/serviceRequest?id=" + id;
-        console.log(url);
-        fetch(url)
-        .then(results => results.json())
-        .then(
-            (data) => {
-                this.setState({ 
-                    serviceRequest: data
-                });
-            },
-            (error) => {
-                this.setState({
-                  error
-                });
-              }
-            )
-            
-        console.log("state", this.state.serviceRequest);
-    }
+  componentDidMount() {
+    let id = this.props.match.params.servReq;
+    let url = "http://localhost:8080/serviceRequest?id=" + id;
+    console.log(url);
+    fetch(url)
+      .then(results => results.json())
+      .then(
+        data => {
+          this.setState({
+            serviceRequest: data
+          });
+        },
+        error => {
+          this.setState({
+            error
+          });
+        }
+      );
 
-    render() {
-        const{serviceRequest}=this.state;
-       
-        return(
-        <div class="container-fluid selector-for-some-widget">
-            <h3 className="heading">Service Request Details</h3>
+    console.log("state", this.state.serviceRequest);
+  }
+
+  render() {
+    const { serviceRequest } = this.state;
+
+    return (
+      <div class="container-fluid selector-for-some-widget">
+        <h3 className="heading">Service Request Details</h3>
 
         {serviceRequest.map(servReq => (
           <form key={servReq.request_id} className="formDetail">
@@ -133,8 +139,8 @@ class ServiceRequestDetail extends React.Component {
                   value={servReq.admin_user_id}
                 />
               </div>
-              </div>
-              <div class="row">
+            </div>
+            <div class="row">
               <div class="form-group col-md-6 mb-6">
                 <label for="exampleFormControlTextarea1">
                   Additional Information
@@ -147,11 +153,11 @@ class ServiceRequestDetail extends React.Component {
                 ></textarea>
               </div>
             </div>
-            </form>))}
-            </div>
-            
-        )
-    }
+          </form>
+        ))}
+      </div>
+    );
+  }
 }
 
 export default ServiceRequestDetail;
