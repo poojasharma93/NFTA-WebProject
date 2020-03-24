@@ -14,6 +14,7 @@ import TransactionDetail from "./TransactionDetail";
 import OpenServiceRequest from "./OpenServiceRequest";
 import TransactionInProgress from "./TransactionInProgress";
 import TransactionResolved from "./TransactionResolved";
+import ServiceRequestDetail from "./ServiceRequestDetail";
 
 class App extends Component {
   changeClass(e) {
@@ -96,6 +97,7 @@ class App extends Component {
                 component={TransactionDetail}
                 exact
               />
+              <Route path="/serviceRequestDetail/:servReq" component={ServiceRequestDetail} exact />
             </Switch>
           </div>
         </div>
