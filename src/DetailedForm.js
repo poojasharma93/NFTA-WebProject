@@ -11,6 +11,7 @@ import Iframe from "react-iframe";
 import { formPost } from "./formPost";
 
 class detailedForm extends React.Component {
+  
   constructor(props) {
     super(props);
 
@@ -22,7 +23,7 @@ class detailedForm extends React.Component {
       return trans.transaction_no;
     });
     this.state = {
-      transaction_no: "3",
+      transaction_no: "",
       stopID: "",
       direction: "",
       county: "",
@@ -66,11 +67,9 @@ class detailedForm extends React.Component {
   render() {
     return (
       <div class="container-fluid selector-for-some-widget">
+        <h3 className="heading">Transaction Details</h3>
         {this.props.details.map(trans => (
-          <form key={trans.transaction_no}>
-            {/* private String device_id;
-	private String stop_id;
- */}
+          <form key={trans.transaction_no} className="formDetail">
             <div class="row">
               <div class="col-md-4 mb-6">
                 <label for="validationDefault01">transaction_no</label>

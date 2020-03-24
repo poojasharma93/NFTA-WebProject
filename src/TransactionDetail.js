@@ -9,6 +9,16 @@ import {
 import DetailedForm from "./DetailedForm";
 
 class TransactionDetail extends React.Component {
+    render() {
+        console.log(this.props);
+       
+        return(
+            <div className="TransactionDetail">
+                ({this.props.match.params.trans})
+                
+            </div>
+        )
+    }
   constructor(props) {
     super(props);
 

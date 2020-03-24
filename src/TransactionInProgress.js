@@ -17,57 +17,43 @@ class TransactionInProgress extends Component {
     };
   }
 
-  handleOnClick = e => {
-    console.log(e.transactionNo);
-    console.log(e.stopID);
-    let filterTransNo = e.transactionNo;
-    let filterStopID = e.stopID;
-    let filterDirection = e.direction;
-    let filterCounty = e.county;
-    let filterRequestID = e.requestID;
-    console.log(
-      filterTransNo,
-      filterStopID,
-      filterDirection,
-      filterCounty,
-      filterRequestID
-    );
+    handleOnClick = (e) => {
+        let filterTransNo=e.transactionNo;
+        let filterStopID=e.stopID;
+        let filterDirection=e.direction;
+        let filterCounty=e.county;
+        let filterRequestID=e.requestID;
 
-    let filterArray = this.tempTrans;
-    console.log(filterArray);
-    if (filterTransNo !== "") {
-      filterArray = filterArray.filter(d => {
-        let searchVal = d.transaction_no + "";
-        return searchVal.indexOf(filterTransNo) !== -1;
-      });
+        let url = "http://localhost:8080/transaction?status=In Progress&";
+        console.log(filterRequestID, filterStopID, filterDirection);
+        
+        if(filterTransNo!==""){
+            url=url+"transaction_no=" + filterTransNo + "&";
+        }
+        if(filterStopID!==""){
+            url=url+"id="+filterStopID + "&";
+        }
+        if(filterDirection!==""){
+            url=url+"direction="+filterDirection + "&";
+        }
+        if(filterCounty!==""){
+            url=url+"country="+filterCounty + "&";
+        }
+        if(filterRequestID!==""){
+            url=url+"requestID="+filterRequestID;
+        }
+
+        fetch(url)
+        .then(results => results.json())
+        .then(
+            (data) => {
+                this.setState({ 
+                    transactions: data
+                });
+            }
+            )
+
     }
-    if (filterStopID !== "") {
-      filterArray = filterArray.filter(d => {
-        let searchVal = d.stop_id + "";
-        return searchVal.indexOf(filterStopID) !== -1;
-      });
-    }
-    if (filterDirection !== "") {
-      filterArray = filterArray.filter(
-        d => d.direction.indexOf(filterDirection) !== -1
-      );
-    }
-    if (filterCounty !== "") {
-      filterArray = filterArray.filter(
-        d => d.county.indexOf(filterCounty) !== -1
-      );
-    }
-    if (filterRequestID !== "") {
-      filterArray = filterArray.filter(d => {
-        let searchVal = (d.work_request ? d.work_request.request_id : "") + "";
-        return searchVal.indexOf(filterRequestID) !== -1;
-      });
-    }
-    console.log(filterArray);
-    this.setState({
-      transactions: filterArray
-    });
-  };
 
   componentDidMount() {
     fetch(window.$url + "/transaction?status=In Progress")
@@ -79,15 +65,13 @@ class TransactionInProgress extends Component {
             transactions: data
           });
         },
-        error => {
+        (error) => {
           this.setState({
             error
           });
         }
-      );
-
-    //console.log("state", this.state.transactions);
-  }
+      )
+    }
 
   render() {
     const { transactions } = this.state;
@@ -111,18 +95,16 @@ class TransactionInProgress extends Component {
                 <td> {trans.direction}</td>
                 <td> {trans.county}</td>
                 <td>
-                  {" "}
-                  {trans.work_request ? trans.work_request.request_id : ""}{" "}
+                  {trans.work_request ? trans.work_request.request_id : ""}
                 </td>
                 <td>
-                  {" "}
                   <a
                     href={`/transactionDetail/${trans.transaction_no}`}
                     exact
                     id="link"
                   >
                     View Details
-                  </a>{" "}
+                  </a>
                 </td>
               </tr>
             ))}
