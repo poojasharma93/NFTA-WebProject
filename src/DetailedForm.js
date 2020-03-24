@@ -18,7 +18,6 @@ class detailedForm extends React.Component {
       return trans.transaction_no;
     });
 
-    // console.log(this.props.match.params.transaction_no);
     props.details.map(trans => {
       return trans.transaction_no;
     });
@@ -36,7 +35,7 @@ class detailedForm extends React.Component {
     try {
       console.log(this.props.details[0]["transaction_no"]);
 
-      const result = await fetch("http://localhost:8080/updateTransaction", {
+      const result = await fetch(window.$url + "/updateTransaction", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -44,27 +43,21 @@ class detailedForm extends React.Component {
           "Content-type": "application/json"
         },
 
-        body: JSON.stringify(
-          this.props.details[0]
-          // status: "open"
-        )
+        body: JSON.stringify(this.props.details[0])
       });
     } catch (e) {
       console.log(e);
     }
   }
-
   handleAdminComments = e => {
-    // console.log(this.props.match.params.transactionNo);
-    // console.log(e.target.value);
     this.props.details[0]["admin_comments"] = e.target.value;
   };
 
   handleStatusChange = e => {
-    // console.log(this.props.match.params.transactionNo);
-    // console.log(e.target.value);
     this.props.details[0]["status"] = e.target.value;
   };
+
+  // currently not in use
   handleSubmit(e) {
     e.preventDefault();
     formPost(this.state);
@@ -415,7 +408,7 @@ class detailedForm extends React.Component {
                   ref="hello"
                 >
                   <option>Open</option>
-                  <option>InProgress</option>
+                  <option>In Progress</option>
                   <option>Resolved</option>
                 </select>
                 <small id="admin_commentsHelpInline" class="text-muted">

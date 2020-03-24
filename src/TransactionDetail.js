@@ -19,7 +19,8 @@ class TransactionDetail extends React.Component {
 
   componentDidMount() {
     fetch(
-      "http://localhost:8080/transaction?transaction_no=" +
+      window.$url +
+        "/transaction?transaction_no=" +
         this.props.match.params.trans
     )
       .then(results => results.json())
