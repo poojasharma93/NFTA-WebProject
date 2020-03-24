@@ -1,7 +1,12 @@
-import React, { Component } from 'react';
-import {BrowserRouter as Router, Route, NavLink, Redirect, useLocation} from 'react-router-dom';
-import FilterFormServReq from './FilterFormServReq';
-
+import React, { Component } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Redirect,
+  useLocation
+} from "react-router-dom";
+import FilterFormServReq from "./FilterFormServReq";
 
 class OpenServiceRequest extends Component{
     
@@ -21,7 +26,7 @@ class OpenServiceRequest extends Component{
         let filterDirection=e.direction;
         let filterRequestType=e.requestType;
         let filterRequestUser=e.requestUser;
-        let url = "http://localhost:8080/serviceRequest?status=Open&";
+        let url = window.$url + "/serviceRequest?status=Open&";
         console.log(filterRequestID, filterStopID, filterDirection, filterRequestType, filterRequestUser);
         
         if(filterRequestID!==""){
@@ -51,12 +56,11 @@ class OpenServiceRequest extends Component{
             )
 
         console.log(this.state.serviceRequests);
-        //this.setState({serviceRequests: filterServiceReq})
     }
 
     componentDidMount(){
         
-        fetch('http://localhost:8080/serviceRequest?status=Open')
+        fetch(window.$url + "/serviceRequest?status=Open")
         .then(results => results.json())
         .then(
             (data) => {
@@ -107,13 +111,9 @@ class OpenServiceRequest extends Component{
                 </thead>
             </table>
 
-          
-            </div>
-            
-            
-            
-        );
-    }
+        </div>
+    );
+  }
 }
 
 export default OpenServiceRequest;

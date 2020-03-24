@@ -12,21 +12,20 @@
   min-width: 300px;
   max-width: 300px;
   min-height: 100vh;
-  background: #7386D5;
+  background: #7386d5;
   color: #fff;
 }
- 
+
 .sidebar-header {
   padding: 50px;
   background: #6d7fcc;
 }
 
-#sidebar ul{
+#sidebar ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-
 
 #sidebar ul li a {
   padding: 20px;
@@ -35,7 +34,7 @@
 }
 
 #sidebar ul li a:hover {
-  color: #7386D5;
+  color: #7386d5;
   background: #fff;
 }
 
@@ -47,18 +46,20 @@ ul ul a {
 
 @media (max-width: 768px) {
   #sidebar {
-      margin-left: -250px;
+    margin-left: -250px;
   }
 }
 
-a, a:hover, a:focus {
+a,
+a:hover,
+a:focus {
   color: inherit;
   text-decoration: none;
 }
 
 #sidebar li.active {
   text-align: center;
-  margin-right:  0;
+  margin-right: 0;
   display: block;
   background: #6374c2;
 }
@@ -86,64 +87,56 @@ a, a:hover, a:focus {
 }
 
 .table, tr, th, td, thead {
-  width: 20cm;
+  width: 22cm;
   margin: auto;
   margin-top: 2cm;
 }
 
-
-
-
-
-
-.navbar   {
+.navbar {
   min-height: 80px;
   background-color: rgb(247, 242, 242);
   width: 100%;
   margin-left: 0mm;
   font-size: 7mm;
-  
 }
 
 .navbar li {
   padding-left: 3cm;
   padding-right: 3cm;
-
 }
 
 .navbar2_li--active {
   background-origin: border-box;
   background-color: rgb(238, 226, 226);
   background-size: 40px 30px;
-  font-weight: bold ;
+  font-weight: bold;
   padding: 20px;
 }
 
 .navbar__link--active {
   text-align: center;
-  margin-right:  0;
+  margin-right: 0;
   display: block;
   background: #6374c2;
   border-bottom: 3px solid #29b6f6;
-  transition: border-bottom .5s ease-in-out;
+  transition: border-bottom 0.5s ease-in-out;
 }
 
-.filterForm{
+.filterForm {
   margin-top: 1cm;
   font-size: 4.5mm;
   font-style: italic;
-  
 }
 
-.filterForm .row{
+.filterForm .row {
   margin-top: 1cm;
 }
 
-.filterForm .col{
+.filterForm .col {
   margin-left: 0cm;
 }
 
-#link{
+#link {
   font-style: italic;
   text-decoration: underline;
   text-decoration-color: blue;
@@ -295,16 +288,11 @@ html {
 iframe {
   height: 500px;
   width: 500px;
-  align: right;
 }
 .divider {
   width: 5px;
   height: auto;
   display: inline-block;
-}
-
-.heading {
-  margin-top: 2cm;
 }
 
 .formDetail{

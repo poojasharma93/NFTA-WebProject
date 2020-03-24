@@ -1,9 +1,14 @@
-import React from 'react';
-import {BrowserRouter as Router, Route, NavLink, Redirect,useParams} from 'react-router-dom';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Redirect,
+  useParams
+} from "react-router-dom";
+import DetailedForm from "./DetailedForm";
 
 class TransactionDetail extends React.Component {
-<<<<<<< HEAD
-    
     render() {
         console.log(this.props);
        
@@ -14,7 +19,6 @@ class TransactionDetail extends React.Component {
             </div>
         )
     }
-=======
   constructor(props) {
     super(props);
 
@@ -24,9 +28,9 @@ class TransactionDetail extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.match.params.trans)
     fetch(
-      "http://localhost:8080/transaction?transaction_no=" +
+      window.$url +
+        "/transaction?transaction_no=" +
         this.props.match.params.trans
     )
       .then(results => results.json())
@@ -54,7 +58,6 @@ class TransactionDetail extends React.Component {
       </div>
     );
   }
->>>>>>> 270f5a8... Web Changes
 }
 
 export default TransactionDetail;

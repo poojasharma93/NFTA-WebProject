@@ -19,7 +19,6 @@ class detailedForm extends React.Component {
       return trans.transaction_no;
     });
 
-    // console.log(this.props.match.params.transaction_no);
     props.details.map(trans => {
       return trans.transaction_no;
     });
@@ -37,7 +36,7 @@ class detailedForm extends React.Component {
     try {
       console.log(this.props.details[0]["transaction_no"]);
 
-      const result = await fetch("http://localhost:8080/updateTransaction", {
+      const result = await fetch(window.$url + "/updateTransaction", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -45,27 +44,21 @@ class detailedForm extends React.Component {
           "Content-type": "application/json"
         },
 
-        body: JSON.stringify(
-          this.props.details[0]
-          // status: "open"
-        )
+        body: JSON.stringify(this.props.details[0])
       });
     } catch (e) {
       console.log(e);
     }
   }
-
   handleAdminComments = e => {
-    // console.log(this.props.match.params.transactionNo);
-    // console.log(e.target.value);
     this.props.details[0]["admin_comments"] = e.target.value;
   };
 
   handleStatusChange = e => {
-    // console.log(this.props.match.params.transactionNo);
-    // console.log(e.target.value);
     this.props.details[0]["status"] = e.target.value;
   };
+
+  // currently not in use
   handleSubmit(e) {
     e.preventDefault();
     formPost(this.state);
@@ -77,9 +70,6 @@ class detailedForm extends React.Component {
         <h3 className="heading">Transaction Details</h3>
         {this.props.details.map(trans => (
           <form key={trans.transaction_no} className="formDetail">
-            {/* private String device_id;
-	private String stop_id;
- */}
             <div class="row">
               <div class="col-md-4 mb-6">
                 <label for="validationDefault01">transaction_no</label>
@@ -417,7 +407,7 @@ class detailedForm extends React.Component {
                   ref="hello"
                 >
                   <option>Open</option>
-                  <option>InProgress</option>
+                  <option>In Progress</option>
                   <option>Resolved</option>
                 </select>
                 <small id="admin_commentsHelpInline" class="text-muted">
@@ -428,7 +418,7 @@ class detailedForm extends React.Component {
 
             <div class="text_center">
               <a
-                href={"/" + this.status}
+                href={"/" + trans.status}
                 type="button"
                 class="btn-lg btn-primary col-md-2 mb-3"
               >
