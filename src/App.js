@@ -1,10 +1,20 @@
-import React, { Component } from 'react';
-import './App.css';
-import TransactionHome from './TransactionHome';
-import ServiceRequest from './ServiceRequest';
-import {BrowserRouter, Router, Switch, Route, NavLink, HashRouter} from 'react-router-dom';
-import TransactionDetail from './TransactionDetail';
-import ServiceRequestDetail from './ServiceRequestDetail';
+import React, { Component } from "react";
+import "./App.css";
+import TransactionHome from "./TransactionHome";
+import ServiceRequest from "./ServiceRequest";
+import {
+  BrowserRouter,
+  Router,
+  Switch,
+  Route,
+  NavLink,
+  HashRouter
+} from "react-router-dom";
+import TransactionDetail from "./TransactionDetail";
+import OpenServiceRequest from "./OpenServiceRequest";
+import TransactionInProgress from "./TransactionInProgress";
+import TransactionResolved from "./TransactionResolved";
+import ServiceRequestDetail from "./ServiceRequestDetail";
 
 class App extends Component {
 
@@ -43,19 +53,28 @@ class App extends Component {
                 </li>
             </ul>
             </nav>
-            
-              <Switch>
-                <Route path="/" component={TransactionHome} exact/>
-                <Route path="/serviceRequest" component={ServiceRequest} exact />
-                <Route path="/transactionDetail/:trans" component={TransactionDetail} exact/>
-                <Route path="/serviceRequestDetail/:servReq" component={ServiceRequestDetail} exact/>
-              </Switch>
-              
+
+            <Switch>
+              <Route path="/" component={TransactionHome} exact />
+              <Route path="/serviceRequest" component={ServiceRequest} exact />
+              <Route path="/open" component={OpenServiceRequest} exact />
+              <Route
+                path="/inprogress"
+                component={TransactionInProgress}
+                exact
+              />
+              <Route path="/resolved" component={TransactionResolved} exact />
+              <Route
+                path="/transactionDetail/:trans"
+                component={TransactionDetail}
+                exact
+              />
+              <Route path="/serviceRequestDetail/:servReq" component={ServiceRequestDetail} exact />
+            </Switch>
+          </div>
         </div>
         
         
-      </div>
-     
       </BrowserRouter>
     );
   }

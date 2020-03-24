@@ -14,45 +14,41 @@ class TransactionInProgress extends Component{
     }
 
     handleOnClick = (e) => {
-        console.log(e.transactionNo);
-        console.log(e.stopID);
         let filterTransNo=e.transactionNo;
         let filterStopID=e.stopID;
         let filterDirection=e.direction;
         let filterCounty=e.county;
         let filterRequestID=e.requestID;
-        console.log(filterTransNo, filterStopID, filterDirection, filterCounty, filterRequestID);
+
+        let url = "http://localhost:8080/transaction?status=In Progress&";
+        console.log(filterRequestID, filterStopID, filterDirection);
         
-        let filterArray = this.tempTrans;
-        console.log(filterArray);
         if(filterTransNo!==""){
-            filterArray=filterArray.filter((d) => {
-                let searchVal = d.transaction_no + "";
-                return searchVal.indexOf(filterTransNo) !== -1;
-            });
+            url=url+"transaction_no=" + filterTransNo + "&";
         }
         if(filterStopID!==""){
-            filterArray=filterArray.filter((d) => {
-                let searchVal = d.stop_id + "";
-                return searchVal.indexOf(filterStopID) !== -1;
-            });
+            url=url+"id="+filterStopID + "&";
         }
         if(filterDirection!==""){
-            filterArray=filterArray.filter((d) => (d.direction.indexOf(filterDirection) !== -1));
+            url=url+"direction="+filterDirection + "&";
         }
         if(filterCounty!==""){
-            filterArray=filterArray.filter((d) => (d.county.indexOf(filterCounty) !== -1));
+            url=url+"country="+filterCounty + "&";
         }
         if(filterRequestID!==""){
-            filterArray=filterArray.filter((d) => {
-                let searchVal = (d.work_request?d.work_request.request_id:"") + "";
-                return searchVal.indexOf(filterRequestID) !== -1;
-            });
+            url=url+"requestID="+filterRequestID;
         }
-        console.log(filterArray); 
-        this.setState({
-            transactions: filterArray
-        })
+
+        fetch(url)
+        .then(results => results.json())
+        .then(
+            (data) => {
+                this.setState({ 
+                    transactions: data
+                });
+            }
+            )
+
     }
     
 
