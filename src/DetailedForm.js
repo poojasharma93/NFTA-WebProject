@@ -418,14 +418,14 @@ class detailedForm extends React.Component {
             </div>
 
             <div class="text_center">
-              <a
+              {/* <a
                 href={"/" + trans.status}
                 type="button"
                 class="btn-lg btn-primary col-md-2 mb-3"
               >
                 Previous Page
               </a>
-              <div class="divider" />
+              <div class="divider" /> */}
 
               <button
                 type="button"
