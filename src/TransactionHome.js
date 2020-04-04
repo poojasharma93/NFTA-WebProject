@@ -9,19 +9,20 @@ import {
 import OpenServiceRequest from "./OpenServiceRequest";
 import TransactionInProgress from "./TransactionInProgress";
 import TransactionResolved from "./TransactionResolved";
-import TransactionDetail from "./TransactionDetail";
 
 class TransactionHome extends Component {
   render() {
+    
     const listId = "";
     return (
+
       <div className="container">
         <Router>
           <nav className="navbar navbar-expand-lg navbar-light  navbar-default navbar-fixed-top">
             <div>
               <ul className="navbar-nav">
                 <li id="open">
-                  <NavLink to="/open" activeClassName="navbar2_li--active">
+                  <NavLink to="/transactions" activeClassName="navbar2_li--active">
                     Open
                   </NavLink>
                 </li>
@@ -42,8 +43,7 @@ class TransactionHome extends Component {
             </div>
           </nav>
 
-          <Route path="/" component={OpenServiceRequest} exact />
-          <Route path="/open" component={OpenServiceRequest} exact />
+          <Route path="/transactions" component={OpenServiceRequest} exact />
           <Route path="/inprogress" component={TransactionInProgress} exact />
           <Route path="/resolved" component={TransactionResolved} exact />
         </Router>

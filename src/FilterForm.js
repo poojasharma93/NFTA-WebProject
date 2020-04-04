@@ -18,7 +18,6 @@ class FilterForm extends Component {
   };
 
   handleTransNoChange = e => {
-    console.log(e.target.value);
     this.setState({
       transactionNo: e.target.value
     });
@@ -58,19 +57,19 @@ class FilterForm extends Component {
       <div className="filterForm">
         <form className="form-inline justify-content-center">
           <div className="row">
-            Transaction No{" "}
+            Transaction No
             <input
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
               onChange={this.handleTransNoChange}
             />
-            Stop ID{" "}
+            Stop ID
             <input
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
               onChange={this.handleStopIDChange}
             />
-            Direction{" "}
+            Direction
             <input
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
@@ -78,13 +77,13 @@ class FilterForm extends Component {
             />
           </div>
           <div className="row">
-            County{" "}
+            County
             <input
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
               onChange={this.handleCountyChange}
             />
-            Request ID{" "}
+            Request ID
             <input
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"

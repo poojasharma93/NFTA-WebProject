@@ -24,7 +24,7 @@ class TransactionInProgress extends Component {
         let filterCounty=e.county;
         let filterRequestID=e.requestID;
 
-        let url = "http://localhost:8080/transaction?status=In Progress&";
+        let url = window.$url + "/transaction?status=In Progress&";
         console.log(filterRequestID, filterStopID, filterDirection);
         
         if(filterTransNo!==""){
@@ -75,6 +75,7 @@ class TransactionInProgress extends Component {
 
   render() {
     const { transactions } = this.state;
+    console.log(transactions);
     return (
       <div>
         <FilterForm handleOnClick={this.handleOnClick} />

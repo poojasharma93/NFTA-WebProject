@@ -298,3 +298,7 @@ iframe {
 .formDetail{
   margin-top: 2cm;
 }
+
+.form-inline{
+  padding-left: 3cm;
+}

@@ -14,7 +14,8 @@ class OpenServiceRequest extends Component{
         super();
         this.state={
             serviceRequests:[],
-            filterServiceReq:[]
+            filterServiceReq:[],
+            error:''
         };
     }
 
@@ -71,18 +72,24 @@ class OpenServiceRequest extends Component{
             },
             (error) => {
                 this.setState({
-                  error
+                  error: error
                 });
               }
             )
+        
             
-        //console.log("state", this.state.transactions);
+        console.log("state", this.state.serviceRequests);
     }
         
 
     render(){
         const {serviceRequests} = this.state;
         console.log(this.props);
+        console.log(serviceRequests);
+
+        if(serviceRequests.status===false){
+        return <h1>{serviceRequests.message}</h1>
+        }
         
         return(
             <div>
@@ -104,7 +111,7 @@ class OpenServiceRequest extends Component{
                         <td> {servReq.stopId}</td>
                         <td> {servReq.direction}</td>
                         <td> {servReq.request_type}</td>
-                        <td> {servReq.admin_user_id}</td>
+                        <td> {servReq.admin_user_id?servReq.admin_user_id.user_id :""}</td>
                         <td> <a href={`/serviceRequestDetail/${servReq.request_id}`} id="link">View Details</a> </td>
                         </tr>
                         ))}

@@ -436,7 +436,7 @@ class detailedForm extends React.Component {
               </button>
               <div class="divider" />
               <a
-                href="/"
+                href="/transactions"
                 type="button"
                 class="btn-lg btn-primary col-md-2 mb-3"
               >

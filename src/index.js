@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-window.$url = "https://nfta-app.herokuapp.com";
-//window.$url = "http://localhost:8080";
+import App from "./App";
+//window.$url = "https://nfta-app.herokuapp.com";
+window.$url = "http://localhost:8080";
 ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change

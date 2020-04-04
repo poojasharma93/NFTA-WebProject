@@ -1,6 +1,7 @@
 import React from 'react';
 import Popup from "reactjs-popup";
 import {FormErrors} from "./FormErrors";
+import { withStatement } from '@babel/types';
 
 class ServiceRequest extends React.Component {
   
@@ -15,7 +16,7 @@ class ServiceRequest extends React.Component {
       route:"",
       additionalInformation:"",
       status:"Open",
-      adminUserId:"2",
+      adminUserId:"",
       formErrors : {requestType: '', direction: '', location:'',route:''},
       stopIdValid: false,
       requestTypeValid: false,
@@ -123,8 +124,9 @@ class ServiceRequest extends React.Component {
   }
 
   async postData() {
+    this.setState({adminUserId: sessionStorage.getItem('user')})
     try {
-      const result = await fetch("http://localhost:8080/addServiceRequest", {
+      const result = await fetch(window.$url+"/addServiceRequest", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -159,46 +161,46 @@ class ServiceRequest extends React.Component {
       <FormErrors formErrors={this.state.formErrors} />
       <div className="row">
         <div className="col-md-4 mb-6 {`form-group ${this.errorClass(this.state.formErrors.stopId)}`}">
-          <label for="validationDefault02">Stop ID</label>
+          Stop ID
           <input
             type="text"
             className="form-control"
             name="stopId"
             value={this.state.stopId}
-            onInput={this.handleUserInput}
+            onChange={this.handleUserInput}
           />
         </div>
         <div className="col-md-4 mb-6 {`form-group ${this.errorClass(this.state.formErrors.stopId)}`}">
-          <label for="validationDefault02">Direction</label>
+          Direction
           <input
             type="text"
             className="form-control"
             name="direction"
             value={this.state.direction}
-            onInput={this.handleUserInput}
+            onChange={this.handleUserInput}
           />
         </div>
       {/*street_on,nearest_cross_street,position
        */}
         <div className="col-md-4 mb-6">
-          <label for="validationDefault01">Location</label>
+          Location
           <input
             type="text"
             className="form-control"
             name="location"
             value={this.state.location}
-            onInput={this.handleUserInput}
+            onChange={this.handleUserInput}
           />
         </div>
         </div>
         <div className="row">
         <div className="col-md-4 mb-6">
-          <label for="validationDefault02">Request Type</label>
+          Request Type
           <select
             className="col-md-12 mb-6 "
             name="requestType"
             value={this.state.requestType}
-            onInput={this.handleUserInput}
+            onChange={this.handleUserInput}
           >
             <option>New</option>
             <option>Update</option>
@@ -207,39 +209,39 @@ class ServiceRequest extends React.Component {
           
         </div>
         <div className="col-md-4 mb-6">
-          <label for="validationDefault02">Reason</label>
+          Reason
           <input
             type="text"
             className="form-control"
             name="reason"
             value={this.state.reason}
-            onInput={this.handleReason.bind(this)}
+            onChange={this.handleReason.bind(this)}
           />
         </div>
       {/* 	fastened_to,location,county
        */}
         <div className="col-md-4 mb-6">
-          <label for="validationDefault01">Route</label>
+          Route
           <input
             type="text"
             className="form-control"
             name="route"
             value={this.state.route}
-            onInput={this.handleUserInput}
+            onChange={this.handleUserInput}
           />
         </div>
         </div>
         <div className="row">
         <div className="form-group col-md-6 mb-6">
-          <label for="exampleFormControlTextarea1">
+          
             Additional Information
-          </label>
+         
           <textarea
             className="form-control"
             name="additionalInformation"
             rows="3"
             value={this.state.additionalInformation}
-            onInput={this.handleAdditionalInformation.bind(this)}
+            onChange={this.handleAdditionalInformation.bind(this)}
           ></textarea>
         </div>
         </div>
