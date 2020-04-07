@@ -35,9 +35,9 @@ class Home extends Component {
   };
 
   render() {
-    //if(cookies.get('usertoken')==undefined || cookies.get('usertoken')===""){
-    //  return (<Redirect to={'/'}/>)
-    //}
+    if(cookies.get('usertoken')==undefined || cookies.get('usertoken')===""){
+     return (<Redirect to={'/'}/>)
+    }
 
     if (this.state.redirect) {
       return <Redirect to={"/"} />;
