@@ -1,7 +1,9 @@
 import React from 'react';
-import Popup from "reactjs-popup";
 import {FormErrors} from "./FormErrors";
-import { withStatement } from '@babel/types';
+import Cookies from 'universal-cookie';
+import { Redirect } from 'react-router-dom';
+
+const cookies = new Cookies();
 
 class ServiceRequest extends React.Component {
   
@@ -11,12 +13,12 @@ class ServiceRequest extends React.Component {
       stopId:"",
       direction:"",
       location:"",
-      requestType:"",
+      request_type:"",
       reason:"",
       route:"",
       additionalInformation:"",
       status:"Open",
-      adminUserId:"",
+      requested_user: cookies.get('username'),
       formErrors : {requestType: '', direction: '', location:'',route:''},
       stopIdValid: false,
       requestTypeValid: false,
@@ -25,7 +27,8 @@ class ServiceRequest extends React.Component {
       routeValid: false,
       formValid: false,
       stopIdError:"",
-      directionError:""
+      directionError:"",
+      redirect: false
     };
     
   }
@@ -54,7 +57,7 @@ class ServiceRequest extends React.Component {
           fieldValidationErrors.requestType = '';
         }
         break;
-      case 'requestType':
+      case 'request_type':
         if(value==="Update" && this.state.stopIdValid){
           requestTypeValid=true;
         }
@@ -108,7 +111,7 @@ class ServiceRequest extends React.Component {
   }
 
   handleRequestType = e => {
-    this.setState({requestType: e.target.value});
+    this.setState({request_type: e.target.value});
   }
 
   handleReason = e => {
@@ -120,32 +123,35 @@ class ServiceRequest extends React.Component {
   }
 
   handleAdditionalInformation = e => {
-    this.setState({additionalInformation: e.target.value});
+    this.setState({additional_information: e.target.value});
   }
 
   async postData() {
-    this.setState({adminUserId: sessionStorage.getItem('user')})
+    let srbody = JSON.stringify(
+      {stopId: this.state.stopId,
+      status:this.state.status,
+      direction: this.state.direction,
+      location: this.state.location,
+      request_type: this.state.request_type,
+      reason: this.state.reason,
+      route: this.state.route,
+      additional_information: this.state.additional_information,
+      requested_user: this.state.requested_user });
+
+      console.log('Body', srbody);
+
     try {
       const result = await fetch(window.$url+"/addServiceRequest", {
         method: "POST",
         mode: "cors",
         headers: {
           Accept: "application/json",
-          "Content-type": "application/json"
+          "Content-type": "application/json",
+          "Authorization": "Bearer "+ cookies.get('usertoken')
         },
 
-        body: JSON.stringify(
-          {stopId: this.state.stopId,
-          status:this.state.status,
-          direction: this.state.direction,
-          location: this.state.location,
-          request_type: this.state.requestType,
-          reason: this.state.reason,
-          route: this.state.route,
-          additional_information: this.state.additionalInformation,
-          admin_user_id: this.state.adminUserId }
+        body: srbody
           // status: "open"
-        )
       });
     } catch (e) {
       console.log(e);
@@ -154,6 +160,10 @@ class ServiceRequest extends React.Component {
   }
 
   render() {
+
+    if(this.state.redirect)
+      return <Redirect to={'/'}/>
+
     return(
       <div className="container-fluid selector-for-some-widget">
       <h3 className="heading">New Service Request</h3>
@@ -198,8 +208,8 @@ class ServiceRequest extends React.Component {
           Request Type
           <select
             className="col-md-12 mb-6 "
-            name="requestType"
-            value={this.state.requestType}
+            name="request_type"
+            value={this.state.request_type}
             onChange={this.handleUserInput}
           >
             <option>New</option>
@@ -238,9 +248,9 @@ class ServiceRequest extends React.Component {
          
           <textarea
             className="form-control"
-            name="additionalInformation"
+            name="additional_information"
             rows="3"
-            value={this.state.additionalInformation}
+            value={this.state.additional_information}
             onChange={this.handleAdditionalInformation.bind(this)}
           ></textarea>
         </div>

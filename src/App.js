@@ -10,12 +10,6 @@ import {
   } from "react-router-dom";
 import Home from "./Home";
 import LoginPage from './LoginPage';
-import TransactionDetail from './TransactionDetail';
-import ServiceRequest from "./ServiceRequest";
-import OpenServiceRequest from "./OpenServiceRequest";
-import TransactionInProgress from "./TransactionInProgress";
-import TransactionResolved from "./TransactionResolved";
-import ServiceRequestDetail from "./ServiceRequestDetail";
 
 class App extends React.Component {
 
@@ -26,7 +20,7 @@ class App extends React.Component {
        <BrowserRouter>
        <Switch>
             <Route exact path="/" component={LoginPage} />
-            <Route exact path="/(transactions|open|inprogress|resolved|transactionDetail|serviceRequest|serviceRequestDetail|routes)" component={Home} />
+            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|routes)" component={Home} />
             <Route
                 path="/transactionDetail/:trans"
                 component={Home}

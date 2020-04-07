@@ -1,8 +1,10 @@
 import React from 'react';
 import {FormErrors} from './FormErrors';
 import {Redirect} from 'react-router-dom';
-import qs from 'qs';
+import Cookies from 'universal-cookie';
+import { strict } from 'assert';
 
+const cookies = new Cookies();
 
 class LoginPage extends React.Component {
 
@@ -12,7 +14,9 @@ class LoginPage extends React.Component {
       email: "",
       password: "",
       redirect: false,
-      formErrors: {emailError:'', passwordError:'', login:''}
+      formErrors: {emailError:'', passwordError:'', login:''},
+      loginResult: "",
+      errror: ""
     }
   }
 
@@ -23,64 +27,60 @@ class LoginPage extends React.Component {
     });
   }
 
-  handleSubmit = e => {
+  async handleSubmit(){
     if(this.state.email && this.state.password){
-      //code to encrypt password
-      //check successful login -> call API and check response
-      //this.fetchResult();
-      sessionStorage.setItem('user',JSON.stringify(this.state.email));
+      try {
+        await fetch(window.$url+"/authenticate", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json"
+        },
+
+        body: JSON.stringify(
+          {username: this.state.email,
+          password:this.state.password
+          }
+        )
+      })
+      .then(response => response.json())
+      .then(result => this.setState({loginResult: result}))
+      .catch(error => this.setState({error: error}));
+      } catch (e) {
+          this.setState({error:e});
+      }
+      console.log(this.state.loginResult)
+      if(this.state.loginResult.token===undefined){
+        let fieldValidationError = this.state.formErrors;
+        fieldValidationError.login='Either username or password is incorrect. Please try again';
+        this.setState({formErrors:fieldValidationError});
+      }
+      else{
+      cookies.set('usertoken', this.state.loginResult.token, {maxAge: 60*60*3, sameSite: strict})
+      cookies.set('username', this.state.email, {maxAge: 60*60*3, sameSite: strict})
       this.setState({redirect: true});
+      }
       
-       }
-    else
-      {
+    }
+    else{
         let fieldValidationError = this.state.formErrors;
         fieldValidationError.emailError=this.state.email? '' : 'Please enter Email ID';
         fieldValidationError.passwordError=this.state.password? '' : 'Please enter Password';
-        fieldValidationError.login='Login Unsuccessful';
         this.setState({formErrors:fieldValidationError});
       }
     }
-  
-  async fetchResult(){
 
-    const data = new FormData();
-    data.append('username', 'anuj3@gmail.com');
-    data.append('password', 'anuj78911');
-    var urlencoded = new URLSearchParams();
-      urlencoded.append('username', 'anuj3@gmail.com');
-      urlencoded.append('password', 'anuj78911');
 
-      let requestOptions = {
-        method: 'POST',
-        mode: "cors",
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        },
-        body: 'username=anuj3@gmail.com&password=anuj78911'
-      };
-
-      console.log(urlencoded);
-      console.log(requestOptions);
-      fetch(window.$url+"/login", {
-        method: 'POST',
-        mode: "cors",
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        },
-        body: 'username=anuj3@gmail.com&password=anuj78911'
-        })
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-
-  }
 
   render () {
     
     if(this.state.redirect){
+      return (<Redirect to={'/transactions'}/>)
+    }
+
+    if(cookies.get('usertoken')!==undefined && cookies.get('usertoken')!=="" &&
+    this.props.location.state===undefined){
       return (<Redirect to={'/transactions'}/>)
     }
 
@@ -93,7 +93,7 @@ class LoginPage extends React.Component {
         <div className="row">
         
         <label>Email</label>
-        <input input type="email" className="form-control ml-2 mb-2 mr-sm-4" 
+        <input className="form-control ml-2 mb-2 mr-sm-4" 
           name="email"
           placeholder="Email"
           value={this.state.email}
@@ -110,7 +110,7 @@ class LoginPage extends React.Component {
           required/>
         </div>
         <div className="row">
-        <input type="submit" className="button success" value="Login" onClick={this.handleSubmit}/>
+        <input type="button" className="button success" value="Login" onClick={()=>this.handleSubmit()}/>
         </div>
         <div className="row">
         <FormErrors formErrors={this.state.formErrors} />

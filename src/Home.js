@@ -9,14 +9,15 @@ import {
   Switch,
   Route,
   NavLink,
+  withRouter,
   HashRouter
 } from "react-router-dom";
 import TransactionDetail from "./TransactionDetail";
-import OpenServiceRequest from "./OpenServiceRequest";
-import TransactionInProgress from "./TransactionInProgress";
-import TransactionResolved from "./TransactionResolved";
 import ServiceRequestDetail from "./ServiceRequestDetail";
 import Routes from "./Routes";
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class Home extends Component {
 
@@ -28,32 +29,23 @@ class Home extends Component {
   }
 
   logout=e=>{
-    sessionStorage.setItem('user','');
+    cookies.remove('usertoken')
+    cookies.remove('username')
     this.setState({redirect:true});
   }
 
-  changeClass(e) {
-    console.log(e.target);
-  }
-
-  componentWillMount(){
-    if(sessionStorage.getItem('user')){
-      console.log(sessionStorage.getItem('user'));
-    }
-    else{
-      this.setState({redirect:true});
-    }
-
-  }
-
   render() {
+
+    //if(cookies.get('usertoken')==undefined || cookies.get('usertoken')===""){
+    //  return (<Redirect to={'/'}/>)
+    //}
 
     if(this.state.redirect){
       return (<Redirect to={'/'}/>)
     }
 
     return (
-      <BrowserRouter>
+      
         <div className="App">
           <div className="wrapper">
             <nav id="sidebar">
@@ -115,7 +107,7 @@ class Home extends Component {
             </nav>
 
             <Switch>
-              
+            
               <Route path="/(transactions|open|inprogress|resolved)" component={TransactionHome} exact/>
               <Route
                 path="/transactionDetail/:trans"
@@ -129,7 +121,7 @@ class Home extends Component {
             </Switch>
           </div>
         </div>
-      </BrowserRouter>
+     
     );
   }
 }

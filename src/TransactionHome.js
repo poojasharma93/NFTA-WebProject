@@ -3,21 +3,23 @@ import {
   BrowserRouter as Router,
   Route,
   NavLink,
+  withRouter,
   Redirect,
   Link
 } from "react-router-dom";
 import OpenServiceRequest from "./OpenServiceRequest";
 import TransactionInProgress from "./TransactionInProgress";
 import TransactionResolved from "./TransactionResolved";
+import LoginPage from "./LoginPage";
 
 class TransactionHome extends Component {
+
   render() {
     
     const listId = "";
     return (
 
       <div className="container">
-        <Router>
           <nav className="navbar navbar-expand-lg navbar-light  navbar-default navbar-fixed-top">
             <div>
               <ul className="navbar-nav">
@@ -43,10 +45,10 @@ class TransactionHome extends Component {
             </div>
           </nav>
 
-          <Route path="/transactions" component={OpenServiceRequest} exact />
-          <Route path="/inprogress" component={TransactionInProgress} exact />
-          <Route path="/resolved" component={TransactionResolved} exact />
-        </Router>
+          <Route exact path="/transactions" component={OpenServiceRequest}  />
+          <Route exact path="/inprogress" component={TransactionInProgress}  />
+          <Route exact path="/resolved" component={TransactionResolved} />
+          
       </div>
     );
   }

@@ -1,11 +1,14 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, NavLink, Redirect,useParams} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 class ServiceRequestDetail extends React.Component {
     constructor() {
         super();
         this.state={
-            serviceRequest:[]
+            serviceRequest:[],
+            redirect: false
         };
     }
 
@@ -13,8 +16,19 @@ class ServiceRequestDetail extends React.Component {
         let id=this.props.match.params.servReq;
         let url="http://localhost:8080/serviceRequest?id=" + id;
         console.log(url);
-        fetch(url)
-        .then(results => results.json())
+        fetch(url, {
+            headers: {
+              "Authorization": "Bearer "+ cookies.get('usertoken')
+            }})
+        .then(results =>  {
+            if(results.status===401)
+            {
+                this.setState({redirect:true});
+            }
+            else{
+                return results.json();
+            }
+        })
         .then(
             (data) => {
                 this.setState({ 
@@ -32,6 +46,13 @@ class ServiceRequestDetail extends React.Component {
     }
 
     render() {
+
+        if(this.state.redirect){
+            return <Redirect to={{
+             pathname: '/',
+             state: { status: '401' }
+         }}/>
+        } 
         const{serviceRequest}=this.state;
        
         return(

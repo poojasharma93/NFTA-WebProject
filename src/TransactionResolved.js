@@ -1,18 +1,15 @@
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  NavLink,
-  Redirect,
-  useLocation
-} from "react-router-dom";
 import FilterForm from "./FilterForm";
+import Cookies from 'universal-cookie';
+import { Redirect } from "react-router";
 
+const cookies = new Cookies();
 class TransactionResolved extends Component{
     constructor() {
         super();
         this.state={
-            transactions:[]
+            transactions:[],
+            redirect: false
         };
     }
 
@@ -42,8 +39,19 @@ class TransactionResolved extends Component{
             url=url+"requestID="+filterRequestID;
         }
 
-        fetch(url)
-        .then(results => results.json())
+        fetch(url, {
+          headers: {
+            "Authorization": "Bearer "+ cookies.get('usertoken')
+          }})
+        .then(results => {
+          if(results.status===401)
+          {
+              this.setState({redirect:true});
+          }
+          else{
+              return results.json();
+          }
+        })
         .then(
             (data) => {
                 this.setState({ 
@@ -54,8 +62,19 @@ class TransactionResolved extends Component{
     }
     
     componentDidMount() {
-      fetch(window.$url + "/transaction?status=Resolved")
-        .then(results => results.json())
+      fetch(window.$url + "/transaction?status=Resolved", {
+        headers: {
+          "Authorization": "Bearer "+ cookies.get('usertoken')
+        }})
+        .then(results => {
+          if(results.status===401)
+          {
+              this.setState({redirect:true});
+          }
+          else{
+              return results.json();
+          }
+        })
         .then(
           data => {
             this.tempTrans = data;
@@ -72,6 +91,14 @@ class TransactionResolved extends Component{
       }
 
   render() {
+
+    if(this.state.redirect){
+      return <Redirect to={{
+       pathname: '/',
+       state: { status: '401' }
+       }}/>
+    }
+
     const { transactions } = this.state;
 
     return (

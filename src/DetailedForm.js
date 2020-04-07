@@ -1,14 +1,9 @@
 import React from "react";
-import axios from "axios";
-import {
-  BrowserRouter as Router,
-  Route,
-  NavLink,
-  Redirect,
-  useParams
-} from "react-router-dom";
 import Iframe from "react-iframe";
 import { formPost } from "./formPost";
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class detailedForm extends React.Component {
   
@@ -41,7 +36,8 @@ class detailedForm extends React.Component {
         mode: "cors",
         headers: {
           Accept: "application/json",
-          "Content-type": "application/json"
+          "Content-type": "application/json",
+          "Authorization": "Bearer "+ cookies.get('usertoken')
         },
 
         body: JSON.stringify(this.props.details[0])

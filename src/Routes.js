@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import Cookies from 'universal-cookie';
+import {Redirect} from 'react-router-dom';
+
+const cookies = new Cookies();
 
 class Routes extends Component{
     
@@ -11,7 +15,8 @@ class Routes extends Component{
             routeId: '',
             routeName: '',
             message: '',
-            addRouteResult: ''
+            addRouteResult: '',
+            redirect: false
         };
     }
 
@@ -25,25 +30,6 @@ class Routes extends Component{
         this.setState({[name]: value})
     }
 
-    /*addRoute = e => {
-        console.log(this.state.routeId, this.state.routeInfo)
-        fetch(window.$url + "/addRoute")
-        .then(results => results.json())
-        .then(
-            (data) => {
-                
-                this.setState({ 
-                    routes: data
-                });
-            },
-            (error) => {
-                this.setState({
-                  error: error
-                });
-              }
-            )
-    }*/
-
     async addRoute() {
         console.log(this.state.routeId, this.state.routeInfo)
         try {
@@ -52,7 +38,8 @@ class Routes extends Component{
             mode: "cors",
             headers: {
               Accept: "application/json",
-              "Content-type": "application/json"
+              "Content-type": "application/json",
+              "Authorization": "Bearer "+ cookies.get('usertoken')
             },
     
             body: JSON.stringify(
@@ -79,10 +66,25 @@ class Routes extends Component{
     
       }
 
+    closeModal = e => {
+        //window.location.reload();
+    }
+
     componentDidMount(){
         
-        fetch(window.$url + "/routes")
-        .then(results => results.json())
+        fetch(window.$url + "/routes", {
+            headers: {
+              "Authorization": "Bearer "+ cookies.get('usertoken')
+            }})
+        .then(results =>  {
+            if(results.status===401)
+            {
+                this.setState({redirect:true});
+            }
+            else{
+                return results.json();
+            }
+        })
         .then(
             (data) => {
                 
@@ -103,6 +105,13 @@ class Routes extends Component{
         
 
     render(){
+
+        if(this.state.redirect){
+            return <Redirect to={{
+             pathname: '/',
+             state: { status: '401' }
+         }}/>
+        }
         const {routes} = this.state;
         console.log(routes);
 
@@ -169,6 +178,7 @@ class Routes extends Component{
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-primary" onClick={() => this.addRoute()}>Save Route</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={this.closeModal()}>Close</button>
                     </div>
                     </div>
                 </div>

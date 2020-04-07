@@ -1,13 +1,9 @@
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  NavLink,
-  Redirect,
-  useLocation
-} from "react-router-dom";
+import Cookies from 'universal-cookie';
 import FilterFormServReq from "./FilterFormServReq";
+import { Redirect, withRouter } from "react-router-dom";
 
+const cookies = new Cookies();
 class OpenServiceRequest extends Component{
     
     constructor() {
@@ -15,7 +11,8 @@ class OpenServiceRequest extends Component{
         this.state={
             serviceRequests:[],
             filterServiceReq:[],
-            error:''
+            error:'',
+            redirect: false
         };
     }
 
@@ -46,8 +43,19 @@ class OpenServiceRequest extends Component{
             url=url+"adminUser="+filterRequestUser;
         }
 
-        fetch(url)
-        .then(results => results.json())
+        fetch(url, {
+            headers: {
+              "Authorization": "Bearer "+ cookies.get('usertoken')
+            }})
+        .then(results => {
+            if(results.status===401)
+            {
+                this.setState({redirect:true});
+            }
+            else{
+                return results.json();
+            }
+        })
         .then(
             (data) => {
                 this.setState({ 
@@ -60,12 +68,22 @@ class OpenServiceRequest extends Component{
     }
 
     componentDidMount(){
-        
-        fetch(window.$url + "/serviceRequest?status=Open")
-        .then(results => results.json())
+        try{
+        fetch(window.$url + "/serviceRequest?status=Open", {headers: {
+            "Authorization": "Bearer "+cookies.get('usertoken')
+          }})
+        .then(results => {
+            if(results.status===401)
+            {
+                this.setState({redirect:true});
+            }
+            else{
+                return results.json();
+            }
+        })
         .then(
             (data) => {
-                
+                console.log("Data", data)
                 this.setState({ 
                     serviceRequests: data
                 });
@@ -76,19 +94,23 @@ class OpenServiceRequest extends Component{
                 });
               }
             )
-        
-            
-        console.log("state", this.state.serviceRequests);
+        }
+        catch(e){
+            console.log("error",e)
+        }
     }
         
-
     render(){
         const {serviceRequests} = this.state;
         console.log(this.props);
         console.log(serviceRequests);
 
-        if(serviceRequests.status===false){
-        return <h1>{serviceRequests.message}</h1>
+        if(this.state.redirect){
+           return <Redirect to={{
+            pathname: '/',
+            state: { status: '401' }
+        }}/>
+            
         }
         
         return(
@@ -111,13 +133,12 @@ class OpenServiceRequest extends Component{
                         <td> {servReq.stopId}</td>
                         <td> {servReq.direction}</td>
                         <td> {servReq.request_type}</td>
-                        <td> {servReq.admin_user_id?servReq.admin_user_id.user_id :""}</td>
+                        <td> {servReq.requested_user}</td>
                         <td> <a href={`/serviceRequestDetail/${servReq.request_id}`} id="link">View Details</a> </td>
                         </tr>
                         ))}
                 </thead>
             </table>
-
         </div>
     );
   }
