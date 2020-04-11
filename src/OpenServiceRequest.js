@@ -40,7 +40,7 @@ class OpenServiceRequest extends Component{
             url=url+"type="+filterRequestType + "&";
         }
         if(filterRequestUser!==""){
-            url=url+"adminUser="+filterRequestUser;
+            url=url+"requestedUser="+filterRequestUser;
         }
 
         fetch(url, {

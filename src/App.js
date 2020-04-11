@@ -20,7 +20,7 @@ class App extends React.Component {
        <BrowserRouter>
        <Switch>
             <Route exact path="/" component={LoginPage} />
-            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|routes)" component={Home} />
+            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|routes|users)" component={Home} />
             <Route
                 path="/transactionDetail/:trans"
                 component={Home}

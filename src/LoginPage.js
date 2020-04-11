@@ -85,43 +85,43 @@ class LoginPage extends React.Component {
     }
 
     return (
-      <div>
+      <div className='container login-container'>
 
-      <div className="row" id="Body">
-      <form className="form-inline justify-content-center">
-      <h4>Login</h4>
-        <div className="row">
-        
-        <label>Email</label>
-        <input className="form-control ml-2 mb-2 mr-sm-4" 
-          name="email"
-          placeholder="Email"
-          value={this.state.email}
-          onChange={this.handleChange}
-          required/>
-        </div>
-        <div className="row">
-        <label>Password</label>
-        <input type="password" className="form-control ml-2 mb-2 mr-sm-4"
-          name="password"
-          placeholder="Password"
-          value={this.state.password}
-          onChange={this.handleChange}
-          required/>
-        </div>
-        <div className="row">
-        <input type="button" className="button success" value="Login" onClick={()=>this.handleSubmit()}/>
-        </div>
-        <div className="row">
-        <FormErrors formErrors={this.state.formErrors} />
-       
-        </div>
+      <div className="row">
+        <div className="col-md-6 login-form">
+          <h3>Login</h3>
+          <form> 
+            <div className="form-group">
+              <input className="form-control" 
+                type="text"
+                name="email"
+                placeholder="Email"
+                value={this.state.email}
+                onChange={this.handleChange}
+                required/>
+            </div>
+            <div className="form-group">
+              <input type="password" className="form-control"
+                name="password"
+                placeholder="Password"
+                value={this.state.password}
+                onChange={this.handleChange}
+                required/>
+            </div>
+            <div className="form-group">
+              <input type="button" className="btnSubmit" value="Login" onClick={()=>this.handleSubmit()}/>
+            </div>
+            <div class="form-group">
+                <a href="#" class="ForgotPwd">Forgot Password?</a>
+            </div>
+            <div className="form-group form-errors">
+              <FormErrors formErrors={this.state.formErrors} />
+            </div>
         </form>
       </div>
 
     </div> 
-       
-
+  </div>
 
     )
   }

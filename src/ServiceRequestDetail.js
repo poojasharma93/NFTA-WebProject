@@ -93,8 +93,8 @@ class ServiceRequestDetail extends React.Component {
                         <td className="tdOtherStyle"> {servReq.status}</td>
                         </tr>
                         <tr>
-                        <td className="tdStyle">Admin User ID</td>
-                        <td className="tdOtherStyle"> {servReq.admin_user_id}</td>
+                        <td className="tdStyle">Admin User</td>
+                        <td className="tdOtherStyle"> {servReq.requested_user}</td>
                        
                         <td className="tdStyle">Additional Information</td>
                         <td className="tdOtherStyle"> {servReq.additional_information}</td>
