@@ -1,5 +1,4 @@
 import React from 'react';
-import {FormErrors} from './FormErrors';
 import {Redirect} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import { strict } from 'assert';
@@ -14,7 +13,7 @@ class LoginPage extends React.Component {
       email: "",
       password: "",
       redirect: false,
-      formErrors: {emailError:'', passwordError:'', login:''},
+      fieldErrors: '',
       loginResult: "",
       errror: ""
     }
@@ -27,8 +26,28 @@ class LoginPage extends React.Component {
     });
   }
 
+  validateFields = (e) =>{
+    e.preventDefault();
+    let fieldErrors={};
+    let isValid=true;
+    if(!this.state.email){
+        isValid=false;
+        fieldErrors["email"] = "Please enter Email ID"
+    }
+
+    if(!this.state.password){
+        isValid=false;
+        fieldErrors["password"] = "Please enter Password"
+    }
+
+    console.log(fieldErrors)
+    console.log(isValid)
+    this.setState({fieldErrors: fieldErrors})
+    if(isValid)
+        this.handleSubmit();
+  }
+
   async handleSubmit(){
-    if(this.state.email && this.state.password){
       try {
         await fetch(window.$url+"/authenticate", {
         method: "POST",
@@ -52,9 +71,9 @@ class LoginPage extends React.Component {
       }
       console.log(this.state.loginResult)
       if(this.state.loginResult.token===undefined){
-        let fieldValidationError = this.state.formErrors;
-        fieldValidationError.login='Either username or password is incorrect. Please try again';
-        this.setState({formErrors:fieldValidationError});
+        let fieldErrors={};
+        fieldErrors["loginError"] = "Either username or password is incorrect. Please try again"
+        this.setState({fieldErrors:fieldErrors});
       }
       else{
       cookies.set('usertoken', this.state.loginResult.token, {maxAge: 60*60*3, sameSite: strict})
@@ -62,13 +81,6 @@ class LoginPage extends React.Component {
       this.setState({redirect: true});
       }
       
-    }
-    else{
-        let fieldValidationError = this.state.formErrors;
-        fieldValidationError.emailError=this.state.email? '' : 'Please enter Email ID';
-        fieldValidationError.passwordError=this.state.password? '' : 'Please enter Password';
-        this.setState({formErrors:fieldValidationError});
-      }
     }
 
 
@@ -99,6 +111,7 @@ class LoginPage extends React.Component {
                 value={this.state.email}
                 onChange={this.handleChange}
                 required/>
+              <span style={{color: "red"}}>{this.state.fieldErrors["email"]}</span>
             </div>
             <div className="form-group">
               <input type="password" className="form-control"
@@ -107,15 +120,15 @@ class LoginPage extends React.Component {
                 value={this.state.password}
                 onChange={this.handleChange}
                 required/>
+                <span style={{color: "red"}}>{this.state.fieldErrors["password"]}</span>
             </div>
             <div className="form-group">
-              <input type="button" className="btnSubmit" value="Login" onClick={()=>this.handleSubmit()}/>
+              <input type="button" className="btnSubmit" value="Login" onClick={this.validateFields}/>
+              <br></br>
+              <span style={{color: "red"}}>{this.state.fieldErrors["loginError"]}</span>
             </div>
             <div class="form-group">
                 <a href="#" class="ForgotPwd">Forgot Password?</a>
-            </div>
-            <div className="form-group form-errors">
-              <FormErrors formErrors={this.state.formErrors} />
             </div>
         </form>
       </div>
