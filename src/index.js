@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import App from "./App";
-//window.$url = "https://nfta-app.herokuapp.com";
+//window.$url = "https://nftainventory.herokuapp.com";
 window.$url = "http://localhost:8080";
 ReactDOM.render(<App />, document.getElementById("root"));
 

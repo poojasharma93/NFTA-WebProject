@@ -1,44 +1,41 @@
-import React from 'react';
+import React from "react";
 import {
-    BrowserRouter,
-    Redirect,
-    Router,
-    Switch,
-    Route,
-    NavLink,
-    HashRouter
-  } from "react-router-dom";
+  BrowserRouter,
+  Redirect,
+  Router,
+  Switch,
+  Route,
+  NavLink,
+  HashRouter
+} from "react-router-dom";
 import Home from "./Home";
-import LoginPage from './LoginPage';
+import LoginPage from "./LoginPage";
 
 class App extends React.Component {
-
-
-  render () {
+  render() {
     return (
-        <div>
-       <BrowserRouter>
-       <Switch>
+      <div>
+        <BrowserRouter>
+          <Switch>
             <Route exact path="/" component={LoginPage} />
-            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|routes|users)" component={Home} />
+            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|routes|account|users)" component={Home} />
             <Route
-                path="/transactionDetail/:trans"
-                component={Home}
-                exact
-              />
+              exact
+              path="/(transactions|inprogress|resolved|serviceRequest|routes|account)"
+              component={Home}
+            />
+            <Route path="/transactionDetail/:trans" component={Home} exact />
 
-              <Route path="/serviceRequestDetail/:servReq" component={Home} exact />
-        </Switch>
+            <Route
+              path="/serviceRequestDetail/:servReq"
+              component={Home}
+              exact
+            />
+          </Switch>
         </BrowserRouter>
-       
-        </div>
-
- 
-    )
+      </div>
+    );
   }
 }
 
 export default App;
-
-
-

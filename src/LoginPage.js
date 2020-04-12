@@ -89,7 +89,7 @@ class LoginPage extends React.Component {
 
       <div className="row">
         <div className="col-md-6 login-form">
-          <h3>Login</h3>
+          <h3>NFTA Web Console</h3>
           <form> 
             <div className="form-group">
               <input className="form-control" 

@@ -1,12 +1,13 @@
-import React from 'react';
-import {FormErrors} from "./FormErrors";
-import Cookies from 'universal-cookie';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { FormErrors } from "./FormErrors";
+import Cookies from "universal-cookie";
+import { Redirect } from "react-router-dom";
+import Dropzone from "react-dropzone-uploader";
+import ImageUpload from "./ImageUpload";
 
 const cookies = new Cookies();
 
 class ServiceRequest extends React.Component {
-  
   constructor() {
     super();
     this.state={
@@ -26,10 +27,9 @@ class ServiceRequest extends React.Component {
       modalStatus:'',
       redirectToTransactions: false
     };
-    
   }
 
-  handleUserInput = (e) => {
+  handleUserInput = e => {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({[name]: value});
@@ -68,16 +68,17 @@ class ServiceRequest extends React.Component {
   }
 
   async postData() {
-    let srbody = JSON.stringify(
-      {stopId: this.state.stopId,
-      status:this.state.status,
+    let srbody = JSON.stringify({
+      stopId: this.state.stopId,
+      status: this.state.status,
       direction: this.state.direction,
       location: this.state.location,
       request_type: this.state.request_type,
       reason: this.state.reason,
       route: this.state.route,
       additional_information: this.state.additional_information,
-      requested_user: this.state.requested_user });
+      requested_user: this.state.requested_user
+    });
 
     try {
       await fetch(window.$url+"/addServiceRequest", {
@@ -86,7 +87,7 @@ class ServiceRequest extends React.Component {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
-          "Authorization": "Bearer "+ cookies.get('usertoken')
+          Authorization: "Bearer " + cookies.get("usertoken")
         },
 
         body: srbody
@@ -121,6 +122,7 @@ class ServiceRequest extends React.Component {
   }
 
   render() {
+    if (this.state.redirect) return <Redirect to={"/"} />;
 
     if(this.state.redirect){
       return <Redirect to={{
@@ -225,6 +227,12 @@ class ServiceRequest extends React.Component {
             onChange={this.handleUserInput}
           ></textarea>
         </div>
+
+        <li></li>`
+        <dividerheight />
+        <ImageUpload />
+        {/* {this.state.isSubmitted && <ImageUpload data={this.state} />} */}
+
         </div>
         <div className="divider" />
               <button type="submit" className="btn btn-primary" onClick={this.validateFields} data-toggle="modal" data-target="#responseServiceRequest"> Submit </button>
