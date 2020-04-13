@@ -5,6 +5,7 @@ import ImageUpload from "./ImageUpload";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
 import Cookies from "universal-cookie";
+import { Redirect } from "react-router-dom";
 
 const cookies = new Cookies();
 class ServiceRequest extends React.Component {
@@ -14,12 +15,12 @@ class ServiceRequest extends React.Component {
       stopId: "",
       direction: "",
       location: "",
-      requestType: "",
+      request_type: "",
       reason: "",
       route: "",
       additionalInformation: "",
       status: "Open",
-      adminUserId: "2",
+
       formErrors: { requestType: "", direction: "", location: "", route: "" },
       stopIdValid: false,
       requestTypeValid: false,
@@ -34,116 +35,59 @@ class ServiceRequest extends React.Component {
       loading: false,
       image0: "",
       image1: "",
-      image2: ""
+      image2: "",
+      request_type: "",
+      status: "Open",
+      requested_user: cookies.get("username"),
+      fieldErrors: {},
+      redirect: false,
+      addServiceRequestResult: "",
+      modalMessage: "",
+      modalStatus: "",
+      redirectToTransactions: false
     };
   }
 
   handleUserInput = e => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({ [name]: value }, () => {
-      this.validateField(name, value);
-    });
+    this.setState({ [name]: value });
   };
 
-  validateField(fieldName, value) {
-    let fieldValidationErrors = this.state.formErrors;
-    let stopIdValid = this.state.stopIdValid;
-    let directionValid = this.state.directionValid;
-    let requestTypeValid = this.state.requestTypeValid;
-    let locationValid = this.state.locationValid;
-    let routeValid = this.state.routeValid;
-
-    switch (fieldName) {
-      case "stopId":
-        stopIdValid = value.length >= 1;
-        if (!requestTypeValid && stopIdValid) {
-          requestTypeValid = true;
-          fieldValidationErrors.requestType = "";
-        }
-        break;
-      case "requestType":
-        if (value === "Update" && this.state.stopIdValid) {
-          requestTypeValid = true;
-        }
-        fieldValidationErrors.requestType = requestTypeValid
-          ? ""
-          : " Please enter stop ID";
-        break;
-      case "direction":
-        directionValid = value.length >= 1;
-        fieldValidationErrors.direction = directionValid
-          ? ""
-          : "Please enter Direction";
-        break;
-      case "location":
-        locationValid = value.length >= 1;
-        fieldValidationErrors.location = locationValid
-          ? ""
-          : "Please enter Location";
-        break;
-      case "route":
-        routeValid = value.length >= 1;
-        fieldValidationErrors.route = routeValid ? "" : "Please enter Route";
-        break;
-      default:
-        break;
+  validateFields = e => {
+    e.preventDefault();
+    console.log(this.state);
+    let fieldErrors = {};
+    let isValid = true;
+    if (!this.state.request_type) {
+      isValid = false;
+      fieldErrors["request_type"] = "Please select request type";
     }
-    this.setState(
-      {
-        formErrors: fieldValidationErrors,
-        stopIdValid: stopIdValid,
-        directionValid: directionValid,
-        requestTypeValid: requestTypeValid,
-        locationValid: locationValid,
-        routeValid: routeValid
-      },
-      this.validateForm
-    );
-  }
-
-  validateForm() {
-    this.setState({
-      formValid:
-        this.state.requestTypeValid &&
-        this.state.directionValid &&
-        this.state.locationValid &&
-        this.state.routeValid
-    });
-  }
-
-  errorClass(error) {
-    return error.length === 0 ? "" : "has-error";
-  }
-
-  handleStopID = e => {
-    // console.log(this.props.match.params.transactionNo);
-    // console.log(e.target.value);
-    this.setState({ stopId: e.target.value });
-  };
-
-  handleDirection = e => {
-    this.setState({ direction: e.target.value });
-  };
-
-  handleLocation = e => {
-    this.setState({ location: e.target.value });
-  };
-
-  handleRequestType = e => {
-    this.setState({ requestType: e.target.value });
-  };
-
-  handleReason = e => {
-    this.setState({ reason: e.target.value });
-  };
-
-  handleRoute = e => {
-    this.setState({ route: e.target.value });
-  };
-
-  handleAdditionalInformation = e => {
-    this.setState({ additionalInformation: e.target.value });
+    if (
+      (this.state.request_type === "Update" ||
+        this.state.request_type === "Remove") &&
+      !this.state.stopId
+    ) {
+      isValid = false;
+      fieldErrors["stopID"] =
+        "Stop ID cannot be empty for Request Type: " + this.state.request_type;
+    }
+    if (!this.state.direction) {
+      isValid = false;
+      fieldErrors["direction"] = "Direction cannot be empty";
+    }
+    if (!this.state.location) {
+      isValid = false;
+      fieldErrors["location"] = "Location cannot be empty";
+    }
+    if (!this.state.route) {
+      isValid = false;
+      fieldErrors["route"] = "Please select a route";
+    }
+    console.log(fieldErrors);
+    console.log(isValid);
+    this.setState({ fieldErrors: fieldErrors });
+    if (isValid) this.postData();
   };
 
   handleSubmit = async (files, allFiles) => {
@@ -179,12 +123,11 @@ class ServiceRequest extends React.Component {
   };
 
   async postData(e) {
-    e.preventDefault();
     this.setState({ isSubmitted: false });
     console.log(this.state.isSubmitted);
 
     try {
-      const result = await fetch(window.$url + "/addServiceRequest", {
+      await fetch(window.$url + "/addServiceRequest", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -197,13 +140,12 @@ class ServiceRequest extends React.Component {
           {
             stopId: this.state.stopId,
             status: this.state.status,
-            direction: this.state.direction,
+            // direction: this.state.direction,
             location: this.state.location,
-            request_type: this.state.requestType,
+            request_type: this.state.request_type,
             reason: this.state.reason,
-            route: this.state.route,
+            // route: this.state.route,
             additional_information: this.state.additionalInformation,
-            admin_user_id: this.state.adminUserId,
             image0: this.state.image0,
             image1: this.state.image1,
             image2: this.state.image2
@@ -211,67 +153,120 @@ class ServiceRequest extends React.Component {
 
           // status: "open"
         )
-      });
-      this.setState({ isSubmitted: false });
-      console.log(this.state.isSubmitted);
+      })
+        .then(response => response.json())
+        .then(result => this.setState({ addServiceRequestResult: result }))
+        .catch(error => this.setState({ error: error }));
     } catch (e) {
-      console.log(e);
+      this.setState({ error: e });
     }
+    console.log(this.state.addServiceRequestResult);
+    if (this.state.addServiceRequestResult.status === undefined) {
+      this.setState({
+        modalMessage:
+          "Request successfully added with ID: " +
+          this.state.addServiceRequestResult.serviceRequestID,
+        modalStatus: "success"
+      });
+    } else if (this.state.addServiceRequestResult.status === 401) {
+      this.setState({ redirect: true });
+    } else {
+      this.setState({
+        modalMessage: "Some error occurred. Please try again later",
+        modalStatus: "error"
+      });
+    }
+    this.setState({ isSubmitted: false });
+    console.log(this.state.isSubmitted);
   }
 
+  closePopup = () => {
+    if (this.state.modalStatus === "success") {
+      this.setState({ redirectToTransactions: true });
+    }
+  };
+
   render() {
+    if (this.state.redirect) return <Redirect to={"/"} />;
+
+    if (this.state.redirect) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/",
+            state: { status: "401" }
+          }}
+        />
+      );
+    }
+
+    if (this.state.redirectToTransactions) {
+      return <Redirect to="/transactions" />;
+    }
     return (
       <div className="container-fluid selector-for-some-widget">
         <h3 className="heading">New Service Request</h3>
         <form className="formDetail">
-          <FormErrors formErrors={this.state.formErrors} />
           <div className="row">
-            <div className="col-md-4 mb-6 {`form-group ${this.errorClass(this.state.formErrors.stopId)}`}">
-              <label for="validationDefault02">Stop ID</label>
+            <div className="col-md-4 mb-6">
+              Stop ID
               <input
                 type="text"
                 className="form-control"
                 name="stopId"
                 value={this.state.stopId}
-                onInput={this.handleUserInput}
+                onChange={this.handleUserInput}
               />
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["stopID"]}
+              </span>
             </div>
-            <div className="col-md-4 mb-6 {`form-group ${this.errorClass(this.state.formErrors.stopId)}`}">
-              <label for="validationDefault02">Direction</label>
+            <div className="col-md-4 mb-6">
+              Direction
               <input
                 type="text"
                 className="form-control"
                 name="direction"
                 value={this.state.direction}
-                onInput={this.handleUserInput}
+                onChange={this.handleUserInput}
               />
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["direction"]}
+              </span>
             </div>
             {/*street_on,nearest_cross_street,position
              */}
             <div className="col-md-4 mb-6">
-              <label for="validationDefault01">Location</label>
+              Location
               <input
                 type="text"
                 className="form-control"
                 name="location"
                 value={this.state.location}
-                onInput={this.handleUserInput}
+                onChange={this.handleUserInput}
               />
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["location"]}
+              </span>
             </div>
           </div>
           <div className="row">
             <div className="col-md-4 mb-6">
-              <label for="validationDefault02">Request Type</label>
+              Request Type
               <select
                 className="col-md-12 mb-6 "
-                name="requestType"
-                value={this.state.requestType}
+                name="request_type"
+                value={this.state.request_type}
                 onInput={this.handleUserInput}
               >
+                <option></option>
                 <option>New</option>
                 <option>Update</option>
                 <option>Remove</option>
               </select>
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["request_type"]}
+              </span>
             </div>
             <div className="col-md-4 mb-6">
               <label for="validationDefault02">Reason</label>
@@ -280,7 +275,7 @@ class ServiceRequest extends React.Component {
                 className="form-control"
                 name="reason"
                 value={this.state.reason}
-                onInput={this.handleReason.bind(this)}
+                onInput={this.handleUserInput}
               />
             </div>
             {/* 	fastened_to,location,county
@@ -294,6 +289,9 @@ class ServiceRequest extends React.Component {
                 value={this.state.route}
                 onInput={this.handleUserInput}
               />
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["route"]}
+              </span>
             </div>
           </div>
           <div className="row">
@@ -306,7 +304,7 @@ class ServiceRequest extends React.Component {
                 name="additionalInformation"
                 rows="3"
                 value={this.state.additionalInformation}
-                onInput={this.handleAdditionalInformation.bind(this)}
+                onInput={this.handleUserInput}
               ></textarea>
             </div>
           </div>
@@ -333,19 +331,51 @@ class ServiceRequest extends React.Component {
         </div>
         <h3></h3>
         <div className="divider" />
+
         <button
-          type="submit"
-          disabled={!this.state.formValid}
+          type="button"
           className="btn btn-primary"
-          onClick={e => this.postData(e)}
+          onClick={this.validateFields}
+          data-toggle="modal"
+          data-target="#responseServiceRequest"
         >
-          Submit
+          {" "}
+          Submit{" "}
         </button>
-        {/* </form> */}
-        {/* <li></li>`
-        <dividerheight /> */}
-        {/* <ImageUpload data={this.state} /> */}
-        {/* {this.state.isSubmitted ? <h4></h4> : <ImageUpload data={this.state} />} */}
+
+        <div
+          className="modal fade"
+          id="responseServiceRequest"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-body">
+                <div className="container-fluid">
+                  <div
+                    className="row justify-content-md-center"
+                    style={{ color: "blue" }}
+                  >
+                    {this.state.modalMessage}
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                  onClick={this.closePopup}
+                >
+                  Ok
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

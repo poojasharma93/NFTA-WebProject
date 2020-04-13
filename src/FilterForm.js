@@ -12,83 +12,61 @@ class FilterForm extends Component {
     };
   }
 
+  handleUserInput = (e)=>{
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({[name]: value})
+  }
+
   submitForm = e => {
     e.preventDefault();
     this.props.handleOnClick(this.state);
-  };
-
-  handleTransNoChange = e => {
-    this.setState({
-      transactionNo: e.target.value
-    });
-  };
-
-  handleStopIDChange = e => {
-    // console.log(e.target.value);
-    this.setState({
-      stopID: e.target.value
-    });
-    console.log(this.stopID);
-  };
-
-  handleDirectionChange = e => {
-    console.log(e.target.value);
-    this.setState({
-      direction: e.target.value
-    });
-  };
-
-  handleCountyChange = e => {
-    console.log(e.target.value);
-    this.setState({
-      county: e.target.value
-    });
-  };
-
-  handleRequestIDChange = e => {
-    console.log(e.target.value);
-    this.setState({
-      requestID: e.target.value
-    });
   };
 
   render() {
     return (
       <div className="filterForm">
         <form className="form-inline justify-content-center">
-          <div className="row">
+          <div className="row justify-content-center">
             Transaction No
             <input
+              name="transactionNo"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleTransNoChange}
+              onChange={this.handleUserInput}
             />
             Stop ID
             <input
+              name="stopID"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleStopIDChange}
+              onChange={this.handleUserInput}
             />
             Direction
             <input
+              name="direction"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleDirectionChange}
+              onChange={this.handleUserInput}
             />
           </div>
-          <div className="row">
+          <div className="row justify-content-center">
             County
             <input
+              name="county"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleCountyChange}
+              onChange={this.handleUserInput}
             />
             Request ID
             <input
+              name="requestID"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleRequestIDChange}
+              onChange={this.handleUserInput}
             />
+            </div>
+            <div className="row justify-content-center">
             <input
               type="button"
               value="Submit"

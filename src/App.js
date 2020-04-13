@@ -18,6 +18,7 @@ class App extends React.Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={LoginPage} />
+            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|routes|account|users)" component={Home} />
             <Route
               exact
               path="/(transactions|inprogress|resolved|serviceRequest|routes|account|routeListed|direction|position|fastenedTO|county)"

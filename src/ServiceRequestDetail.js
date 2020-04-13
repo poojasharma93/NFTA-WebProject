@@ -105,13 +105,17 @@ class ServiceRequestDetail extends React.Component {
 
                 <tr>
                   <td>
-                    <a class="lightbox " href="#dog">
-                      <img
-                        src={servReq.image0}
-                        class="thumbnail float-left"
-                        alt="No preview"
-                      />
-                    </a>
+                    {servReq.image0 ? (
+                      <a class="lightbox " href="#dog">
+                        <img
+                          src={servReq.image0}
+                          class="thumbnail float-left"
+                          alt="No preview"
+                        />
+                      </a>
+                    ) : (
+                      <h1></h1>
+                    )}
                     <div
                       class="lightbox-target container-fluid selector-for-some-widget"
                       id="dog"
@@ -121,13 +125,17 @@ class ServiceRequestDetail extends React.Component {
                     </div>
                   </td>
                   <td>
-                    <a class="lightbox " href="#dog">
-                      <img
-                        src={servReq.image1}
-                        class="thumbnail float-left"
-                        alt="No preview"
-                      />
-                    </a>
+                    {servReq.image1 ? (
+                      <a class="lightbox " href="#dog">
+                        <img
+                          src={servReq.image1}
+                          class="thumbnail float-left"
+                          alt="No preview"
+                        />
+                      </a>
+                    ) : (
+                      <h1></h1>
+                    )}
                     <div
                       class="lightbox-target container-fluid selector-for-some-widget"
                       id="dog"
@@ -137,13 +145,17 @@ class ServiceRequestDetail extends React.Component {
                     </div>
                   </td>
                   <td>
-                    <a class="lightbox " href="#dog">
-                      <img
-                        src={servReq.image2}
-                        class="thumbnail float-left"
-                        alt="No preview"
-                      />
-                    </a>
+                    {servReq.image2 ? (
+                      <a class="lightbox " href="#dog">
+                        <img
+                          src={servReq.image2}
+                          class="thumbnail float-left"
+                          alt="No preview"
+                        />
+                      </a>
+                    ) : (
+                      <h1></h1>
+                    )}
                     <div
                       class="lightbox-target container-fluid selector-for-some-widget"
                       id="dog"

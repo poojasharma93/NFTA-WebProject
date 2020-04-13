@@ -19,6 +19,8 @@ import Routes from "./Routes";
 import PullDown from "./PullDown";
 import Cookies from "universal-cookie";
 
+import Users from "./Users";
+
 const cookies = new Cookies();
 
 class Home extends Component {
@@ -36,9 +38,12 @@ class Home extends Component {
   };
 
   render() {
-    //if(cookies.get('usertoken')==undefined || cookies.get('usertoken')===""){
-    //  return (<Redirect to={'/'}/>)
-    //}
+    if (
+      cookies.get("usertoken") == undefined ||
+      cookies.get("usertoken") === ""
+    ) {
+      return <Redirect to={"/"} />;
+    }
 
     if (this.state.redirect) {
       return <Redirect to={"/"} />;
@@ -115,8 +120,6 @@ class Home extends Component {
               component={TransactionDetail}
               exact
             />
-            <Route path="/account" component={AccountInformation} exact />
-
             <Route path="/serviceRequest" component={ServiceRequest} exact />
             <Route
               path="/serviceRequestDetail/:servReq"
@@ -128,6 +131,9 @@ class Home extends Component {
               component={PullDown}
               exact
             />
+            {/* Incoming change */}
+            <Route path="/account" component={AccountInformation} exact />
+            <Route path="/users" component={Users} exact />
           </Switch>
         </div>
       </div>
