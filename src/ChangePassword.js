@@ -59,6 +59,9 @@ export default function App(props) {
               ref={register}
               // onInput={this.handleemail_id.bind(this)}
             />
+            <small id="passwordHelp" class="form-text text-muted">
+              Password should be between 4-10 characters.
+            </small>
             <div className="error-message">
               {errors.password && errors.password.type === "required" && (
                 <p>{errors.password.message}</p>
@@ -80,6 +83,9 @@ export default function App(props) {
               ref={register}
               // onInput={this.handlefirst_name.bind(this)}
             />
+            <small id="confirmPasswordHelp" class="form-text text-muted">
+              Password and Confirm Password should match.
+            </small>
             <div className="error-message">
               {errors.confirmPassword && (
                 <p>{errors.confirmPassword.message}</p>

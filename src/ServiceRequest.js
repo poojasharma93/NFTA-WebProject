@@ -1,12 +1,12 @@
 import React from "react";
+// import Popup from "reactjs-popup";
 import { FormErrors } from "./FormErrors";
-import Cookies from "universal-cookie";
-import { Redirect } from "react-router-dom";
-import Dropzone from "react-dropzone-uploader";
 import ImageUpload from "./ImageUpload";
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
+import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
-
 class ServiceRequest extends React.Component {
   constructor() {
     super();
@@ -14,12 +14,12 @@ class ServiceRequest extends React.Component {
       stopId: "",
       direction: "",
       location: "",
-      request_type: "",
+      requestType: "",
       reason: "",
       route: "",
       additionalInformation: "",
       status: "Open",
-      requested_user: cookies.get("username"),
+      adminUserId: "2",
       formErrors: { requestType: "", direction: "", location: "", route: "" },
       stopIdValid: false,
       requestTypeValid: false,
@@ -29,7 +29,12 @@ class ServiceRequest extends React.Component {
       formValid: false,
       stopIdError: "",
       directionError: "",
-      redirect: false
+      isSubmitted: true,
+      image: [],
+      loading: false,
+      image0: "",
+      image1: "",
+      image2: ""
     };
   }
 
@@ -57,7 +62,7 @@ class ServiceRequest extends React.Component {
           fieldValidationErrors.requestType = "";
         }
         break;
-      case "request_type":
+      case "requestType":
         if (value === "Update" && this.state.stopIdValid) {
           requestTypeValid = true;
         }
@@ -126,7 +131,7 @@ class ServiceRequest extends React.Component {
   };
 
   handleRequestType = e => {
-    this.setState({ request_type: e.target.value });
+    this.setState({ requestType: e.target.value });
   };
 
   handleReason = e => {
@@ -138,23 +143,45 @@ class ServiceRequest extends React.Component {
   };
 
   handleAdditionalInformation = e => {
-    this.setState({ additional_information: e.target.value });
+    this.setState({ additionalInformation: e.target.value });
   };
 
-  async postData() {
-    let srbody = JSON.stringify({
-      stopId: this.state.stopId,
-      status: this.state.status,
-      direction: this.state.direction,
-      location: this.state.location,
-      request_type: this.state.request_type,
-      reason: this.state.reason,
-      route: this.state.route,
-      additional_information: this.state.additional_information,
-      requested_user: this.state.requested_user
-    });
+  handleSubmit = async (files, allFiles) => {
+    for (var i = 0; i < allFiles.length; i++) {
+      const data = new FormData();
+      data.append("file", allFiles[i].file);
+      data.append("upload_preset", "nftafolder");
+      this.setState({ loading: false });
 
-    console.log("Body", srbody);
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/nftaproject/image/upload",
+        {
+          method: "POST",
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+          body: data
+        }
+      );
+      const file = await res.json();
+      if (this.state.image0 == "") {
+        this.setState({ image0: file.secure_url });
+      } else if (this.state.image1 == "") {
+        this.setState({ image1: file.secure_url });
+      } else {
+        this.setState({ image2: file.secure_url });
+      }
+
+      this.setState({ image: [...this.state.image, file.secure_url] });
+    }
+    console.log(this.state.image0);
+    console.log(this.state.image1);
+    this.setState({ loading: false });
+    allFiles.forEach(f => f.remove());
+  };
+
+  async postData(e) {
+    e.preventDefault();
+    this.setState({ isSubmitted: false });
+    console.log(this.state.isSubmitted);
 
     try {
       const result = await fetch(window.$url + "/addServiceRequest", {
@@ -166,64 +193,80 @@ class ServiceRequest extends React.Component {
           Authorization: "Bearer " + cookies.get("usertoken")
         },
 
-        body: srbody
-        // status: "open"
+        body: JSON.stringify(
+          {
+            stopId: this.state.stopId,
+            status: this.state.status,
+            direction: this.state.direction,
+            location: this.state.location,
+            request_type: this.state.requestType,
+            reason: this.state.reason,
+            route: this.state.route,
+            additional_information: this.state.additionalInformation,
+            admin_user_id: this.state.adminUserId,
+            image0: this.state.image0,
+            image1: this.state.image1,
+            image2: this.state.image2
+          }
+
+          // status: "open"
+        )
       });
+      this.setState({ isSubmitted: false });
+      console.log(this.state.isSubmitted);
     } catch (e) {
       console.log(e);
     }
   }
 
   render() {
-    if (this.state.redirect) return <Redirect to={"/"} />;
-
     return (
       <div className="container-fluid selector-for-some-widget">
         <h3 className="heading">New Service Request</h3>
-        <form className="formDetail" onSubmit={() => this.postData()}>
+        <form className="formDetail">
           <FormErrors formErrors={this.state.formErrors} />
           <div className="row">
             <div className="col-md-4 mb-6 {`form-group ${this.errorClass(this.state.formErrors.stopId)}`}">
-              Stop ID
+              <label for="validationDefault02">Stop ID</label>
               <input
                 type="text"
                 className="form-control"
                 name="stopId"
                 value={this.state.stopId}
-                onChange={this.handleUserInput}
+                onInput={this.handleUserInput}
               />
             </div>
             <div className="col-md-4 mb-6 {`form-group ${this.errorClass(this.state.formErrors.stopId)}`}">
-              Direction
+              <label for="validationDefault02">Direction</label>
               <input
                 type="text"
                 className="form-control"
                 name="direction"
                 value={this.state.direction}
-                onChange={this.handleUserInput}
+                onInput={this.handleUserInput}
               />
             </div>
             {/*street_on,nearest_cross_street,position
              */}
             <div className="col-md-4 mb-6">
-              Location
+              <label for="validationDefault01">Location</label>
               <input
                 type="text"
                 className="form-control"
                 name="location"
                 value={this.state.location}
-                onChange={this.handleUserInput}
+                onInput={this.handleUserInput}
               />
             </div>
           </div>
           <div className="row">
             <div className="col-md-4 mb-6">
-              Request Type
+              <label for="validationDefault02">Request Type</label>
               <select
                 className="col-md-12 mb-6 "
-                name="request_type"
-                value={this.state.request_type}
-                onChange={this.handleUserInput}
+                name="requestType"
+                value={this.state.requestType}
+                onInput={this.handleUserInput}
               >
                 <option>New</option>
                 <option>Update</option>
@@ -231,53 +274,78 @@ class ServiceRequest extends React.Component {
               </select>
             </div>
             <div className="col-md-4 mb-6">
-              Reason
+              <label for="validationDefault02">Reason</label>
               <input
                 type="text"
                 className="form-control"
                 name="reason"
                 value={this.state.reason}
-                onChange={this.handleReason.bind(this)}
+                onInput={this.handleReason.bind(this)}
               />
             </div>
             {/* 	fastened_to,location,county
              */}
             <div className="col-md-4 mb-6">
-              Route
+              <label for="validationDefault01">Route</label>
               <input
                 type="text"
                 className="form-control"
                 name="route"
                 value={this.state.route}
-                onChange={this.handleUserInput}
+                onInput={this.handleUserInput}
               />
             </div>
           </div>
           <div className="row">
             <div className="form-group col-md-6 mb-6">
-              Additional Information
+              <label for="exampleFormControlTextarea1">
+                Additional Information
+              </label>
               <textarea
                 className="form-control"
-                name="additional_information"
+                name="additionalInformation"
                 rows="3"
-                value={this.state.additional_information}
-                onChange={this.handleAdditionalInformation.bind(this)}
+                value={this.state.additionalInformation}
+                onInput={this.handleAdditionalInformation.bind(this)}
               ></textarea>
             </div>
           </div>
-          <div className="divider" />
-          <button
-            type="submit"
-            disabled={!this.state.formValid}
-            className="btn btn-primary"
-          >
-            Submit
-          </button>
         </form>
-        <li></li>`
-        <dividerheight />
-        <ImageUpload />
-        {/* {this.state.isSubmitted && <ImageUpload data={this.state} />} */}
+        <div className="ImageUpload">
+          <Dropzone
+            onSubmit={this.handleSubmit}
+            maxFiles={3}
+            inputContent="Drop maximum 3 Images"
+            inputWithFilesContent={files => `${3 - files.length} more`}
+            class="divider"
+            type="file"
+            name="file"
+            accept="image/jpeg, image/png"
+            submitButtonContent="Upload"
+            //   submitButtonDisabled={files => files.length < 3}
+          ></Dropzone>
+
+          {this.state.loading ? (
+            <h3>Loading ....</h3>
+          ) : (
+            this.state.image.map(img => <img src={img} />)
+          )}
+        </div>
+        <h3></h3>
+        <div className="divider" />
+        <button
+          type="submit"
+          disabled={!this.state.formValid}
+          className="btn btn-primary"
+          onClick={e => this.postData(e)}
+        >
+          Submit
+        </button>
+        {/* </form> */}
+        {/* <li></li>`
+        <dividerheight /> */}
+        {/* <ImageUpload data={this.state} /> */}
+        {/* {this.state.isSubmitted ? <h4></h4> : <ImageUpload data={this.state} />} */}
       </div>
     );
   }

@@ -20,7 +20,7 @@ class App extends React.Component {
             <Route exact path="/" component={LoginPage} />
             <Route
               exact
-              path="/(transactions|inprogress|resolved|serviceRequest|routes|account)"
+              path="/(transactions|inprogress|resolved|serviceRequest|routes|account|routeListed|direction|position|fastenedTO|county)"
               component={Home}
             />
             <Route path="/transactionDetail/:trans" component={Home} exact />

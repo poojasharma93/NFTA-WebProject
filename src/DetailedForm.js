@@ -1,12 +1,15 @@
 import React from "react";
 import Iframe from "react-iframe";
 import { formPost } from "./formPost";
-import Cookies from 'universal-cookie';
-
+import Cookies from "universal-cookie";
+import BootstrapSwitchButton from "bootstrap-switch-button-react";
+import Alert from "react-s-alert";
+import "react-s-alert/dist/s-alert-default.css";
+import "react-s-alert/dist/s-alert-css-effects/slide.css";
+import "./App.css";
 const cookies = new Cookies();
 
 class detailedForm extends React.Component {
-  
   constructor(props) {
     super(props);
 
@@ -30,22 +33,35 @@ class detailedForm extends React.Component {
   async postData() {
     try {
       console.log(this.props.details[0]["transaction_no"]);
-
+      this.props.details[0]["username"] = cookies.get("username");
+      console.log(this.props.details[0]["username"]);
       const result = await fetch(window.$url + "/updateTransaction", {
         method: "POST",
         mode: "cors",
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
-          "Authorization": "Bearer "+ cookies.get('usertoken')
+          Authorization: "Bearer " + cookies.get("usertoken")
         },
 
         body: JSON.stringify(this.props.details[0])
       });
+      alert("CHANGES SAVED");
+      Alert.success("CHANGES SAVED", {
+        position: "top-right",
+        effect: "slide",
+        offset: 100
+      });
     } catch (e) {
       console.log(e);
+      Alert.error("Error Changes not saved", {
+        position: "top-right",
+        effect: "slide",
+        offset: 100
+      });
     }
   }
+
   handleAdminComments = e => {
     this.props.details[0]["admin_comments"] = e.target.value;
   };
@@ -67,100 +83,252 @@ class detailedForm extends React.Component {
         {this.props.details.map(trans => (
           <form key={trans.transaction_no} className="formDetail">
             <div class="row">
-              <div class="col-md-4 mb-6">
+              <div class="col-md-3 mb-6">
                 <label for="validationDefault01">transaction_no</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control text-light bg-dark"
                   id="validationDefault01"
                   value={trans.transaction_no}
+                  disabled={true}
                 />
               </div>
-              <div class="col-md-4 mb-6">
+              <div class="col-md-3 mb-6">
                 <label for="validationDefault02">stop_id</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control text-light bg-dark"
                   id="validationDefault02"
                   value={trans.stop_id}
+                  disabled={true}
                 />
               </div>
-              <div class="col-md-4 mb-6">
-                <label for="validationDefault02">direction</label>
+
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault02">request_id</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control text-light bg-dark"
                   id="validationDefault02"
-                  value={trans.direction}
+                  value={trans.request_id}
+                  disabled={true}
+                />
+              </div>
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault01">Last Updated By</label>
+                <input
+                  type="text"
+                  class="form-control text-light bg-dark"
+                  id="validationDefault01"
+                  value={trans.username}
+                  disabled={true}
                 />
               </div>
             </div>
             {/*street_on,nearest_cross_street,position
              */}
+            <hr class="dotted"></hr>
             <div class="row">
-              <div class="col-md-4 mb-6">
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault02">device_id</label>
+                <input
+                  type="text"
+                  class="form-control text-light bg-dark"
+                  id="validationDefault02"
+                  value={trans.device_id}
+                  disabled={true}
+                />
+              </div>
+              <div class="col-md-3 mb-6">
                 <label for="validationDefault01">street_on</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control text-light bg-dark"
                   id="validationDefault01"
                   value={trans.street_on}
+                  disabled={true}
                 />
               </div>
-              <div class="col-md-4 mb-6">
+              <div class="col-md-3 mb-6">
                 <label for="validationDefault02">nearest_cross_street</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control text-light bg-dark"
                   id="validationDefault02"
-                  value={trans.nearest_cross_street}
+                  value={
+                    trans.nearest_cross_street
+                      ? trans.nearest_cross_street.display_name
+                      : ""
+                  }
+                  disabled={true}
                 />
               </div>
-              <div class="col-md-4 mb-6">
+              <div class="col-md-3 mb-6">
                 <label for="validationDefault02">position</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control text-light bg-dark"
                   id="validationDefault02"
-                  value={trans.position}
+                  value={trans.position ? trans.position.display_name : ""}
+                  disabled={true}
                 />
               </div>
             </div>
             {/* 	fastened_to,location,county
              */}
+            <hr class="dotted"></hr>
             <div class="row">
-              <div class="col-md-4 mb-6">
+              <div class="col-md-3 mb-6">
                 <label for="validationDefault01">fastened_to</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control text-light bg-dark"
                   id="validationDefault01"
                   value="."
-                  value={trans.fastened_to}
+                  value={
+                    trans.fastened_to ? trans.fastened_to.display_name : ""
+                  }
+                  disabled={true}
                 />
               </div>
-              <div class="col-md-4 mb-6">
+              <div class="col-md-3 mb-6">
                 <label for="validationDefault02">location</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control text-light bg-dark"
                   id="validationDefault02"
                   value={trans.location}
+                  disabled={true}
                 />
               </div>
-              <div class="col-md-4 mb-6">
+              <div class="col-md-3 mb-6">
                 <label for="validationDefault02">county</label>
                 <input
-                  type="text"
-                  class="form-control"
+                  type="text text-dark"
+                  class="form-control input-group-text-left text-light bg-dark "
                   id="validationDefault02"
-                  value={trans.county}
+                  value={trans.county ? trans.county.display_name : ""}
+                  disabled={true}
+                />
+              </div>
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault02">direction</label>
+                <input
+                  type="text"
+                  class="form-control text-light bg-dark"
+                  id="validationDefault02"
+                  value={trans.direction ? trans.direction.display_name : ""}
+                  disabled={true}
                 />
               </div>
             </div>
-            {/* status,shelter,advertisement
+            {/* test */}
+            <hr class="dotted"></hr>
+            <div class="container-fluid">
+              <div class="row justify-content-center">
+                <div class="col-md-1 mb-6 ml-md-auto">
+                  <label>
+                    Advertisement
+                    <BootstrapSwitchButton
+                      checked={trans.advertisement}
+                      onlabel="Yes"
+                      onstyle="success"
+                      offlabel="No"
+                      offstyle="danger"
+                      disabled={true}
+                      style="w-15 mx-2"
+                    />
+                  </label>
+                </div>
+                <div class="col-md-1 mb-6 ml-md-auto">
+                  <label>
+                    Shelter
+                    <BootstrapSwitchButton
+                      checked={trans.shelter}
+                      onlabel="Yes"
+                      onstyle="success"
+                      offlabel="N0"
+                      offstyle="danger"
+                      disabled={true}
+                      style="w-15 mx-3"
+                    />
+                  </label>
+                </div>
+                <div class="col-md-1 mb-6 ml-md-auto">
+                  <label>
+                    Bench
+                    <BootstrapSwitchButton
+                      checked={trans.bench}
+                      onlabel="Yes"
+                      onstyle="success"
+                      offlabel="N0"
+                      offstyle="danger"
+                      disabled={true}
+                      style="w-15 mx-3"
+                    />
+                  </label>
+                </div>
+                <div class="col-md-1 mb-6 ml-md-auto">
+                  <label>
+                    Bike Rack
+                    <BootstrapSwitchButton
+                      checked={trans.bike_rack}
+                      onlabel="Yes"
+                      onstyle="success"
+                      offlabel="N0"
+                      offstyle="danger"
+                      disabled={true}
+                      style="w-15 mx-3"
+                    />
+                  </label>
+                </div>
+                <div class="col-md-1 mb-6 ml-md-auto">
+                  <label>
+                    Trash Can
+                    <BootstrapSwitchButton
+                      checked={trans.trash_can}
+                      onlabel="Yes"
+                      onstyle="success"
+                      offlabel="N0"
+                      offstyle="danger"
+                      disabled={true}
+                      style="w-15 mx-3"
+                    />
+                  </label>
+                </div>
+                <div class="col-md-1 mb-6 ml-md-auto">
+                  <label>
+                    Time Table
+                    <BootstrapSwitchButton
+                      checked={trans.time_table}
+                      onlabel="Yes"
+                      onstyle="success"
+                      offlabel="N0"
+                      offstyle="danger"
+                      disabled={true}
+                      style="w-15 mx-3"
+                    />
+                  </label>
+                </div>
+                <div class="col-md-1 mb-6 ml-md-auto">
+                  <label>
+                    System Map
+                    <BootstrapSwitchButton
+                      checked={trans.system_map}
+                      onlabel="Yes"
+                      onstyle="success"
+                      offlabel="N0"
+                      offstyle="danger"
+                      disabled={true}
+                      style="w-15 mx-3"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+            {/* {/* status,shelter,advertisement
              */}
-            <div class="row">
+            {/* <div class="row">
               <div class="col-md-4 mb-6">
                 <label for="validationDefault01">status</label>
                 <input
@@ -188,10 +356,10 @@ class detailedForm extends React.Component {
                   value={trans.advertisement}
                 />
               </div>
-            </div>
+            </div> */}
             {/* bench,bike_rack,trash_can
              */}
-            <div class="row">
+            {/* <div class="row">
               <div class="col-md-4 mb-6">
                 <label for="validationDefault01">bench</label>
                 <input
@@ -219,10 +387,10 @@ class detailedForm extends React.Component {
                   value={trans.trash_can}
                 />
               </div>
-            </div>
+            </div> */}
             {/* time_table,system_map,work_request
              */}
-            <div class="row">
+            {/* <div class="row">
               <div class="col-md-4 mb-6">
                 <label for="validationDefault01">time_table</label>
                 <input
@@ -250,17 +418,17 @@ class detailedForm extends React.Component {
                   value={trans.request_id}
                 />
               </div>
-            </div>
+            </div> */}
             {/* user_id,device_id,
              */}
-            <div class="row">
+            {/* <div class="row">
               <div class="col-md-6 mb-6">
-                <label for="validationDefault01">user_id</label>
+                <label for="validationDefault01">Last User</label>
                 <input
                   type="text"
                   class="form-control"
                   id="validationDefault01"
-                  value={trans.user_id}
+                  value={trans.username}
                 />
               </div>
               <div class="col-md-6 mb-6">
@@ -272,9 +440,10 @@ class detailedForm extends React.Component {
                   value={trans.device_id}
                 />
               </div>
-            </div>
+            </div> */}
             {/* additional_information,admin_comments
              */}
+            <hr class="dotted"></hr>
             <div class="row">
               <div class="form-group col-md-6 mb-6">
                 <label for="exampleFormControlTextarea1">
@@ -285,7 +454,37 @@ class detailedForm extends React.Component {
                   id="exampleFormControlTextarea1"
                   rows="3"
                   value={trans.additional_information}
+                  disabled={true}
                 ></textarea>
+              </div>
+              <div class="dropdown form-group col-md-6 mb-6">
+                <button
+                  class="btn btn-primary dropdown-toggle col-md-6 mb-6"
+                  type="button"
+                  id="dropdownMenu2"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Routes
+                </button>
+
+                <div
+                  class="dropdown-menu col-md-6 mb-6"
+                  aria-labelledby="dropdownMenu2 "
+                >
+                  {trans.direction
+                    ? trans.routes.map(rot => (
+                        <button
+                          class="dropdown-item "
+                          type="button"
+                          key={rot.dropdown_id}
+                        >
+                          {rot.display_name}
+                        </button>
+                      ))
+                    : ""}
+                </div>
               </div>
             </div>
             {/* private String location; */}
@@ -413,14 +612,14 @@ class detailedForm extends React.Component {
             </div>
 
             <div class="text_center">
-              <a
+              {/* <a
                 href={"/" + trans.status}
                 type="button"
                 class="btn-lg btn-primary col-md-2 mb-3"
               >
                 Previous Page
               </a>
-              <div class="divider" />
+              <div class="divider" /> */}
 
               <button
                 type="button"
@@ -447,6 +646,7 @@ class detailedForm extends React.Component {
           + this.probs.details.latitude + "," + this.probs.details.longitude +
           "&zoom=15";
         </script>
+        <Alert stack={{ limit: 3, spacing: 50 }} />
       </div>
     );
   }

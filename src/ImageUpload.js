@@ -1,48 +1,54 @@
-import React, { Component, Fragment } from "react";
-import { render } from "react-dom";
+import React, { Component, Fragment, useState } from "react";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
-// import FileReaderInput from "react-file-reader-input";
 
 const ImageUpload = props => {
   const handleChangeStatus = ({ meta }, status) => {
     // console.log(status, meta);
   };
-  //   const FileType = require("file-type");
-  const handleSubmit = (files, allFiles) => {
-    // console.log(files.map(f => f.meta));
-    // console.log(files[0]);
-    const data = new FormData();
-    data.append("data", props.data);
+  const [image, setImage] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (files, allFiles) => {
     for (var i = 0; i < allFiles.length; i++) {
-      let file = allFiles[i];
-      console.log(file);
-      data.append("image" + i, file);
+      const data = new FormData();
+      data.append("file", allFiles[i].file);
+      data.append("upload_preset", "nftafolder");
+      setLoading(true);
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/nftaproject/image/upload",
+        {
+          method: "POST",
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+          body: data
+        }
+      );
+      const file = await res.json();
+      setImage(image => [...image, file.secure_url]);
+      setLoading(false);
     }
-    for (var pair of data.entries()) {
-      console.log(pair[0] + " - " + pair[1]);
-    }
+
     allFiles.forEach(f => f.remove());
   };
 
   return (
-    <Dropzone
-      onChangeStatus={handleChangeStatus}
-      onSubmit={handleSubmit}
-      maxFiles={3}
-      inputContent="Drop maximum 3 Files"
-      inputWithFilesContent={files => `${3 - files.length} more`}
-      class="divider"
-      accept="image/jpeg, image/png"
-      //   submitButtonDisabled={files => files.length < 3}
-    >
-      {({ getRootProps, getInputProps }) => (
-        <div {...getRootProps()}>
-          <input {...getInputProps()} />
-          Drop an image, get a preview!
-        </div>
-      )}
-    </Dropzone>
+    <div className="ImageUpload">
+      <Dropzone
+        onChangeStatus={handleChangeStatus}
+        onSubmit={handleSubmit}
+        maxFiles={3}
+        inputContent="Drop maximum 3 Files"
+        inputWithFilesContent={files => `${3 - files.length} more`}
+        class="divider"
+        type="file"
+        name="file"
+        accept="image/jpeg, image/png"
+        //   submitButtonDisabled={files => files.length < 3}
+      ></Dropzone>
+
+      {loading ? <h3>Loading ....</h3> : image.map(img => <img src={img} />)}
+    </div>
   );
 };
 

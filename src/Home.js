@@ -16,6 +16,7 @@ import AccountInformation from "./AccountInformation";
 import TransactionDetail from "./TransactionDetail";
 import ServiceRequestDetail from "./ServiceRequestDetail";
 import Routes from "./Routes";
+import PullDown from "./PullDown";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
@@ -122,7 +123,11 @@ class Home extends Component {
               component={ServiceRequestDetail}
               exact
             />
-            <Route path="/routes" component={Routes} exact />
+            <Route
+              path="/(routes|routeListed|direction|position|fastenedTO|county)"
+              component={PullDown}
+              exact
+            />
           </Switch>
         </div>
       </div>
