@@ -130,8 +130,8 @@ class OpenServiceRequest extends Component{
                         {serviceRequests.map(servReq => (
                         <tr key={servReq.request_id}>
                         <td> {servReq.request_id} </td>
-                        <td> {servReq.stopId}</td>
-                        <td> {servReq.direction}</td>
+                        <td> {servReq.stop_id}</td>
+                        <td> {servReq.direction? servReq.direction.display_name: ""}</td>
                         <td> {servReq.request_type}</td>
                         <td> {servReq.requested_user}</td>
                         <td> <a href={`/serviceRequestDetail/${servReq.request_id}`} id="link">View Details</a> </td>

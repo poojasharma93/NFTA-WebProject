@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.18.1",
     "qs": "^6.9.3",
+    "query-string": "^6.12.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-dropzone-uploader": "^2.11.0",

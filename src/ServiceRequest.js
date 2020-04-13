@@ -10,13 +10,15 @@ const cookies = new Cookies();
 class ServiceRequest extends React.Component {
   constructor() {
     super();
+    this.modalButton = React.createRef();
     this.state={
-      stopId:"",
+      stop_id:"",
       direction:"",
       location:"",
       request_type:"",
       reason:"",
-      route:"",
+      route:{},
+      routeArray:[],
       additional_information:"",
       status:"Open",
       requested_user: cookies.get('username'),
@@ -25,14 +27,65 @@ class ServiceRequest extends React.Component {
       addServiceRequestResult: '',
       modalMessage: '',
       modalStatus:'',
-      redirectToTransactions: false
+      redirectToTransactions: false,
+      routeOptions:[],
+      directionOptions: []
     };
   }
+
+  componentDidMount(){
+    try{
+      fetch(window.$url + "/dropdown?dropdownType=Route", {headers: {
+          "Authorization": "Bearer "+cookies.get('usertoken')
+        }})
+      .then(results => {
+          if(results.status===401){this.setState({redirect:true});}
+          else{return results.json();}
+      })
+      .then(
+          (data) => {this.setState({ routeOptions: data});},
+          (error) => {this.setState({error: error});}
+        )
+
+      fetch(window.$url + "/dropdown?dropdownType=Direction", {headers: {
+        "Authorization": "Bearer "+cookies.get('usertoken')
+      }})
+    .then(results => {
+        if(results.status===401){this.setState({redirect:true});}
+        else{return results.json();}
+      })
+      .then(
+          (data) => {this.setState({directionOptions: data})},
+          (error) => {this.setState({error: error});}
+        )
+      }
+      catch(e){
+          console.log("error",e)
+      }
+      
+    }
+
 
   handleUserInput = e => {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({[name]: value});
+  }
+
+  handleDirectionChange = e =>{
+    let value=JSON.parse(e.target.value)
+    this.setState({direction: value})
+  }
+
+  handleRouteChange = e =>{
+    var options = e.target.options;
+    var value = [];
+    for (var i = 0, l = options.length; i < l; i++) {
+      if (options[i].selected) {
+        value.push(JSON.parse(options[i].value));
+      }
+    }
+    this.setState({routeArray: value});
   }
 
   validateFields = (e) =>{
@@ -44,9 +97,9 @@ class ServiceRequest extends React.Component {
         isValid=false;
         fieldErrors["request_type"] = "Please select request type"
       }
-      if((this.state.request_type==="Update"||this.state.request_type==="Remove") && !this.state.stopId){
+      if((this.state.request_type==="Update"||this.state.request_type==="Remove") && !this.state.stop_id){
         isValid=false;
-        fieldErrors["stopID"] = "Stop ID cannot be empty for Request Type: " + this.state.request_type
+        fieldErrors["stop_id"] = "Stop ID cannot be empty for Request Type: " + this.state.request_type
       }
       if(!this.state.direction){
         isValid=false;
@@ -56,29 +109,28 @@ class ServiceRequest extends React.Component {
         isValid=false;
         fieldErrors["location"] = "Location cannot be empty"
       }
-      if(!this.state.route){
+      if(this.state.routeArray.length===0){
         isValid=false;
         fieldErrors["route"] = "Please select a route"
       }
-      console.log(fieldErrors)
-      console.log(isValid)
       this.setState({fieldErrors: fieldErrors})
-      if(isValid)
+      if(isValid){
           this.postData();
+      }
   }
 
   async postData() {
     let srbody = JSON.stringify({
-      stopId: this.state.stopId,
+      stop_id: this.state.stop_id,
       status: this.state.status,
-      direction: this.state.direction,
+      direction: JSON.parse(this.state.direction),
       location: this.state.location,
       request_type: this.state.request_type,
       reason: this.state.reason,
-      route: this.state.route,
+      route: this.state.routeArray,
       additional_information: this.state.additional_information,
       requested_user: this.state.requested_user
-    });
+    })
 
     try {
       await fetch(window.$url+"/addServiceRequest", {
@@ -113,6 +165,11 @@ class ServiceRequest extends React.Component {
         this.setState({modalMessage:"Some error occurred. Please try again later",
                       modalStatus: 'error'});
       }
+      this.showPopup();
+  }
+
+  showPopup(){
+    this.modalButton.current.click();
   }
 
   closePopup = ()=>{
@@ -122,7 +179,6 @@ class ServiceRequest extends React.Component {
   }
 
   render() {
-    if (this.state.redirect) return <Redirect to={"/"} />;
 
     if(this.state.redirect){
       return <Redirect to={{
@@ -135,6 +191,8 @@ class ServiceRequest extends React.Component {
       return <Redirect to='/transactions'/>
     }
 
+    console.log('routeOptions', this.state.routeOptions)
+
     return(
       <div className="container-fluid selector-for-some-widget">
       <h3 className="heading">New Service Request</h3>
@@ -145,21 +203,26 @@ class ServiceRequest extends React.Component {
           <input
             type="text"
             className="form-control"
-            name="stopId"
-            value={this.state.stopId}
+            name="stop_id"
+            value={this.state.stop_id}
             onChange={this.handleUserInput}
           />
-          <span style={{color: "red"}}>{this.state.fieldErrors["stopID"]}</span>
+          <span style={{color: "red"}}>{this.state.fieldErrors["stop_id"]}</span>
         </div>
         <div className="col-md-4 mb-6">
           Direction
-          <input
-            type="text"
-            className="form-control"
+          <select
+            className="col-md-12 mb-6 "
             name="direction"
             value={this.state.direction}
             onChange={this.handleUserInput}
-          />
+          >
+            <option></option>
+            {this.state.directionOptions.map((direction,index) => (
+              <option key={index} value={JSON.stringify(direction)}>
+                {direction.display_name}</option>
+            ))}
+          </select>
           <span style={{color: "red"}}>{this.state.fieldErrors["direction"]}</span>
         </div>
       {/*street_on,nearest_cross_street,position
@@ -204,13 +267,17 @@ class ServiceRequest extends React.Component {
         </div>
         <div className="col-md-4 mb-6">
           Route
-          <input
-            type="text"
-            className="form-control"
+          <select multiple
+            className="col-md-12 mb-6 "
             name="route"
-            value={this.state.route}
-            onChange={this.handleUserInput}
-          />
+            onChange={this.handleRouteChange}
+          >
+            {this.state.routeOptions.map((route,index) => (
+              <option key={index} value={JSON.stringify(route)}>
+                {route.display_name}
+              </option>
+            ))}
+          </select>
           <span style={{color: "red"}}>{this.state.fieldErrors["route"]}</span>
         </div>
         </div>
@@ -227,15 +294,14 @@ class ServiceRequest extends React.Component {
             onChange={this.handleUserInput}
           ></textarea>
         </div>
-
-        <li></li>`
         <dividerheight />
         <ImageUpload />
         {/* {this.state.isSubmitted && <ImageUpload data={this.state} />} */}
 
         </div>
         <div className="divider" />
-              <button type="submit" className="btn btn-primary" onClick={this.validateFields} data-toggle="modal" data-target="#responseServiceRequest"> Submit </button>
+              <button type="submit" className="btn btn-primary" onClick={this.validateFields}> Submit </button>
+              <input type="button"  value="Button" hidden ref={this.modalButton} data-toggle="modal" data-target="#responseServiceRequest"/>
       </form>
       
 

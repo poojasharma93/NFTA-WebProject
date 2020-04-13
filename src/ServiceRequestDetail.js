@@ -69,11 +69,11 @@ class ServiceRequestDetail extends React.Component {
                         <td className="tdOtherStyle">{servReq.request_id}</td>
                         
                         <td className="tdStyle">Stop ID</td>
-                        <td className="tdOtherStyle"> {servReq.stopId} </td>
+                        <td className="tdOtherStyle"> {servReq.stop_id} </td>
                         </tr>
                         <tr>
                         <td className="tdStyle">Direction</td>
-                        <td className="tdOtherStyle"> {servReq.direction} </td>
+                        <td className="tdOtherStyle"> {servReq.direction? servReq.direction.display_name: ""} </td>
                         
                         <td className="tdStyle">Location</td>
                         <td className="tdOtherStyle"> {servReq.location}</td>
@@ -87,7 +87,8 @@ class ServiceRequestDetail extends React.Component {
                         </tr>
                         <tr>
                         <td className="tdStyle">Route</td>
-                        <td className="tdOtherStyle"> {servReq.route}</td>
+                        
+                        <td className="tdOtherStyle">{servReq.route.map(function(r,i){ return <td key={i}>{r.display_name}</td>})}</td>
                         
                         <td className="tdStyle">Status</td>
                         <td className="tdOtherStyle"> {servReq.status}</td>

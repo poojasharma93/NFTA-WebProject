@@ -5,6 +5,7 @@ import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
 import Cookies from "universal-cookie";
+import {Redirect} from 'react-router-dom';
 
 const cookies = new Cookies();
 
@@ -19,7 +20,9 @@ const schema = yup.object().shape({
     .oneOf([yup.ref("password"), null], "Passwords must match")
 });
 
-export default function App(props) {
+export default function App(props){ 
+  
+  console.log('user', props.user)
   const { register, handleSubmit, errors } = useForm({
     validationSchema: schema
   });
@@ -32,8 +35,7 @@ export default function App(props) {
       mode: "cors",
       headers: {
         Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: "Bearer " + cookies.get("usertoken")
+        "Content-type": "application/json"
       },
       body: JSON.stringify(props.user[0])
     });
@@ -42,20 +44,24 @@ export default function App(props) {
       effect: "slide",
       offset: 100,
       timeout: 2000
-    });
+    });    
   };
 
+  const redirectToLogin = () =>{
+    props.redirectToLogin();
+  }
+
   return (
-    <div class="container-fluid selector-for-some-widget">
+    <div className="container-fluid selector-for-some-widget">
       <form onSubmit={handleSubmit(onSubmit)} className="formDetail">
         <h3 className="heading">Password Reset</h3>
-        <div class="row">
-          <div class="col-md-6 mb-4">
-            <label for="validationDefault01">Password</label>
+        <div className="row">
+          <div className="col-md-6 mb-4">
+            <label>Password</label>
             <input
               type="password"
               name="password"
-              class="form-control"
+              className="form-control"
               ref={register}
               // onInput={this.handleemail_id.bind(this)}
             />
@@ -71,12 +77,12 @@ export default function App(props) {
               )}
             </div>
           </div>
-          <div class="col-md-6 mb-4">
-            <label for="validationDefault02">Confirm Password</label>
+          <div className="col-md-6 mb-4">
+            <label>Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
-              class="form-control"
+              className="form-control"
               ref={register}
               // onInput={this.handlefirst_name.bind(this)}
             />
@@ -90,9 +96,16 @@ export default function App(props) {
         <input
           type="submit"
           value="Reset"
-          class="btn-lg btn-primary col-md-2 mb-3
+          className="btn-lg btn-primary col-md-2 mb-3
         dividerheight"
         />
+         {props.pageLink==="confirmToken" && <input
+          type="button"
+          value="Login"
+          onClick={redirectToLogin}
+          className="btn-lg btn-primary col-md-2 mb-3
+        dividerheight"
+        />}
       </form>
     </div>
   );

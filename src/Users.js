@@ -126,7 +126,7 @@ class Users extends Component{
                         <td> {user.last_name} </td>
                         <td> {user.contact_info} </td>
                         <td>
-                        {user.user_id!==1 && <button type="button" className="close" aria-label="Close" onClick={this.handleOnClick.bind(this, user.username, user.user_id)} data-toggle="modal" data-target="#deleteUser" >
+                        {user.username!==cookies.get('username') && <button type="button" className="close" aria-label="Close" onClick={this.handleOnClick.bind(this, user.username, user.user_id)} data-toggle="modal" data-target="#deleteUser" >
                             <span aria-hidden="true" style={{color: "red"}}>&times;</span>
                         </button>}
                         </td>

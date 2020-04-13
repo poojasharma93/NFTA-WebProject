@@ -6,6 +6,7 @@ import { object } from "yup";
 import ChangePassword from "./ChangePassword";
 import Alert from "react-s-alert";
 import Cookies from "universal-cookie";
+import {Redirect} from "react-router-dom";
 
 import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
@@ -35,7 +36,7 @@ class AccountInformation extends Component {
         }
       })
       .then(
-        data => {
+        data => { !this.state.redirect &&
           this.setState({
             user: data.filter(us => {
               return us.username == cookies.get("username");
@@ -78,6 +79,12 @@ class AccountInformation extends Component {
   };
 
   render() {
+    if(this.state.redirect){
+      return <Redirect to={{
+        pathname: '/',
+        state: { status: '401' }
+    }}/>
+  }
     console.log(this.state.user);
     return (
       <div class="container-fluid selector-for-some-widget">
@@ -130,7 +137,7 @@ class AccountInformation extends Component {
               <div class="divider" />
             </div>
             <div class="row">
-              <ChangePassword user={this.state.user} />
+              <ChangePassword user={this.state.user}/>
             </div>
             <div class="divider" />
             <div class="text_center">

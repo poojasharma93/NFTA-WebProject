@@ -67,6 +67,7 @@ class LoginPage extends React.Component {
       .then(result => this.setState({loginResult: result}))
       .catch(error => this.setState({error: error}));
       } catch (e) {
+          console.log('error',e)
           this.setState({error:e});
       }
       console.log(this.state.loginResult)
@@ -127,8 +128,8 @@ class LoginPage extends React.Component {
               <br></br>
               <span style={{color: "red"}}>{this.state.fieldErrors["loginError"]}</span>
             </div>
-            <div class="form-group">
-                <a href="#" class="ForgotPwd">Forgot Password?</a>
+            <div className="form-group">
+                <a href="/forgotPassword" className="ForgotPwd">Forgot Password?</a>
             </div>
         </form>
       </div>
