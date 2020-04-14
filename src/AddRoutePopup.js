@@ -24,8 +24,10 @@ class AddRoutePopup extends Component {
 
   validateFields = e => {
     e.preventDefault();
+    this.setState({addRouteResult:""})
     let fieldErrors = {};
     let isValid = true;
+    this.setState({message:""})
     if (!this.state.routeId) {
       isValid = false;
       fieldErrors["routeId"] = "Please enter routeId";
@@ -44,6 +46,7 @@ class AddRoutePopup extends Component {
 
   async addRoute() {
     console.log(this.state.routeId, this.state.routeInfo);
+    
     try {
       await fetch(window.$url + "/addDropdown", {
         method: "POST",
@@ -69,10 +72,11 @@ class AddRoutePopup extends Component {
     }
 
     console.log("addRouteResult", this.state.addRouteResult);
-    if (this.state.addRouteResult.status === 500) {
-      this.setState({ message: "Id and Value should be Unique" });
-    } else if (this.state.addRouteResult === "") {
+    if (this.state.addRouteResult === "") {
       this.setState({ message: "Added successfully!" });
+    }
+    else if (this.state.addRouteResult.status === 500) {
+      this.setState({ message: "Id and Value should be Unique" });
     } else {
       this.setState({ message: this.state.addRouteResult });
     }

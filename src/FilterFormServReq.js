@@ -21,7 +21,6 @@ class FilterFormServReq extends Component {
   }
 
   validateFilters = e =>{
-    e.preventDefault();
     let filtersApplied={};
     if(this.state.requestID || this.state.requestType || this.state.requestUser || this.state.stopID || this.state.direction){
         filtersApplied["requestID"] = this.state.requestID;
@@ -35,6 +34,18 @@ class FilterFormServReq extends Component {
     this.setState({filtersApplied: filtersApplied})
     this.submitForm();
 
+  }
+
+  clearFilters = e =>{
+    console.log('here')
+    this.setState({requestID: "", requestType:"", requestUser:"", stopID:"", direction:"", isFiltersApplied: false});
+    this.validateFilters(e);
+  }
+
+  displayFilter(name, value){
+    return (
+    <div id="filterValues" className="text-muted d-inline border-bottom col-md-2">{name} - {value}</div>
+    )
   }
 
   submitForm() {
@@ -53,6 +64,7 @@ class FilterFormServReq extends Component {
               name="requestID"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
+              value={this.state.requestID}
               onChange={this.handleUserInput}
             />
             Stop ID
@@ -60,6 +72,7 @@ class FilterFormServReq extends Component {
               name="stopID"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
+              value={this.state.stopID}
               onChange={this.handleUserInput}
             />
             Direction
@@ -67,6 +80,7 @@ class FilterFormServReq extends Component {
               name="direction"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
+              value={this.state.direction}
               onChange={this.handleUserInput}
             />
           </div>
@@ -76,6 +90,7 @@ class FilterFormServReq extends Component {
               name="requestType"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
+              value={this.state.requestType}
               onChange={this.handleUserInput}
             />
             Request User
@@ -83,6 +98,7 @@ class FilterFormServReq extends Component {
               name="requestUser"
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
+              value={this.state.requestUser}
               onChange={this.handleUserInput}
             />
             </div>
@@ -97,12 +113,12 @@ class FilterFormServReq extends Component {
           {this.state.isFiltersApplied && 
             <div><i><b>Filters: &nbsp; </b>
             
-            {this.state.filtersApplied["requestID"] && <text>Request ID- {this.state.filtersApplied["requestID"]} &nbsp; &nbsp;</text>}
-              {this.state.filtersApplied["stopID"] && <text>Stop ID- {this.state.filtersApplied["stopID"]} &nbsp; &nbsp; </text>}
-              {this.state.filtersApplied["direction"] && <text>Direction- {this.state.filtersApplied["direction"]} &nbsp; &nbsp; </text>}
-              {this.state.filtersApplied["requestType"] && <text>Request Type- {this.state.filtersApplied["requestType"]} &nbsp; &nbsp; </text>}
-              {this.state.filtersApplied["requestUser"] && <text>Request User- {this.state.filtersApplied["requestUser"]} &nbsp; &nbsp; </text>}
-            
+            {this.state.filtersApplied["requestID"] && this.displayFilter("Request ID", this.state.filtersApplied["requestID"])}
+              {this.state.filtersApplied["stopID"] && this.displayFilter("Stop ID", this.state.filtersApplied["stopID"])}
+              {this.state.filtersApplied["direction"] && this.displayFilter("Direction", this.state.filtersApplied["direction"])}
+              {this.state.filtersApplied["requestType"] && this.displayFilter("Request Type", this.state.filtersApplied["requestType"])}
+              {this.state.filtersApplied["requestUser"] && this.displayFilter("Request User", this.state.filtersApplied["requestUser"])}
+              <button className="btn btn-link" onClick={this.clearFilters}>Clear All</button>
             </i></div>}
         </form>
 

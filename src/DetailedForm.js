@@ -46,7 +46,6 @@ class detailedForm extends React.Component {
 
         body: JSON.stringify(this.props.details[0])
       });
-      alert("CHANGES SAVED");
       Alert.success("CHANGES SAVED", {
         position: "top-right",
         effect: "slide",

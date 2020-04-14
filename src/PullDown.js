@@ -23,7 +23,7 @@ class PullDown extends Component {
           <div>
             <ul className="navbar-nav">
               <li id="routeListed">
-                <NavLink to="/routeListed" activeClassName="navbar2_li--active">
+                <NavLink to="/dropdowns" activeClassName="navbar2_li--active">
                   Routes
                 </NavLink>
               </li>
@@ -53,7 +53,7 @@ class PullDown extends Component {
 
         <Route
           exact
-          path="/routeListed"
+          path="/dropdowns"
           render={() => <Routes status={"route"} />}
         />
         <Route

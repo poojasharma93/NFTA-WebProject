@@ -71,11 +71,11 @@ class Home extends Component {
               </li>
               <li>
                 <NavLink
-                  to="/routes"
+                  to="/dropdowns"
                   activeClassName="navbar__link--active"
                   exact
                 >
-                  Routes
+                  Dropdowns
                 </NavLink>
               </li>
               <li>
@@ -127,7 +127,7 @@ class Home extends Component {
               exact
             />
             <Route
-              path="/(routes|routeListed|direction|position|fastenedTO|county)"
+              path="/(dropdowns|direction|position|fastenedTO|county)"
               component={PullDown}
               exact
             />

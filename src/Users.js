@@ -100,7 +100,7 @@ class Users extends Component {
     console.log(users);
 
     return (
-      <div>
+      <div className="container-fluid">
         <table className="table">
           <thead>
             <tr>

@@ -8,7 +8,9 @@ class FilterForm extends Component {
       stopID: "",
       direction: "",
       county: "",
-      requestID: ""
+      requestID: "",
+      filtersApplied: {},
+      isFiltersApplied: false
     };
   }
 
@@ -18,8 +20,36 @@ class FilterForm extends Component {
     this.setState({[name]: value})
   }
 
-  submitForm = e => {
-    e.preventDefault();
+  validateFilters = e =>{
+    let filtersApplied={};
+    if(this.state.transactionNo || this.state.stopID || this.state.direction || this.state.county || this.state.requestID){
+        filtersApplied["requestID"] = this.state.requestID;
+        filtersApplied["transactionNo"] = this.state.transactionNo;
+        filtersApplied["stopID"] = this.state.stopID;
+        filtersApplied["county"] = this.state.county;
+        filtersApplied["direction"] = this.state.direction;
+        this.setState({isFiltersApplied: true})
+    }
+    
+    this.setState({filtersApplied: filtersApplied})
+    this.submitForm();
+
+  }
+
+  clearFilters = e =>{
+    console.log('here')
+    this.setState({transactionNo: "", stopID:"", county:"", requestID:"", direction:"", isFiltersApplied: false});
+    this.validateFilters(e);
+  }
+
+  displayFilter(name, value){
+    return (
+    <div id="filterValues" className="text-muted d-inline border-bottom col-md-2">{name} - {value}</div>
+    
+    )
+  }
+
+  submitForm () {
     this.props.handleOnClick(this.state);
   };
 
@@ -31,6 +61,7 @@ class FilterForm extends Component {
             Transaction No
             <input
               name="transactionNo"
+              value={this.state.transactionNo}
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
               onChange={this.handleUserInput}
@@ -38,6 +69,7 @@ class FilterForm extends Component {
             Stop ID
             <input
               name="stopID"
+              value={this.state.stopID}
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
               onChange={this.handleUserInput}
@@ -45,6 +77,7 @@ class FilterForm extends Component {
             Direction
             <input
               name="direction"
+              value={this.state.direction}
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
               onChange={this.handleUserInput}
@@ -54,6 +87,7 @@ class FilterForm extends Component {
             County
             <input
               name="county"
+              value={this.state.county}
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
               onChange={this.handleUserInput}
@@ -61,6 +95,7 @@ class FilterForm extends Component {
             Request ID
             <input
               name="requestID"
+              value={this.state.requestID}
               type="text"
               className="form-control ml-2 mb-2 mr-sm-4"
               onChange={this.handleUserInput}
@@ -71,9 +106,21 @@ class FilterForm extends Component {
               type="button"
               value="Submit"
               className="form-control ml-2 mb-2 mr-sm-4"
-              onClick={this.submitForm}
+              onClick={this.validateFilters}
             />
           </div>
+
+          {this.state.isFiltersApplied && 
+            <div><i><b>Filters: &nbsp; </b>
+            
+            {this.state.filtersApplied["transactionNo"] && this.displayFilter("Transaction No", this.state.filtersApplied["transactionNo"])}
+              {this.state.filtersApplied["stopID"] && this.displayFilter("Stop ID", this.state.filtersApplied["stopID"])}
+              {this.state.filtersApplied["direction"] && this.displayFilter("Direction", this.state.filtersApplied["direction"])}
+              {this.state.filtersApplied["county"] && this.displayFilter("County", this.state.filtersApplied["county"])}
+              {this.state.filtersApplied["requestID"] && this.displayFilter("Request ID", this.state.filtersApplied["requestID"])}
+              <button className="btn btn-link" onClick={this.clearFilters}>Clear All</button>
+            </i></div>}
+
         </form>
       </div>
     );

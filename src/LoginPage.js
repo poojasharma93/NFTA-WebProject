@@ -63,6 +63,7 @@ class LoginPage extends React.Component {
         .then(result => this.setState({ loginResult: result }))
         .catch(error => this.setState({ error: error }));
     } catch (e) {
+      console.log("error", e);
       this.setState({ error: e });
     }
     console.log(this.state.loginResult);
@@ -98,7 +99,7 @@ class LoginPage extends React.Component {
     }
 
     return (
-      <div className="container-fluid login-container centered">
+      <div className="container-fluid login-container w-75">
         <div className="row">
           <div className="col-md-6 login-form">
             <h3>NFTA Web Console</h3>
@@ -143,8 +144,8 @@ class LoginPage extends React.Component {
                   {this.state.fieldErrors["loginError"]}
                 </span>
               </div>
-              <div class="form-group">
-                <a href="#" class="ForgotPwd">
+              <div className="form-group">
+                <a href="/forgotPassword" className="ForgotPwd">
                   Forgot Password?
                 </a>
               </div>

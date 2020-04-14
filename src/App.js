@@ -10,6 +10,8 @@ import {
 } from "react-router-dom";
 import Home from "./Home";
 import LoginPage from "./LoginPage";
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 
 class App extends React.Component {
   render() {
@@ -18,10 +20,12 @@ class App extends React.Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={LoginPage} />
-            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|routes|account|users)" component={Home} />
+            <Route exact path="/forgotPassword" component={ForgotPassword} />
+            <Route exact path="/confirmreset" component={ResetPassword} />
+            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|dropdowns|account|users)" component={Home} />
             <Route
               exact
-              path="/(transactions|inprogress|resolved|serviceRequest|routes|account|routeListed|direction|position|fastenedTO|county)"
+              path="/(transactions|inprogress|resolved|serviceRequest|dropdowns|account|direction|position|fastenedTO|county)"
               component={Home}
             />
             <Route path="/transactionDetail/:trans" component={Home} exact />

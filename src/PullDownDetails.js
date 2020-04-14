@@ -8,54 +8,54 @@ class PullDownDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      routes: [],
+      dropdowns: [],
       error: "",
-      routePopup: false,
-      routeId: "",
-      routeName: "",
+      dropdownPopup: false,
+      dropdownId: "",
+      dropdownInfo: "",
       message: "",
-      addRouteResult: "",
+      addDropdownResult: "",
       redirect: false,
       fieldErrors: {}
     };
   }
 
-  closeRoutePopup = e => {
-    e.preventDefault();
-    this.handleOnClose(this.state);
-  };
-  handleOnClose = e => {
-    window.location.reload();
-  };
-
-  handleRouteInput = e => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState({ [name]: value });
-  };
-
   validateFields = e => {
     e.preventDefault();
+    this.setState({ addDropdownResult: "" });
     let fieldErrors = {};
     let isValid = true;
-    if (!this.state.routeId) {
-      isValid = false;
-      fieldErrors["routeId"] = "Please enter routeId";
-    }
+    this.setState({ message: "" });
 
-    if (!this.state.routeInfo) {
+    if (!this.state.dropdownInfo) {
       isValid = false;
-      fieldErrors["routeInfo"] = "Please enter routeInfo";
+      fieldErrors["dropdownInfo"] =
+        "Please enter " + this.props.status + "Info";
     }
 
     console.log(fieldErrors);
     console.log(isValid);
     this.setState({ fieldErrors: fieldErrors });
-    if (isValid) this.addRoute();
+    if (isValid) this.addDropdown();
   };
 
-  async addRoute() {
-    console.log(this.state.routeId, this.state.routeInfo);
+  closeDropdownPopup = e => {
+    e.preventDefault();
+    this.handleOnClose(this.state);
+  };
+
+  handleOnClose = e => {
+    window.location.reload();
+  };
+
+  handleDropdownInput = e => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({ [name]: value });
+  };
+
+  async addDropdown() {
+    console.log(this.state.dropdownId, this.state.dropdownInfo);
     try {
       await fetch(window.$url + "/addDropdown", {
         method: "POST",
@@ -67,32 +67,28 @@ class PullDownDetails extends Component {
         },
 
         body: JSON.stringify({
-          dropdown_value: this.state.routeId,
-          display_name: this.state.routeInfo,
+          dropdown_value: this.state.dropdownId,
+          display_name: this.state.dropdownInfo,
           dropdown_type: this.props.status
         })
       })
         .then(response => response.json())
-        .then(result => this.setState({ addRouteResult: result }))
+        .then(result => this.setState({ addDropdownResult: result }))
         .catch(error => this.setState({ error: error }));
     } catch (e) {
       this.setState({ error: e });
       console.log(e);
     }
 
-    console.log("addRouteResult", this.state.addRouteResult);
-    if (this.state.addRouteResult.status === 500) {
+    console.log("addDropdownResult", this.state.addDropdownResult);
+    if (this.state.addDropdownResult.status === 500) {
       this.setState({ message: "Id and Value should be Unique" });
-    } else if (this.state.addRouteResult === "") {
+    } else if (this.state.addDropdownResult === "") {
       this.setState({ message: "Added successfully!" });
     } else {
-      this.setState({ message: this.state.addRouteResult });
+      this.setState({ message: this.state.addDropdownResult });
     }
   }
-
-  closeModal = e => {
-    //window.location.reload();
-  };
 
   componentDidMount() {
     console.log(this.props.status);
@@ -111,7 +107,7 @@ class PullDownDetails extends Component {
       .then(
         data => {
           this.setState({
-            routes: data
+            dropdowns: data
           });
         },
         error => {
@@ -121,7 +117,7 @@ class PullDownDetails extends Component {
         }
       );
 
-    console.log("state", this.state.routes);
+    console.log("state", this.state.dropdowns);
   }
 
   async handleOnClick(e, dropdown_id) {
@@ -141,7 +137,7 @@ class PullDownDetails extends Component {
         })
       })
         .then(response => response.text())
-        .then(result => this.setState({ deleteRouteResult: result }))
+        .then(result => this.setState({ deleteDropdownResult: result }))
         .catch(error => this.setState({ error: error }));
     } catch (e) {
       this.setState({ error: e });
@@ -160,12 +156,8 @@ class PullDownDetails extends Component {
         />
       );
     }
-    const { routes } = this.state;
-    console.log(routes);
-
-    if (routes.status === false) {
-      return <h1>{routes.message}</h1>;
-    }
+    const { dropdowns } = this.state;
+    console.log(dropdowns);
 
     return (
       <div>
@@ -176,16 +168,17 @@ class PullDownDetails extends Component {
               <th scope="col">{this.props.status} Info</th>
               <th scope="col">Delete</th>
             </tr>
-            {routes.map(route => (
-              <tr key={route.dropdown_id}>
-                <td> {route.dropdown_value} </td>
-                <td> {route.display_name}</td>
+            {dropdowns.map(dropdown => (
+              <tr key={dropdown.dropdown_id}>
+                <td> {dropdown.dropdown_value} </td>
+                <td> {dropdown.display_name}</td>
                 <td>
-                  {" "}
                   <button
                     type="submit"
                     className="btn btn-danger"
-                    onClick={() => this.handleOnClick(this, route.dropdown_id)}
+                    onClick={() =>
+                      this.handleOnClick(this, dropdown.dropdown_id)
+                    }
                   >
                     Delete
                   </button>
@@ -200,14 +193,14 @@ class PullDownDetails extends Component {
             type="button"
             className="btn btn-primary"
             data-toggle="modal"
-            data-target="#addRoute"
+            data-target="#addDropdown"
           >
             Add {this.props.status}
           </button>
 
           <div
             className="modal fade"
-            id="addRoute"
+            id="addDropdown"
             tabindex="-1"
             role="dialog"
             aria-labelledby="exampleModalCenterTitle"
@@ -219,42 +212,36 @@ class PullDownDetails extends Component {
                   <h5 className="modal-title" id="exampleModalLongTitle">
                     {this.props.status}
                   </h5>
-                  <button
-                    type="button"
-                    className="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                 </div>
                 <div className="modal-body">
                   <div className="container-fluid">
                     <div className="row">
                       {this.props.status} ID
                       <input
-                        type="text"
+                        type="number"
                         className="form-control ml-2 mb-2 mr-sm-4"
-                        name="routeId"
-                        onChange={this.handleRouteInput}
+                        name="dropdownId"
+                        onChange={this.handleDropdownInput}
                       />
-                      <span style={{ color: "red" }}>
-                        {this.state.fieldErrors[this.props.status + "Id"]}
-                      </span>
                     </div>
                     <div className="row">
                       {this.props.status} Info
                       <input
                         type="text"
                         className="form-control ml-2 mb-2 mr-sm-4"
-                        name="routeInfo"
-                        onChange={this.handleRouteInput}
+                        name="dropdownInfo"
+                        onChange={this.handleDropdownInput}
                       />
                       <span style={{ color: "red" }}>
-                        {this.state.fieldErrors[this.props.status + "Info"]}
+                        {this.state.fieldErrors["dropdownInfo"]}
                       </span>
                     </div>
-                    <div className="row">{this.state.message}</div>
+                    <div
+                      className="row justify-content-md-center"
+                      style={{ color: "blue" }}
+                    >
+                      {this.state.message}
+                    </div>
                   </div>
                 </div>
                 <div className="modal-footer">
@@ -262,7 +249,6 @@ class PullDownDetails extends Component {
                     type="button"
                     className="btn btn-primary"
                     onClick={this.validateFields}
-                    // onClick={() => this.addRoute()}
                   >
                     Save {this.props.status}
                   </button>
@@ -270,7 +256,7 @@ class PullDownDetails extends Component {
                     type="button"
                     class="btn btn-secondary"
                     data-dismiss="modal"
-                    onClick={this.closeRoutePopup}
+                    onClick={this.closeDropdownPopup}
                   >
                     Close
                   </button>
