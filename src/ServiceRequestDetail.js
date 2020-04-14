@@ -14,7 +14,7 @@ class ServiceRequestDetail extends React.Component {
 
   componentDidMount() {
     let id = this.props.match.params.servReq;
-    let url = "http://localhost:8080/serviceRequest?id=" + id;
+    let url = window.$url+"/serviceRequest?id=" + id;
     console.log(url);
     fetch(url, {
       headers: {
