@@ -98,7 +98,7 @@ class LoginPage extends React.Component {
     }
 
     return (
-      <div className="container-fluid login-container">
+      <div className="container-fluid login-container centered">
         <div className="row">
           <div className="col-md-6 login-form">
             <h3>NFTA Web Console</h3>

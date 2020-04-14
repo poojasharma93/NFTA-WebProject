@@ -15,7 +15,8 @@ class PullDownDetails extends Component {
       routeName: "",
       message: "",
       addRouteResult: "",
-      redirect: false
+      redirect: false,
+      fieldErrors: {}
     };
   }
 
@@ -31,6 +32,26 @@ class PullDownDetails extends Component {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({ [name]: value });
+  };
+
+  validateFields = e => {
+    e.preventDefault();
+    let fieldErrors = {};
+    let isValid = true;
+    if (!this.state.routeId) {
+      isValid = false;
+      fieldErrors["routeId"] = "Please enter routeId";
+    }
+
+    if (!this.state.routeInfo) {
+      isValid = false;
+      fieldErrors["routeInfo"] = "Please enter routeInfo";
+    }
+
+    console.log(fieldErrors);
+    console.log(isValid);
+    this.setState({ fieldErrors: fieldErrors });
+    if (isValid) this.addRoute();
   };
 
   async addRoute() {
@@ -217,6 +238,9 @@ class PullDownDetails extends Component {
                         name="routeId"
                         onChange={this.handleRouteInput}
                       />
+                      <span style={{ color: "red" }}>
+                        {this.state.fieldErrors[this.props.status + "Id"]}
+                      </span>
                     </div>
                     <div className="row">
                       {this.props.status} Info
@@ -226,6 +250,9 @@ class PullDownDetails extends Component {
                         name="routeInfo"
                         onChange={this.handleRouteInput}
                       />
+                      <span style={{ color: "red" }}>
+                        {this.state.fieldErrors[this.props.status + "Info"]}
+                      </span>
                     </div>
                     <div className="row">{this.state.message}</div>
                   </div>
@@ -234,7 +261,8 @@ class PullDownDetails extends Component {
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={() => this.addRoute()}
+                    onClick={this.validateFields}
+                    // onClick={() => this.addRoute()}
                   >
                     Save {this.props.status}
                   </button>
@@ -251,7 +279,6 @@ class PullDownDetails extends Component {
             </div>
           </div>
         </form>
-        <script>$('#addRoute').on('hidden.bs.modal', function () {});</script>
       </div>
     );
   }
