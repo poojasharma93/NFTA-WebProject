@@ -109,7 +109,7 @@ class detailedForm extends React.Component {
                   type="text"
                   class="form-control text-light bg-dark"
                   id="validationDefault02"
-                  value={trans.request_id}
+                  value={trans.work_request ? trans.work_request.request_id : ""}
                   disabled={true}
                 />
               </div>
