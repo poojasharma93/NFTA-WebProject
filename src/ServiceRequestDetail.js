@@ -14,7 +14,7 @@ class ServiceRequestDetail extends React.Component {
 
   componentDidMount() {
     let id = this.props.match.params.servReq;
-    let url = "http://localhost:8080/serviceRequest?id=" + id;
+    let url = window.$url + "/serviceRequest?id=" + id;
     console.log(url);
     fetch(url, {
       headers: {
@@ -57,61 +57,150 @@ class ServiceRequestDetail extends React.Component {
     const { serviceRequest } = this.state;
 
     return (
-      <div className="container-fluid">
+        <div class="container-fluid selector-for-some-widget">
         <h3 className="heading">Service Request Details</h3>
+        {serviceRequest.map(servReq => (
+          <form key={servReq.request_id} className="formDetail">
+            <div class="row">
+                <div class="col-md-3 mb-6">
+                    <label for="validationDefault01">Request ID</label>
+                    <input
+                    type="text"
+                    class="form-control text-light bg-dark"
+                    id="validationDefault01"
+                    value={servReq.request_id}
+                    disabled={true}
+                    />
+                </div>
+                <div class="col-md-3 mb-6">
+                    <label for="validationDefault02">Stop ID</label>
+                    <input
+                    type="text"
+                    class="form-control text-light bg-dark"
+                    id="validationDefault02"
+                    value={servReq.stop_id}
+                    disabled={true}
+                    />
+                </div>
+                <div class="col-md-3 mb-6">
+                    <label for="validationDefault02">Direction</label>
+                    <input
+                    type="text"
+                    class="form-control text-light bg-dark"
+                    id="validationDefault02"
+                    value={servReq.direction? servReq.direction.display_name: ""}
+                    disabled={true}
+                    />
+                </div>
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault02">Location</label>
+                <input
+                  type="text"
+                  class="form-control text-light bg-dark"
+                  id="validationDefault02"
+                  value={servReq.location}
+                  disabled={true}
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault02">Request Type</label>
+                <input
+                  type="text"
+                  class="form-control text-light bg-dark"
+                  id="validationDefault02"
+                  value={servReq.request_type}
+                  disabled={true}
+                />
+              </div>
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault02">Reason</label>
+                <input
+                  type="text"
+                  class="form-control text-light bg-dark"
+                  id="validationDefault02"
+                  value={servReq.reason}
+                  disabled={true}
+                />
+              </div>
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault02">Status</label>
+                <input
+                  type="text"
+                  class="form-control text-light bg-dark"
+                  id="validationDefault02"
+                  value={servReq.status}
+                  disabled={true}
+                />
+              </div>
+              <div class="col-md-3 mb-6">
+                <label for="validationDefault02">Admin User</label>
+                <input
+                  type="text"
+                  class="form-control text-light bg-dark"
+                  id="validationDefault02"
+                  value={servReq.requested_user}
+                  disabled={true}
+                />
+              </div>
+            </div>
+            <hr class="dotted"></hr>
+            <div class="row">
+              <div class="form-group col-md-6 mb-6">
+                <label for="exampleFormControlTextarea1">
+                  Additional Information
+                </label>
+                <textarea
+                  class="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="3"
+                  value={servReq.additional_information}
+                  disabled={true}
+                ></textarea>
+              </div>
+              <div class="dropdown form-group col-md-6 mb-6">
+                <button
+                  class="btn btn-primary dropdown-toggle col-md-6 mb-6"
+                  type="button"
+                  id="dropdownMenu2"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Routes
+                </button>
 
-                <table className="tableService">
-                <thead>
-                    {serviceRequest.map(servReq => (
-                    <tr key={servReq.request_id}>
-                    <tr>
-                    <td className="tdStyle">Request ID</td>
-                    <td className="tdOtherStyle">{servReq.request_id}</td>
-                    
-                    <td className="tdStyle">Stop ID</td>
-                    <td className="tdOtherStyle"> {servReq.stop_id} </td>
-                    </tr>
-                    <tr>
-                    <td className="tdStyle">Direction</td>
-                    <td className="tdOtherStyle"> {servReq.direction? servReq.direction.display_name: ""} </td>
-                    
-                    <td className="tdStyle">Location</td>
-                    <td className="tdOtherStyle"> {servReq.location}</td>
-                    </tr>
-                    <tr>
-                    <td className="tdStyle">Request Type</td>
-                    <td className="tdOtherStyle"> {servReq.request_type}</td>
-                    
-                    <td className="tdStyle">Reason</td>
-                    <td className="tdOtherStyle"> {servReq.reason}</td>
-                    </tr>
-                    <tr>
-                    <td className="tdStyle">Route</td>
-                    
-                    <td className="tdOtherStyle">{servReq.route.map(function(r,i){ return <td key={i}>{r.display_name}</td>})}</td>
-                    
-                    <td className="tdStyle">Status</td>
-                    <td className="tdOtherStyle"> {servReq.status}</td>
-                    </tr>
-                    <tr>
-                    <td className="tdStyle">Admin User</td>
-                    <td className="tdOtherStyle"> {servReq.requested_user}</td>
-                    
-                    <td className="tdStyle">Additional Information</td>
-                    <td className="tdOtherStyle"> {servReq.additional_information}</td>
-                    </tr>
-
-                    <tr>
-                    <td>
-                        {servReq.image0 ? (
-                        <a class="lightbox " href="#dog">
-                            <img
-                            src={servReq.image0}
-                            class="thumbnail float-left"
-                            alt="No preview"
-                            />
-                        </a>
-                        ) : (
+                <div
+                  class="dropdown-menu col-md-6 mb-6"
+                  aria-labelledby="dropdownMenu2 "
+                >
+                  {servReq.route
+                    ? servReq.route.map(rot => (
+                        <button
+                          class="dropdown-item "
+                          type="button"
+                          key={rot.dropdown_id}
+                        >
+                          {rot.display_name}
+                        </button>
+                      ))
+                    : ""}
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6 ">
+                {servReq.image0 ? (
+                    <a class="lightbox " href="#dog">
+                    <img
+                        src="https://images.pexels.com/photos/136743/pexels-photo-136743.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                        class="thumbnail float-left"
+                        alt="No preview"
+                    />
+                    </a>
+                    ) : (
                         <h1></h1>
                         )}
                         <div
@@ -121,53 +210,53 @@ class ServiceRequestDetail extends React.Component {
                         <img src={servReq.image0} alt="No preview" />
                         <a class="lightbox-close" href="#"></a>
                         </div>
-                    </td>
-                    <td>
+                    </div>
+
+                        <div class="col-md-4 mb-6 ">
                         {servReq.image1 ? (
-                        <a class="lightbox " href="#dog">
-                            <img
-                            src={servReq.image1}
-                            class="thumbnail float-left"
-                            alt="No preview"
-                            />
-                        </a>
-                        ) : (
-                        <h1></h1>
-                        )}
-                        <div
-                        class="lightbox-target container-fluid selector-for-some-widget"
-                        id="dog"
-                        >
-                        <img src={servReq.image1} alt="No preview" />
-                        <a class="lightbox-close" href="#"></a>
+                            <a class="lightbox " href="#dog">
+                                <img
+                                src={servReq.image1}
+                                class="thumbnail float-left"
+                                alt="No preview"
+                                />
+                            </a>
+                            ) : (
+                            <h1></h1>
+                            )}
+                            <div
+                            class="lightbox-target container-fluid selector-for-some-widget"
+                            id="dog"
+                            >
+                            <img src={servReq.image1} alt="No preview" />
+                            <a class="lightbox-close" href="#"></a>
+                            </div>
                         </div>
-                    </td>
-                    <td>
+                        <div class="col-md-4 mb-6 ">
                         {servReq.image2 ? (
-                        <a class="lightbox " href="#dog">
-                            <img
-                            src={servReq.image2}
-                            class="thumbnail float-left"
-                            alt="No preview"
-                            />
-                        </a>
-                        ) : (
-                        <h1></h1>
-                        )}
-                        <div
-                        class="lightbox-target container-fluid selector-for-some-widget"
-                        id="dog"
-                        >
-                        <img src={servReq.image2} alt="No preview" />
-                        <a class="lightbox-close" href="#"></a>
+                            <a class="lightbox " href="#dog">
+                                <img
+                                src={servReq.image2}
+                                class="thumbnail float-left"
+                                alt="No preview"
+                                />
+                            </a>
+                            ) : (
+                            <h1></h1>
+                            )}
+                            <div
+                            class="lightbox-target container-fluid selector-for-some-widget"
+                            id="dog"
+                            >
+                            <img src={servReq.image2} alt="No preview" />
+                            <a class="lightbox-close" href="#"></a>
+                            </div>
                         </div>
-                    </td>
-                    </tr>
-                </tr>
-            ))}
-          </thead>
-        </table>
-      </div>
+                </div>
+
+            </form>))}
+        </div>
+                    
     );
   }
 

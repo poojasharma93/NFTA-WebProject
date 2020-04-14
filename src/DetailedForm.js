@@ -472,7 +472,7 @@ class detailedForm extends React.Component {
                   class="dropdown-menu col-md-6 mb-6"
                   aria-labelledby="dropdownMenu2 "
                 >
-                  {trans.direction
+                  {trans.routes
                     ? trans.routes.map(rot => (
                         <button
                           class="dropdown-item "
