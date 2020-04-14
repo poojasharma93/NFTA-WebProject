@@ -16,8 +16,10 @@ import AccountInformation from "./AccountInformation";
 import TransactionDetail from "./TransactionDetail";
 import ServiceRequestDetail from "./ServiceRequestDetail";
 import Routes from "./Routes";
-import Cookies from 'universal-cookie';
-import Users from './Users';
+import PullDown from "./PullDown";
+import Cookies from "universal-cookie";
+
+import Users from "./Users";
 
 const cookies = new Cookies();
 
@@ -36,12 +38,15 @@ class Home extends Component {
   };
 
   render() {
-    if(cookies.get('usertoken')==undefined || cookies.get('usertoken')===""){
-     return (<Redirect to={'/'}/>)
+    if (
+      cookies.get("usertoken") == undefined ||
+      cookies.get("usertoken") === ""
+    ) {
+      return <Redirect to={"/"} />;
     }
 
-    if(this.state.redirect){
-      return (<Redirect to={'/'}/>)
+    if (this.state.redirect) {
+      return <Redirect to={"/"} />;
     }
 
     return (
@@ -66,11 +71,11 @@ class Home extends Component {
               </li>
               <li>
                 <NavLink
-                  to="/routes"
+                  to="/dropdowns"
                   activeClassName="navbar__link--active"
                   exact
                 >
-                  Routes
+                  Dropdowns
                 </NavLink>
               </li>
               <li>
@@ -102,17 +107,33 @@ class Home extends Component {
                 </NavLink>
               </li>
             </ul>
-          </nav>           
+          </nav>
 
           <Switch>
-            <Route path="/(transactions|open|inprogress|resolved)" component={TransactionHome} exact/>
-            <Route path="/transactionDetail/:trans" component={TransactionDetail} exact/>
+            <Route
+              path="/(transactions|open|inprogress|resolved)"
+              component={TransactionHome}
+              exact
+            />
+            <Route
+              path="/transactionDetail/:trans"
+              component={TransactionDetail}
+              exact
+            />
             <Route path="/serviceRequest" component={ServiceRequest} exact />
-            <Route path="/serviceRequestDetail/:servReq" component={ServiceRequestDetail} exact />
-            <Route path="/routes" component={Routes} exact />
+            <Route
+              path="/serviceRequestDetail/:servReq"
+              component={ServiceRequestDetail}
+              exact
+            />
+            <Route
+              path="/(dropdowns|direction|position|fastenedTO|county)"
+              component={PullDown}
+              exact
+            />
+            {/* Incoming change */}
             <Route path="/account" component={AccountInformation} exact />
             <Route path="/users" component={Users} exact />
-            
           </Switch>
         </div>
       </div>

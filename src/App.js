@@ -22,10 +22,10 @@ class App extends React.Component {
             <Route exact path="/" component={LoginPage} />
             <Route exact path="/forgotPassword" component={ForgotPassword} />
             <Route exact path="/confirmreset" component={ResetPassword} />
-            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|routes|account|users)" component={Home} />
+            <Route exact path="/(transactions|inprogress|resolved|serviceRequest|dropdowns|account|users)" component={Home} />
             <Route
               exact
-              path="/(transactions|inprogress|resolved|serviceRequest|routes|account)"
+              path="/(transactions|inprogress|resolved|serviceRequest|dropdowns|account|direction|position|fastenedTO|county)"
               component={Home}
             />
             <Route path="/transactionDetail/:trans" component={Home} exact />

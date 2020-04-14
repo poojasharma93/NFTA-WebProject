@@ -1,55 +1,52 @@
-import React from 'react';
-import {Redirect} from 'react-router-dom';
-import Cookies from 'universal-cookie';
-import { strict } from 'assert';
+import React from "react";
+import { Redirect } from "react-router-dom";
+import Cookies from "universal-cookie";
+import { strict } from "assert";
 
 const cookies = new Cookies();
 
 class LoginPage extends React.Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       email: "",
       password: "",
       redirect: false,
-      fieldErrors: '',
+      fieldErrors: "",
       loginResult: "",
       errror: ""
-    }
+    };
   }
 
-
-  handleChange = e =>{
+  handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
-  }
+  };
 
-  validateFields = (e) =>{
+  validateFields = e => {
     e.preventDefault();
-    let fieldErrors={};
-    let isValid=true;
-    if(!this.state.email){
-        isValid=false;
-        fieldErrors["email"] = "Please enter Email ID"
+    let fieldErrors = {};
+    let isValid = true;
+    if (!this.state.email) {
+      isValid = false;
+      fieldErrors["email"] = "Please enter Email ID";
     }
 
-    if(!this.state.password){
-        isValid=false;
-        fieldErrors["password"] = "Please enter Password"
+    if (!this.state.password) {
+      isValid = false;
+      fieldErrors["password"] = "Please enter Password";
     }
 
-    console.log(fieldErrors)
-    console.log(isValid)
-    this.setState({fieldErrors: fieldErrors})
-    if(isValid)
-        this.handleSubmit();
-  }
+    console.log(fieldErrors);
+    console.log(isValid);
+    this.setState({ fieldErrors: fieldErrors });
+    if (isValid) this.handleSubmit();
+  };
 
-  async handleSubmit(){
-      try {
-        await fetch(window.$url+"/authenticate", {
+  async handleSubmit() {
+    try {
+      await fetch(window.$url + "/authenticate", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -57,11 +54,10 @@ class LoginPage extends React.Component {
           "Content-type": "application/json"
         },
 
-        body: JSON.stringify(
-          {username: this.state.email,
-          password:this.state.password
-          }
-        )
+        body: JSON.stringify({
+          username: this.state.email,
+          password: this.state.password
+        })
       })
       .then(response => response.json())
       .then(result => this.setState({loginResult: result}))
@@ -84,22 +80,21 @@ class LoginPage extends React.Component {
       
     }
 
-
-
-  render () {
-    
-    if(this.state.redirect){
-      return (<Redirect to={'/transactions'}/>)
+  render() {
+    if (this.state.redirect) {
+      return <Redirect to={"/transactions"} />;
     }
 
-    if(cookies.get('usertoken')!==undefined && cookies.get('usertoken')!=="" &&
-    this.props.location.state===undefined){
-      return (<Redirect to={'/transactions'}/>)
+    if (
+      cookies.get("usertoken") !== undefined &&
+      cookies.get("usertoken") !== "" &&
+      this.props.location.state === undefined
+    ) {
+      return <Redirect to={"/transactions"} />;
     }
 
     return (
-      <div className='container login-container'>
-
+        <div className='container-fluid login-container w-75'>
       <div className="row">
         <div className="col-md-6 login-form">
           <h3>NFTA Web Console</h3>
@@ -133,13 +128,11 @@ class LoginPage extends React.Component {
             </div>
         </form>
       </div>
-
-    </div> 
-  </div>
-
-    )
+    </div>
+    </div>
+    
+    );
   }
 }
-
 
 export default LoginPage;

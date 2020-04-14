@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import FilterForm from "./FilterForm";
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 import { Redirect } from "react-router-dom";
 
 const cookies = new Cookies();
@@ -14,69 +14,64 @@ class TransactionInProgress extends Component {
     };
   }
 
-    handleOnClick = (e) => {
-        let filterTransNo=e.transactionNo;
-        let filterStopID=e.stopID;
-        let filterDirection=e.direction;
-        let filterCounty=e.county;
-        let filterRequestID=e.requestID;
+  handleOnClick = e => {
+    let filterTransNo = e.transactionNo;
+    let filterStopID = e.stopID;
+    let filterDirection = e.direction;
+    let filterCounty = e.county;
+    let filterRequestID = e.requestID;
 
-        let url = window.$url + "/transaction?status=In Progress&";
-        console.log(filterRequestID, filterStopID, filterDirection);
-        
-        if(filterTransNo!==""){
-            url=url+"transaction_no=" + filterTransNo + "&";
-        }
-        if(filterStopID!==""){
-            url=url+"id="+filterStopID + "&";
-        }
-        if(filterDirection!==""){
-            url=url+"direction="+filterDirection + "&";
-        }
-        if(filterCounty!==""){
-            url=url+"country="+filterCounty + "&";
-        }
-        if(filterRequestID!==""){
-            url=url+"requestID="+filterRequestID;
-        }
+    let url = window.$url + "/transaction?status=In Progress&";
+    console.log(filterRequestID, filterStopID, filterDirection);
 
-        fetch(url, {
-          headers: {
-            "Authorization": "Bearer "+ cookies.get('usertoken')
-          }})
-        .then(results => {
-          if(results.status===401)
-          {
-              this.setState({redirect:true});
-          }
-          else{
-              return results.json();
-          }
-        })
-        .then(
-            (data) => {
-                this.setState({ 
-                    transactions: data
-                });
-            }
-            )
-
+    if (filterTransNo !== "") {
+      url = url + "transaction_no=" + filterTransNo + "&";
+    }
+    if (filterStopID !== "") {
+      url = url + "id=" + filterStopID + "&";
+    }
+    if (filterDirection !== "") {
+      url = url + "direction=" + filterDirection + "&";
+    }
+    if (filterCounty !== "") {
+      url = url + "country=" + filterCounty + "&";
+    }
+    if (filterRequestID !== "") {
+      url = url + "requestID=" + filterRequestID;
     }
 
-  componentDidMount() {
-    fetch(window.$url + "/transaction?status=In Progress",{
+    fetch(url, {
       headers: {
-        "Authorization": "Bearer "+ cookies.get('usertoken')
-      }})
-      .then(results => {
-        if(results.status===401)
-        {
-            this.setState({redirect:true});
-        }
-        else{
-            return results.json();
-        }
+        Authorization: "Bearer " + cookies.get("usertoken")
+      }
     })
+      .then(results => {
+        if (results.status === 401) {
+          this.setState({ redirect: true });
+        } else {
+          return results.json();
+        }
+      })
+      .then(data => {
+        this.setState({
+          transactions: data
+        });
+      });
+  };
+
+  componentDidMount() {
+    fetch(window.$url + "/transaction?status=In Progress", {
+      headers: {
+        Authorization: "Bearer " + cookies.get("usertoken")
+      }
+    })
+      .then(results => {
+        if (results.status === 401) {
+          this.setState({ redirect: true });
+        } else {
+          return results.json();
+        }
+      })
       .then(
         data => {
           this.tempTrans = data;
@@ -84,23 +79,27 @@ class TransactionInProgress extends Component {
             transactions: data
           });
         },
-        (error) => {
+        error => {
           this.setState({
             error
           });
         }
-      )
-    }
+      );
+  }
 
   render() {
     const { transactions } = this.state;
     console.log(transactions);
 
-    if(this.state.redirect){
-      return <Redirect to={{
-       pathname: '/',
-       state: { status: '401' }
-       }}/>
+    if (this.state.redirect) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/",
+            state: { status: "401" }
+          }}
+        />
+      );
     }
 
     return (
@@ -120,8 +119,8 @@ class TransactionInProgress extends Component {
               <tr key={trans.transaction_no}>
                 <td> {trans.transaction_no} </td>
                 <td> {trans.stop_id}</td>
-                <td> {trans.direction}</td>
-                <td> {trans.county}</td>
+                <td>{trans.direction ? trans.direction.display_name : ""}</td>
+                <td>{trans.county ? trans.county.display_name : ""}</td>
                 <td>
                   {trans.work_request ? trans.work_request.request_id : ""}
                 </td>

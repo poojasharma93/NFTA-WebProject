@@ -96,6 +96,10 @@ class ForgotPassword extends React.Component {
         }
     }
 
+    back = ()=>{
+          this.setState({redirectToLogin: true})
+    }
+
     render () {
 
         if(this.state.redirectToLogin){
@@ -103,7 +107,8 @@ class ForgotPassword extends React.Component {
         }
     
         return (
-          <div className='container login-container'>
+        
+          <div className='container-fluid forgotpwd-container w-75'>
                 
                 <form> 
                     <div className="form-group">
@@ -120,7 +125,7 @@ class ForgotPassword extends React.Component {
                     <div className="form-group d-inline ">
                      <input type="button" className="btn btn-primary col-md-2 mr-5" value="Submit" onClick={this.validateFields}/>
                      <input type="button" className="btn btn-primary col-md-2 mr-5" hidden value="Button" ref={this.modalButton} data-toggle="modal" data-target="#responseForgotPassword"/>
-                     <input type="button" className="btn btn-primary col-md-2" value="Back" onClick={this.closePopup}/>
+                     <input type="button" className="btn btn-primary col-md-2" value="Back" onClick={this.back}/>
                     </div>
                     
                 </form>
@@ -128,7 +133,7 @@ class ForgotPassword extends React.Component {
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">
                             <div className="modal-body">
-                                <div className="container">
+                                <div className="container-fluid">
                                     <div className="row justify-content-md-center">
                                         {this.state.modalMessage}
                                     </div>

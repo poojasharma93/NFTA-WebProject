@@ -1,12 +1,13 @@
 import React from "react";
+// import Popup from "reactjs-popup";
 import { FormErrors } from "./FormErrors";
+import ImageUpload from "./ImageUpload";
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
 import Cookies from "universal-cookie";
 import { Redirect } from "react-router-dom";
-import Dropzone from "react-dropzone-uploader";
-import ImageUpload from "./ImageUpload";
 
 const cookies = new Cookies();
-
 class ServiceRequest extends React.Component {
   constructor() {
     super();
@@ -29,7 +30,12 @@ class ServiceRequest extends React.Component {
       modalStatus:'',
       redirectToTransactions: false,
       routeOptions:[],
-      directionOptions: []
+      directionOptions: [],
+      image: [],
+      loading: false,
+      image0: "",
+      image1: "",
+      image2: ""
     };
   }
 
@@ -69,8 +75,8 @@ class ServiceRequest extends React.Component {
   handleUserInput = e => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({[name]: value});
-  }
+    this.setState({ [name]: value });
+  };
 
   handleDirectionChange = e =>{
     let value=JSON.parse(e.target.value)
@@ -119,6 +125,38 @@ class ServiceRequest extends React.Component {
       }
   }
 
+  handleSubmit = async (files, allFiles) => {
+    for (var i = 0; i < allFiles.length; i++) {
+      const data = new FormData();
+      data.append("file", allFiles[i].file);
+      data.append("upload_preset", "nftafolder");
+      this.setState({ loading: false });
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/nftaproject/image/upload",
+        {
+          method: "POST",
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+          body: data
+        }
+      );
+      const file = await res.json();
+      if (this.state.image0 == "") {
+        this.setState({ image0: file.secure_url });
+      } else if (this.state.image1 == "") {
+        this.setState({ image1: file.secure_url });
+      } else {
+        this.setState({ image2: file.secure_url });
+      }
+
+      this.setState({ image: [...this.state.image, file.secure_url] });
+    }
+    console.log(this.state.image0);
+    console.log(this.state.image1);
+    this.setState({ loading: false });
+    allFiles.forEach(f => f.remove());
+  };
+
   async postData() {
     let srbody = JSON.stringify({
       stop_id: this.state.stop_id,
@@ -129,11 +167,14 @@ class ServiceRequest extends React.Component {
       reason: this.state.reason,
       route: this.state.routeArray,
       additional_information: this.state.additional_information,
-      requested_user: this.state.requested_user
+      requested_user: this.state.requested_user,
+      image0: this.state.image0,
+      image1: this.state.image1,
+      image2: this.state.image2
     })
 
     try {
-      await fetch(window.$url+"/addServiceRequest", {
+      await fetch(window.$url + "/addServiceRequest", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -143,7 +184,6 @@ class ServiceRequest extends React.Component {
         },
 
         body: srbody
-          // status: "open"
       })
       .then(response => response.json())
       .then(result => this.setState({addServiceRequestResult: result}))
@@ -172,25 +212,29 @@ class ServiceRequest extends React.Component {
     this.modalButton.current.click();
   }
 
-  closePopup = ()=>{
-    if(this.state.modalStatus==='success'){
-      this.setState({redirectToTransactions: true})
+  closePopup = () => {
+    if (this.state.modalStatus === "success") {
+      this.setState({ redirectToTransactions: true });
     }
-  }
+  };
 
   render() {
 
-    if(this.state.redirect){
-      return <Redirect to={{
-       pathname: '/',
-       state: { status: '401' }
-   }}/>
-  }
-
-    if(this.state.redirectToTransactions){
-      return <Redirect to='/transactions'/>
+    if (this.state.redirect) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/",
+            state: { status: "401" }
+          }}
+        />
+      );
     }
 
+    if (this.state.redirectToTransactions) {
+      return <Redirect to="/transactions" />;
+    }
+    
     console.log('routeOptions', this.state.routeOptions)
 
     return(
@@ -294,38 +338,68 @@ class ServiceRequest extends React.Component {
             onChange={this.handleUserInput}
           ></textarea>
         </div>
-        <dividerheight />
-        <ImageUpload />
-        {/* {this.state.isSubmitted && <ImageUpload data={this.state} />} */}
-
         </div>
+        </form>
+        <div className="ImageUpload">
+          <Dropzone
+            onSubmit={this.handleSubmit}
+            maxFiles={3}
+            inputContent="Drop maximum 3 Images"
+            inputWithFilesContent={files => `${3 - files.length} more`}
+            class="divider"
+            type="file"
+            name="file"
+            accept="image/jpeg, image/png"
+            submitButtonContent="Upload"
+            //   submitButtonDisabled={files => files.length < 3}
+          ></Dropzone>
+
+          {this.state.loading ? (
+            <h3>Loading ....</h3>
+          ) : (
+            this.state.image.map(img => <img src={img} />)
+          )}
+        </div>
+        <h3></h3>
         <div className="divider" />
-              <button type="submit" className="btn btn-primary" onClick={this.validateFields}> Submit </button>
-              <input type="button"  value="Button" hidden ref={this.modalButton} data-toggle="modal" data-target="#responseServiceRequest"/>
-      </form>
-      
+          <button type="submit" className="btn btn-primary" onClick={this.validateFields}> Submit </button>
+          <input type="button"  value="Button" hidden ref={this.modalButton} data-toggle="modal" data-target="#responseServiceRequest"/>
 
-
-      <div className="modal fade" id="responseServiceRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered" role="document">
+        <div
+          className="modal fade"
+          id="responseServiceRequest"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
-            <div className="modal-body">
-                <div className="container">
-                    <div className="row justify-content-md-center" style={{color: "blue"}}>
-                        {this.state.modalMessage}
-                    </div>
+              <div className="modal-body">
+                <div className="container-fluid">
+                  <div
+                    className="row justify-content-md-center"
+                    style={{ color: "blue" }}
+                  >
+                    {this.state.modalMessage}
+                  </div>
                 </div>
-            </div>
-            <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-dismiss='modal' onClick={this.closePopup}>Ok</button>
-            </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                  onClick={this.closePopup}
+                >
+                  Ok
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-
-    )
+    );
   }
 }
 

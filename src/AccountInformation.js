@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 import "./App.css";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { object } from "yup";
 import ChangePassword from "./ChangePassword";
 import Alert from "react-s-alert";
 import Cookies from "universal-cookie";
@@ -18,7 +15,10 @@ class AccountInformation extends Component {
     super(props);
 
     this.state = {
-      user: []
+      user: [],
+      userUpdateResult: "",
+      error: "",
+      message: ""
     };
   }
 
@@ -59,13 +59,44 @@ class AccountInformation extends Component {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
-          "Authorization": "Bearer " + cookies.get("usertoken")
+          Authorization: "Bearer " + cookies.get("usertoken")
         },
 
         body: JSON.stringify(this.state.user[0])
-      });
+      })
+        .then(response => response.json())
+        .then(result => this.setState({ userUpdateResult: result }))
+        .catch(error => this.setState({ error: error }));
     } catch (e) {
+      this.setState({ error: e });
       console.log(e);
+    }
+
+    console.log("userUpdateResult", this.state.userUpdateResult);
+    if (this.state.userUpdateResult.status === 500) {
+      this.setState({ message: "Username should be Unique" });
+      Alert.error("Username should be Unique", {
+        position: "top-right",
+        effect: "slide",
+        offset: 100,
+        timeout: 4000
+      });
+    } else if (this.state.userUpdateResult === "") {
+      this.setState({ message: "Updated successfully!" });
+      Alert.success("Updated successfully!", {
+        position: "top-right",
+        effect: "slide",
+        offset: 100,
+        timeout: 4000
+      });
+    } else {
+      this.setState({ message: this.state.userUpdateResult });
+      Alert.error("Some error occured", {
+        position: "top-right",
+        effect: "slide",
+        offset: 100,
+        timeout: 4000
+      });
     }
   }
   handlefirst_name = e => {
@@ -75,7 +106,11 @@ class AccountInformation extends Component {
     this.state.user[0]["last_name"] = e.target.value;
   };
   handleemail_id = e => {
-    this.state.user[0]["username "] = e.target.value;
+    this.state.user[0]["username"] = e.target.value;
+  };
+  handlecontact_info = e => {
+    this.state.user[0]["contact_info"] = e.target.value;
+    console.log(this.state.user[0]["contact_info "]);
   };
 
   render() {
@@ -91,17 +126,21 @@ class AccountInformation extends Component {
         <h3 className="heading">User Management</h3>
         {this.state.user.map(admin => (
           <form key={admin.username} className="formDetail">
-            <div class="row">
-              <div class="col-md-4 mb-6">
-                <label for="validationDefault01">Email_id</label>
+            <div class="row justify-content-center">
+              <div class="col-md-4 mb-6 ">
+                <label for="validationDefault01">User Name</label>
                 <input
                   type="email"
                   class="form-control"
                   id="validationDefault01"
                   defaultValue={admin.username}
-                  onInput={this.handleemail_id.bind(this)}
+                  // onInput={this.handleemail_id.bind(this)}
+                  disabled={true}
                 />
               </div>
+            </div>
+            <h1></h1>
+            <div class="row">
               <div class="col-md-4 mb-6">
                 <label for="validationDefault02">first_name</label>
 
@@ -121,6 +160,16 @@ class AccountInformation extends Component {
                   id="validationDefault02"
                   defaultValue={admin.last_name}
                   onInput={this.handlelast_name.bind(this)}
+                />
+              </div>
+              <div class="col-md-4 mb-6">
+                <label for="validationDefault02">Contact Info</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="validationDefault02"
+                  defaultValue={admin.contact_info}
+                  onInput={this.handlecontact_info.bind(this)}
                 />
               </div>
             </div>
