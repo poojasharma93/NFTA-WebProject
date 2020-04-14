@@ -119,7 +119,7 @@ class Users extends Component {
                 <td> {user.last_name} </td>
                 <td> {user.contact_info} </td>
                 <td>
-                  {user.user_id !== 1 && (
+                  {user.user_id !== cookies.get('username') && (
                     <button
                       type="button"
                       className="close"
