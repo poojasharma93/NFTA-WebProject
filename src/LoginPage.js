@@ -59,26 +59,31 @@ class LoginPage extends React.Component {
           password: this.state.password
         })
       })
-      .then(response => response.json())
-      .then(result => this.setState({loginResult: result}))
-      .catch(error => this.setState({error: error}));
-      } catch (e) {
-          console.log('error',e)
-          this.setState({error:e});
-      }
-      console.log(this.state.loginResult)
-      if(this.state.loginResult.token===undefined){
-        let fieldErrors={};
-        fieldErrors["loginError"] = "Either username or password is incorrect. Please try again"
-        this.setState({fieldErrors:fieldErrors});
-      }
-      else{
-      cookies.set('usertoken', this.state.loginResult.token, {maxAge: 60*60*3, sameSite: strict})
-      cookies.set('username', this.state.email, {maxAge: 60*60*3, sameSite: strict})
-      this.setState({redirect: true});
-      }
-      
+        .then(response => response.json())
+        .then(result => this.setState({ loginResult: result }))
+        .catch(error => this.setState({ error: error }));
+    } catch (e) {
+      console.log("error", e);
+      this.setState({ error: e });
     }
+    console.log(this.state.loginResult);
+    if (this.state.loginResult.token === undefined) {
+      let fieldErrors = {};
+      fieldErrors["loginError"] =
+        "Either username or password is incorrect. Please try again";
+      this.setState({ fieldErrors: fieldErrors });
+    } else {
+      cookies.set("usertoken", this.state.loginResult.token, {
+        maxAge: 60 * 60 * 3,
+        sameSite: strict
+      });
+      cookies.set("username", this.state.email, {
+        maxAge: 60 * 60 * 3,
+        sameSite: strict
+      });
+      this.setState({ redirect: true });
+    }
+  }
 
   render() {
     if (this.state.redirect) {
@@ -94,43 +99,60 @@ class LoginPage extends React.Component {
     }
 
     return (
-        <div className='container-fluid login-container w-75'>
-      <div className="row">
-        <div className="col-md-6 login-form">
-          <h3>NFTA Web Console</h3>
-          <form> 
-            <div className="form-group">
-              <input className="form-control" 
-                type="text"
-                name="email"
-                placeholder="Email"
-                value={this.state.email}
-                onChange={this.handleChange}
-                required/>
-              <span style={{color: "red"}}>{this.state.fieldErrors["email"]}</span>
-            </div>
-            <div className="form-group">
-              <input type="password" className="form-control"
-                name="password"
-                placeholder="Password"
-                value={this.state.password}
-                onChange={this.handleChange}
-                required/>
-                <span style={{color: "red"}}>{this.state.fieldErrors["password"]}</span>
-            </div>
-            <div className="form-group">
-              <input type="button" className="btnSubmit" value="Login" onClick={this.validateFields}/>
-              <br></br>
-              <span style={{color: "red"}}>{this.state.fieldErrors["loginError"]}</span>
-            </div>
-            <div className="form-group">
-                <a href="/forgotPassword" className="ForgotPwd">Forgot Password?</a>
-            </div>
-        </form>
+      <div className="container-fluid login-container w-75">
+        <div className="row">
+          <div className="col-md-6 login-form">
+            <h3>NFTA Web Console</h3>
+            <form>
+              <div className="form-group">
+                <input
+                  className="form-control"
+                  type="text"
+                  name="email"
+                  placeholder="Email"
+                  value={this.state.email}
+                  onChange={this.handleChange}
+                  required
+                />
+                <span style={{ color: "red" }}>
+                  {this.state.fieldErrors["email"]}
+                </span>
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  placeholder="Password"
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                  required
+                />
+                <span style={{ color: "red" }}>
+                  {this.state.fieldErrors["password"]}
+                </span>
+              </div>
+              <div className="form-group">
+                <input
+                  type="button"
+                  className="btnSubmit"
+                  value="Login"
+                  onClick={this.validateFields}
+                />
+                <br></br>
+                <span style={{ color: "red" }}>
+                  {this.state.fieldErrors["loginError"]}
+                </span>
+              </div>
+              <div className="form-group">
+                <a href="/forgotPassword" className="ForgotPwd">
+                  Forgot Password?
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-    </div>
-    
     );
   }
 }

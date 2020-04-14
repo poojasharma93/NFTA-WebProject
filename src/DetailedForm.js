@@ -155,10 +155,7 @@ class detailedForm extends React.Component {
                   class="form-control text-light bg-dark"
                   id="validationDefault02"
                   value={
-                    trans.nearest_cross_street
-                      ? trans.nearest_cross_street.display_name
-                      : ""
-                  }
+                    trans.nearest_cross_street}
                   disabled={true}
                 />
               </div>

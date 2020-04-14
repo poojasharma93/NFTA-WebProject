@@ -18,7 +18,15 @@ class AccountInformation extends Component {
       user: [],
       userUpdateResult: "",
       error: "",
-      message: ""
+      message: "",
+      fieldErrors: {},
+      redirect: false,
+      addUserResult: "",
+      username: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      contactInfo: ""
     };
   }
 
@@ -50,6 +58,67 @@ class AccountInformation extends Component {
         }
       );
   }
+
+  validateFields = e => {
+    e.preventDefault();
+    let fieldErrors = {};
+    let isValid = true;
+    // if (!this.state.username) {
+    //   isValid = false;
+    //   fieldErrors["username"] = "Please enter email ID";
+    // } else {
+    //   let lastAtPos = this.state.username.lastIndexOf("@");
+    //   let lastDotPos = this.state.username.lastIndexOf(".");
+
+    //   if (
+    //     !(
+    //       lastAtPos < lastDotPos &&
+    //       lastAtPos > 0 &&
+    //       this.state.username.indexOf("@@") == -1 &&
+    //       lastDotPos > 2 &&
+    //       this.state.username.length - lastDotPos > 2
+    //     )
+    //   ) {
+    //     isValid = false;
+    //     fieldErrors["username"] = "Please enter a valid email ID";
+    //   }
+    // }
+
+    // if (!this.state.password) {
+    //   isValid = false;
+    //   fieldErrors["password"] = "Please enter password";
+    // } else if (
+    //   this.state.password.length < 4 ||
+    //   this.state.password.length > 10
+    // ) {
+    //   isValid = false;
+    //   fieldErrors["password"] =
+    //     "Password should be atleast 4 and maximum 10 characters.";
+    // }
+
+    if (!this.state.firstName) {
+      isValid = false;
+      fieldErrors["firstName"] = "Please enter first name";
+    }
+    if (this.state.firstName && !this.state.firstName.match(/^[a-zA-Z]+$/)) {
+      isValid = false;
+      fieldErrors["name"] = "Please enter only letters in name";
+    }
+    if (this.state.lastName && !this.state.lastName.match(/^[a-zA-Z]+$/)) {
+      isValid = false;
+      fieldErrors["lastName"] = "Please enter only letters in name";
+    }
+    if (this.state.contactInfo && this.state.contactInfo.length !== 10) {
+      isValid = false;
+      fieldErrors["contactInfo"] = "Contact should be of 10 digits.";
+    }
+
+    console.log(fieldErrors);
+    console.log(isValid);
+    this.setState({ fieldErrors: fieldErrors });
+    if (isValid) this.postData();
+  };
+
   async postData() {
     console.log(this.state.user[0]);
     try {
@@ -100,15 +169,18 @@ class AccountInformation extends Component {
     }
   }
   handlefirst_name = e => {
+    this.setState({ firstName: e.target.value });
     this.state.user[0]["first_name"] = e.target.value;
   };
   handlelast_name = e => {
+    this.setState({ lastName: e.target.value });
     this.state.user[0]["last_name"] = e.target.value;
   };
   handleemail_id = e => {
     this.state.user[0]["username"] = e.target.value;
   };
   handlecontact_info = e => {
+    this.setState({ contactInfo: e.target.value });
     this.state.user[0]["contact_info"] = e.target.value;
     console.log(this.state.user[0]["contact_info "]);
   };
@@ -137,6 +209,9 @@ class AccountInformation extends Component {
                   // onInput={this.handleemail_id.bind(this)}
                   disabled={true}
                 />
+                <span style={{ color: "red" }}>
+                  {this.state.fieldErrors["username"]}
+                </span>
               </div>
             </div>
             <h1></h1>
@@ -151,6 +226,12 @@ class AccountInformation extends Component {
                   defaultValue={admin.first_name}
                   onInput={this.handlefirst_name.bind(this)}
                 />
+                <span style={{ color: "red" }}>
+                  {this.state.fieldErrors["firstName"]}
+                </span>
+                <span style={{ color: "red" }}>
+                  {this.state.fieldErrors["name"]}
+                </span>
               </div>
               <div class="col-md-4 mb-6">
                 <label for="validationDefault02">last_name</label>
@@ -161,6 +242,9 @@ class AccountInformation extends Component {
                   defaultValue={admin.last_name}
                   onInput={this.handlelast_name.bind(this)}
                 />
+                <span style={{ color: "red" }}>
+                  {this.state.fieldErrors["lastName"]}
+                </span>
               </div>
               <div class="col-md-4 mb-6">
                 <label for="validationDefault02">Contact Info</label>
@@ -171,6 +255,9 @@ class AccountInformation extends Component {
                   defaultValue={admin.contact_info}
                   onInput={this.handlecontact_info.bind(this)}
                 />
+                <span style={{ color: "red" }}>
+                  {this.state.fieldErrors["contactInfo"]}
+                </span>
               </div>
             </div>
 
@@ -179,7 +266,8 @@ class AccountInformation extends Component {
                 type="button"
                 class=" btn-lg btn-primary col-md-2 mb-3 dividerheight"
                 href="#/{trans.status}"
-                onClick={() => this.postData()}
+                // onClick={() => this.postData()}
+                onClick={this.validateFields}
               >
                 Save Changes
               </button>

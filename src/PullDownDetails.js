@@ -16,27 +16,27 @@ class PullDownDetails extends Component {
       message: "",
       addDropdownResult: "",
       redirect: false,
-      fieldErrors:{}
+      fieldErrors: {}
     };
   }
 
   validateFields = e => {
     e.preventDefault();
-    this.setState({addDropdownResult:""})
+    this.setState({ addDropdownResult: "" });
     let fieldErrors = {};
     let isValid = true;
-    this.setState({message:""})
+    this.setState({ message: "" });
 
     if (!this.state.dropdownInfo) {
       isValid = false;
-      fieldErrors["dropdownInfo"] = "Please enter " + this.props.status + "Info";
+      fieldErrors["dropdownInfo"] =
+        "Please enter " + this.props.status + "Info";
     }
 
     console.log(fieldErrors);
     console.log(isValid);
     this.setState({ fieldErrors: fieldErrors });
-    if (isValid) 
-      this.addDropdown();
+    if (isValid) this.addDropdown();
   };
 
   closeDropdownPopup = e => {
@@ -159,7 +159,6 @@ class PullDownDetails extends Component {
     const { dropdowns } = this.state;
     console.log(dropdowns);
 
-
     return (
       <div>
         <table className="table">
@@ -177,7 +176,9 @@ class PullDownDetails extends Component {
                   <button
                     type="submit"
                     className="btn btn-danger"
-                    onClick={() => this.handleOnClick(this, dropdown.dropdown_id)}
+                    onClick={() =>
+                      this.handleOnClick(this, dropdown.dropdown_id)
+                    }
                   >
                     Delete
                   </button>
@@ -235,8 +236,12 @@ class PullDownDetails extends Component {
                         {this.state.fieldErrors["dropdownInfo"]}
                       </span>
                     </div>
-                    <div className="row justify-content-md-center" style={{ color: "blue" }}>
-                      {this.state.message}</div>
+                    <div
+                      className="row justify-content-md-center"
+                      style={{ color: "blue" }}
+                    >
+                      {this.state.message}
+                    </div>
                   </div>
                 </div>
                 <div className="modal-footer">
