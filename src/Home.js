@@ -66,7 +66,7 @@ class Home extends Component {
                   activeClassName="navbar__link--active"
                   exact
                 >
-                  Service Request
+                  Request Service
                 </NavLink>
               </li>
               <li>
