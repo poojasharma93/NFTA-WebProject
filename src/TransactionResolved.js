@@ -125,7 +125,7 @@ class TransactionResolved extends Component {
                 </td>
                 <td>
                   <a
-                    href={`/transactionDetail/${trans.transaction_no}`}
+                    href={`/requestStatusDetail/${trans.transaction_no}`}
                     id="link"
                   >
                     View Details

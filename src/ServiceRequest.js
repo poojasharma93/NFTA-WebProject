@@ -294,7 +294,7 @@ class ServiceRequest extends React.Component {
           >
             <option></option>
             <option>New</option>
-            <option>Update</option>
+            <option>Repair</option>
             <option>Remove</option>
           </select>
           <span style={{color: "red"}}>{this.state.fieldErrors["request_type"]}</span>

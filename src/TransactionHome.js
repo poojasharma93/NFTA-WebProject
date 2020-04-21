@@ -23,7 +23,7 @@ class TransactionHome extends Component {
             <ul className="one navbar-nav">
               <li id="open">
                 <NavLink
-                  to="/transactions"
+                  to="/requestStatus"
                   activeClassName="navbar2_li--active"
                 >
                   Open
@@ -43,7 +43,7 @@ class TransactionHome extends Component {
           </div>
         </nav>
 
-        <Route exact path="/transactions" component={OpenServiceRequest} />
+        <Route exact path="/requestStatus" component={OpenServiceRequest} />
         <Route exact path="/inprogress" component={TransactionInProgress} />
         <Route exact path="/resolved" component={TransactionResolved} />
       </div>
