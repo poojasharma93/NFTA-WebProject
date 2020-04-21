@@ -87,7 +87,7 @@ class LoginPage extends React.Component {
 
   render() {
     if (this.state.redirect) {
-      return <Redirect to={"/transactions"} />;
+      return <Redirect to={"/requestStatus"} />;
     }
 
     if (
@@ -95,7 +95,7 @@ class LoginPage extends React.Component {
       cookies.get("usertoken") !== "" &&
       this.props.location.state === undefined
     ) {
-      return <Redirect to={"/transactions"} />;
+      return <Redirect to={"/requestStatus"} />;
     }
 
     return (

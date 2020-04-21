@@ -8,7 +8,8 @@ class ServiceRequestDetail extends React.Component {
     super();
     this.state = {
       serviceRequest: [],
-      redirect: false
+      redirect: false,
+      redirectToHome: false
     };
   }
 
@@ -43,6 +44,10 @@ class ServiceRequestDetail extends React.Component {
     console.log("state", this.state.serviceRequest);
   }
 
+  back = e =>{
+    this.setState({redirectToHome:true})
+  }
+
   render() {
     if (this.state.redirect) {
       return (
@@ -54,6 +59,13 @@ class ServiceRequestDetail extends React.Component {
         />
       );
     }
+
+    if (this.state.redirectToHome) {
+      return (
+        <Redirect to='/requestStatus'/>
+      );
+    }
+
     const { serviceRequest } = this.state;
 
     return (
@@ -253,7 +265,7 @@ class ServiceRequestDetail extends React.Component {
                             </div>
                         </div>
                 </div>
-
+                <button type="button" className="btn btn-primary col-md-1" onClick={this.back}> Back </button>
             </form>))}
         </div>
                     

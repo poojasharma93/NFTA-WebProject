@@ -58,7 +58,7 @@ class Home extends Component {
             </div>
             <ul className="list">
               <li>
-                <a href="/transactions">Transactions</a>
+                <a href="/requestStatus">Request Status</a>
               </li>
               <li>
                 <NavLink
@@ -111,12 +111,12 @@ class Home extends Component {
 
           <Switch>
             <Route
-              path="/(transactions|open|inprogress|resolved)"
+              path="/(requestStatus|open|inprogress|resolved)"
               component={TransactionHome}
               exact
             />
             <Route
-              path="/transactionDetail/:trans"
+              path="/requestStatusDetail/:trans"
               component={TransactionDetail}
               exact
             />

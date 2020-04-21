@@ -66,7 +66,7 @@ class ResetPassword extends React.Component {
        return(
            <div>
                {this.state.isTokenConfirm && <ChangePassword user={this.state.confirmTokenResult} pageLink="confirmToken" redirectToLogin={this.redirectToLogin}/> }
-               <Alert stack={{ limit: 3, spacing: 50 }} />
+               <Alert stack={{ limit: 3, spacing: 50 }} onClose={this.redirectToLogin}/>
            </div>
        )
     }

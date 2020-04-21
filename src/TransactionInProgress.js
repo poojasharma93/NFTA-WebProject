@@ -126,7 +126,7 @@ class TransactionInProgress extends Component {
                 </td>
                 <td>
                   <a
-                    href={`/transactionDetail/${trans.transaction_no}`}
+                    href={`/requestStatusDetail/${trans.transaction_no}`}
                     exact
                     id="link"
                   >
