@@ -109,7 +109,9 @@ class detailedForm extends React.Component {
                   type="text"
                   class="form-control text-light bg-dark"
                   id="validationDefault02"
-                  value={trans.work_request ? trans.work_request.request_id : ""}
+                  value={
+                    trans.work_request ? trans.work_request.request_id : ""
+                  }
                   disabled={true}
                 />
               </div>
@@ -154,8 +156,7 @@ class detailedForm extends React.Component {
                   type="text"
                   class="form-control text-light bg-dark"
                   id="validationDefault02"
-                  value={
-                    trans.nearest_cross_street}
+                  value={trans.nearest_cross_street}
                   disabled={true}
                 />
               </div>
@@ -440,110 +441,105 @@ class detailedForm extends React.Component {
             {/* additional_information,admin_comments
              */}
             <hr class="dotted"></hr>
-            <div class="row">
-              <div class="form-group col-md-6 mb-6">
-                <label for="exampleFormControlTextarea1">
-                  additional_information
-                </label>
-                <textarea
-                  class="form-control"
-                  id="exampleFormControlTextarea1"
-                  rows="3"
-                  value={trans.additional_information}
-                  disabled={true}
-                ></textarea>
-              </div>
-              <div class="dropdown form-group col-md-6 mb-6">
-                <button
-                  class="btn btn-primary dropdown-toggle col-md-6 mb-6"
-                  type="button"
-                  id="dropdownMenu2"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Routes
-                </button>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="form-group col-md-6 mb-6">
+                  <label for="exampleFormControlTextarea1">
+                    additional_information
+                  </label>
+                  <textarea
+                    class="form-control"
+                    id="exampleFormControlTextarea1"
+                    rows="6"
+                    value={trans.additional_information}
+                    disabled={true}
+                  ></textarea>
+                </div>
 
-                <div
-                  class="dropdown-menu col-md-6 mb-6"
-                  aria-labelledby="dropdownMenu2 "
-                >
-                  {trans.routes
-                    ? trans.routes.map(rot => (
-                        <button
-                          class="dropdown-item "
-                          type="button"
-                          key={rot.dropdown_id}
-                        >
-                          {rot.display_name}
-                        </button>
-                      ))
-                    : ""}
+                <div class="form-group col-md-6 mb-6  ">
+                  <table className="table table-sm table-bordered w-auto mt-2">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="w-25">
+                          Route ID
+                        </th>
+                        <th scope="col" class="w-30">
+                          Route Info
+                        </th>
+                      </tr>
+                      {trans.routes
+                        ? trans.routes.map(rot => (
+                            <tr key={rot.dropdown_id}>
+                              <td> {rot.dropdown_id} </td>
+                              <td> {rot.display_name}</td>
+                            </tr>
+                          ))
+                        : ""}
+                    </thead>
+                  </table>
                 </div>
               </div>
             </div>
-            {/* private String location; */}
-            {/*  */}
-            {/*  */}
-            {/* Images */}
             <div class="row">
               <div class="col-md-4 mb-6 ">
-                <a class="lightbox " href="#dog">
-                  <img
-                    src="https://images.pexels.com/photos/136743/pexels-photo-136743.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                    class="thumbnail float-left"
-                    alt="No preview"
-                  />
-                </a>
+                {trans.image0 ? (
+                  <a class="lightbox " href="#dog">
+                    <img
+                      src={trans.image0}
+                      class="thumbnail float-left"
+                      alt="No preview"
+                    />
+                  </a>
+                ) : (
+                  <h1></h1>
+                )}
                 <div
                   class="lightbox-target container-fluid selector-for-some-widget"
                   id="dog"
                 >
-                  <img
-                    src="https://images.pexels.com/photos/136743/pexels-photo-136743.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                    alt="No preview"
-                  />
+                  <img src={trans.image0} alt="No preview" />
                   <a class="lightbox-close" href="#"></a>
                 </div>
               </div>
 
               <div class=" col-md-4 mb-6  ">
-                <a class="lightbox " href="#dog">
-                  <img
-                    src="https://images.pexels.com/photos/136743/pexels-photo-136743.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                    class="thumbnail float-middle"
-                    alt="No preview"
-                  />
-                </a>
+                {trans.image1 ? (
+                  <a class="lightbox " href="#dog">
+                    <img
+                      src={trans.image1}
+                      class="thumbnail float-middle"
+                      alt="No preview"
+                    />
+                  </a>
+                ) : (
+                  <h1></h1>
+                )}
                 <div
                   class="lightbox-target container-fluid selector-for-some-widget"
                   id="dog"
                 >
-                  <img
-                    src="https://images.pexels.com/photos/136743/pexels-photo-136743.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                    alt="No preview"
-                  />
+                  <img src={trans.image1} alt="No preview" />
                   <a class="lightbox-close" href="#"></a>
                 </div>
               </div>
 
               <div class=" col-md-4 mb-6  ">
-                <a class="lightbox " href="#dog">
-                  <img
-                    src="https://images.pexels.com/photos/136743/pexels-photo-136743.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                    class="thumbnail float-right"
-                    alt="No preview"
-                  />
-                </a>
+                {trans.image2 ? (
+                  <a class="lightbox " href="#dog">
+                    <img
+                      src={trans.image2}
+                      class="thumbnail float-right"
+                      alt="No preview"
+                    />
+                  </a>
+                ) : (
+                  <h1></h1>
+                )}
                 <div
                   class="lightbox-target container-fluid selector-for-some-widge"
                   id="dog"
                 >
-                  <img
-                    src="https://images.pexels.com/photos/136743/pexels-photo-136743.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                    alt="No preview"
-                  />
+                  <img src={trans.image2} alt="No preview" />
                   <a class="lightbox-close" href="#"></a>
                 </div>
               </div>

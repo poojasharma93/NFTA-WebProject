@@ -5,7 +5,7 @@ import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
 import Cookies from "universal-cookie";
-import {Redirect} from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 
 const cookies = new Cookies();
 
@@ -13,16 +13,15 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .required("Password is required")
-    .min(4, "Password too weak")
-    .max(10, "Password too long"),
+    .min(4, "Password should be above 4 characters.")
+    .max(10, "Password should be less then 10 characters."),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
 });
 
-export default function App(props){ 
-  
-  console.log('user', props.user)
+export default function App(props) {
+  console.log("user", props.user);
   const { register, handleSubmit, errors } = useForm({
     validationSchema: schema
   });
@@ -44,12 +43,12 @@ export default function App(props){
       effect: "slide",
       offset: 100,
       timeout: 2000
-    });    
+    });
   };
 
-  const redirectToLogin = () =>{
+  const redirectToLogin = () => {
     props.redirectToLogin();
-  }
+  };
 
   return (
     <div className="container-fluid selector-for-some-widget">
@@ -105,13 +104,15 @@ export default function App(props){
           className="btn-lg btn-primary col-md-2 mb-3
         dividerheight"
         />
-         {props.pageLink==="confirmToken" && <input
-          type="button"
-          value="Login"
-          onClick={redirectToLogin}
-          className="btn-lg btn-primary col-md-2 mb-3
+        {props.pageLink === "confirmToken" && (
+          <input
+            type="button"
+            value="Login"
+            onClick={redirectToLogin}
+            className="btn-lg btn-primary col-md-2 mb-3
         dividerheight"
-        />}
+          />
+        )}
       </form>
     </div>
   );

@@ -3,7 +3,7 @@ import "./App.css";
 import ChangePassword from "./ChangePassword";
 import Alert from "react-s-alert";
 import Cookies from "universal-cookie";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import "react-s-alert/dist/s-alert-default.css";
 import "react-s-alert/dist/s-alert-css-effects/slide.css";
@@ -44,12 +44,13 @@ class AccountInformation extends Component {
         }
       })
       .then(
-        data => { !this.state.redirect &&
-          this.setState({
-            user: data.filter(us => {
-              return us.username == cookies.get("username");
-            })
-          });
+        data => {
+          !this.state.redirect &&
+            this.setState({
+              user: data.filter(us => {
+                return us.username == cookies.get("username");
+              })
+            });
         },
         error => {
           this.setState({
@@ -96,7 +97,7 @@ class AccountInformation extends Component {
     //     "Password should be atleast 4 and maximum 10 characters.";
     // }
 
-    if (!this.state.firstName) {
+    if (!this.state.user[0]["first_name"]) {
       isValid = false;
       fieldErrors["firstName"] = "Please enter first name";
     }
@@ -186,13 +187,18 @@ class AccountInformation extends Component {
   };
 
   render() {
-    if(this.state.redirect){
-      return <Redirect to={{
-        pathname: '/',
-        state: { status: '401' }
-    }}/>
-  }
+    if (this.state.redirect) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/",
+            state: { status: "401" }
+          }}
+        />
+      );
+    }
     console.log(this.state.user);
+
     return (
       <div class="container-fluid selector-for-some-widget">
         <h3 className="heading">User Management</h3>
@@ -274,7 +280,7 @@ class AccountInformation extends Component {
               <div class="divider" />
             </div>
             <div class="row">
-              <ChangePassword user={this.state.user}/>
+              <ChangePassword user={this.state.user} />
             </div>
             <div class="divider" />
             <div class="text_center">

@@ -11,7 +11,6 @@ class PullDownDetails extends Component {
       dropdowns: [],
       error: "",
       dropdownPopup: false,
-      dropdownId: "",
       dropdownInfo: "",
       message: "",
       addDropdownResult: "",
@@ -50,7 +49,11 @@ class PullDownDetails extends Component {
 
   handleDropdownInput = e => {
     const name = e.target.name;
-    const value = e.target.value;
+    let value = e.target.value;
+    if (name == "dropdownInfo" && this.props.status == "direction") {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
     this.setState({ [name]: value });
   };
 
@@ -164,13 +167,13 @@ class PullDownDetails extends Component {
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">{this.props.status} ID</th>
+              {/* <th scope="col">{this.props.status} ID</th> */}
               <th scope="col">{this.props.status} Info</th>
               <th scope="col">Delete</th>
             </tr>
             {dropdowns.map(dropdown => (
               <tr key={dropdown.dropdown_id}>
-                <td> {dropdown.dropdown_value} </td>
+                {/* <td> {dropdown.dropdown_value} </td> */}
                 <td> {dropdown.display_name}</td>
                 <td>
                   <button
@@ -215,7 +218,7 @@ class PullDownDetails extends Component {
                 </div>
                 <div className="modal-body">
                   <div className="container-fluid">
-                    <div className="row">
+                    {/* <div className="row">
                       {this.props.status} ID
                       <input
                         type="number"
@@ -223,7 +226,7 @@ class PullDownDetails extends Component {
                         name="dropdownId"
                         onChange={this.handleDropdownInput}
                       />
-                    </div>
+                    </div> */}
                     <div className="row">
                       {this.props.status} Info
                       <input
