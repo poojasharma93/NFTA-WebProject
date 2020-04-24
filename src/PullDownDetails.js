@@ -85,7 +85,7 @@ class PullDownDetails extends Component {
 
     console.log("addDropdownResult", this.state.addDropdownResult);
     if (this.state.addDropdownResult.status === 500) {
-      this.setState({ message: "Id and Value should be Unique" });
+      this.setState({ message: "Value should be Unique" });
     } else if (this.state.addDropdownResult === "") {
       this.setState({ message: "Added successfully!" });
     } else {
