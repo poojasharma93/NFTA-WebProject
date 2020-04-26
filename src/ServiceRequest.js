@@ -232,7 +232,7 @@ class ServiceRequest extends React.Component {
     }
 
     if (this.state.redirectToTransactions) {
-      return <Redirect to="/transactions" />;
+      return <Redirect to="/requestStatus" />;
     }
     
     console.log('routeOptions', this.state.routeOptions)
