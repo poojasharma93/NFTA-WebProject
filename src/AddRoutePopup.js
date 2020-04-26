@@ -18,16 +18,19 @@ class AddRoutePopup extends Component {
 
   handleRouteInput = e => {
     const name = e.target.name;
-    const value = e.target.value;
+    let value = e.target.value;
+    if (name == "routeInfo") {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
     this.setState({ [name]: value });
   };
 
   validateFields = e => {
     e.preventDefault();
-    this.setState({addRouteResult:""})
+    this.setState({ addRouteResult: "" });
     let fieldErrors = {};
     let isValid = true;
-    this.setState({message:""})
+    this.setState({ message: "" });
     if (!this.state.routeId) {
       isValid = false;
       fieldErrors["routeId"] = "Please enter routeId";
@@ -46,7 +49,7 @@ class AddRoutePopup extends Component {
 
   async addRoute() {
     console.log(this.state.routeId, this.state.routeInfo);
-    
+
     try {
       await fetch(window.$url + "/addDropdown", {
         method: "POST",
@@ -74,8 +77,7 @@ class AddRoutePopup extends Component {
     console.log("addRouteResult", this.state.addRouteResult);
     if (this.state.addRouteResult === "") {
       this.setState({ message: "Added successfully!" });
-    }
-    else if (this.state.addRouteResult.status === 500) {
+    } else if (this.state.addRouteResult.status === 500) {
       this.setState({ message: "Id and Value should be Unique" });
     } else {
       this.setState({ message: this.state.addRouteResult });

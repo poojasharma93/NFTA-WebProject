@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import FilterForm from "./FilterForm";
 import Cookies from "universal-cookie";
-import { Redirect } from "react-router-dom";
+import { Redirect, Route, Link } from "react-router-dom";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
+import "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 
 const cookies = new Cookies();
+
 class TransactionInProgress extends Component {
   tempTrans = [];
   constructor() {
@@ -86,6 +92,109 @@ class TransactionInProgress extends Component {
         }
       );
   }
+  transactionFilter;
+  stopidFilter;
+  directionFilter;
+  countyFilter;
+  requestFilter;
+  caret = (order, column) => {
+    if (!order) return <span>&nbsp;&nbsp;Desc/Asc</span>;
+    else if (order === "asc")
+      return (
+        <span>
+          &nbsp;&nbsp;Desc/<font color="red">Asc</font>
+        </span>
+      );
+    else if (order === "desc")
+      return (
+        <span>
+          &nbsp;&nbsp;<font color="red">Desc</font>/Asc
+        </span>
+      );
+    return null;
+  };
+
+  columns = [
+    {
+      dataField: "transaction_no",
+      text: "TransactionID",
+      id: "transaction_no",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.transactionFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "stop_id",
+      text: "StopID",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.stopidFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "direction.display_name",
+      text: "Direction",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.directionFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "county.display_name",
+      text: "County",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.countyFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "work_request.request_id",
+      text: "Request ID",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.requestFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "transaction_no",
+      formatter: (cell, row) => {
+        return (
+          <p>
+            <a href={"/requestStatusDetail/" + row.transaction_no}>
+              View Details
+            </a>
+          </p>
+        );
+      },
+      text: "View Details",
+      sort: false,
+      style: { color: "blue" }
+    }
+  ];
+
+  handleClick = () => {
+    this.transactionFilter("");
+    this.stopidFilter("");
+    this.directionFilter("");
+    this.countyFilter("");
+    this.requestFilter("");
+  };
 
   render() {
     const { transactions } = this.state;
@@ -105,11 +214,13 @@ class TransactionInProgress extends Component {
     return (
       <div>
         <FilterForm handleOnClick={this.handleOnClick} />
-        <table className="table">
+        {/* <table id="inprogress" className="table" data-silent-sort="false">
           <thead>
             <tr>
               <th scope="col">TransactionID</th>
-              <th scope="col">StopID</th>
+              <th scope="col" data-sortable="true">
+                StopID
+              </th>
               <th scope="col">Direction</th>
               <th scope="col">County</th>
               <th scope="col">Request ID</th>
@@ -136,7 +247,51 @@ class TransactionInProgress extends Component {
               </tr>
             ))}
           </thead>
-        </table>
+        </table> */}
+        <hr />
+        <button className="btn btn-lg btn-primary" onClick={this.handleClick}>
+          {" "}
+          Clear all filters{" "}
+        </button>
+        <BootstrapTable
+          keyField="transaction_no"
+          data={transactions}
+          columns={this.columns}
+          hover="true"
+          filter={filterFactory()}
+          pagination={paginationFactory({
+            sizePerPage: 10,
+            hideSizePerPage: true,
+            showTotal: true,
+            withFirstAndLast: true,
+            alwaysShowAllBtns: true
+          })}
+        />
+        {/* <ToolkitProvider
+          keyField="transaction_no"
+          data={transactions}
+          columns={this.columns}
+          columnToggle
+        >
+          {props => (
+            <div>
+              <ToggleList {...props.columnToggleProps} />
+              <hr />
+              <BootstrapTable
+                {...props.baseProps}
+                filter={filterFactory()}
+                hover="true"
+                pagination={paginationFactory({
+                  sizePerPage: 10,
+                  hideSizePerPage: true,
+                  showTotal: true,
+                  withFirstAndLast: true,
+                  alwaysShowAllBtns: true
+                })}
+              />
+            </div>
+          )}
+        </ToolkitProvider> */}
       </div>
     );
   }

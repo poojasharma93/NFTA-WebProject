@@ -1,145 +1,257 @@
 import React, { Component } from "react";
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 import FilterFormServReq from "./FilterFormServReq";
 import { Redirect, withRouter } from "react-router-dom";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
+import "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 
 const cookies = new Cookies();
-class OpenServiceRequest extends Component{
-    
-    constructor() {
-        super();
-        this.state={
-            serviceRequests:[],
-            filterServiceReq:[],
-            error:'',
-            redirect: false
-        };
+class OpenServiceRequest extends Component {
+  constructor() {
+    super();
+    this.state = {
+      serviceRequests: [],
+      filterServiceReq: [],
+      error: "",
+      redirect: false
+    };
+  }
+
+  handleOnClick = e => {
+    console.log(e.requestID);
+    console.log(e.stopID);
+    let filterRequestID = e.requestID;
+    let filterStopID = e.stopID;
+    let filterDirection = e.direction;
+    let filterRequestType = e.requestType;
+    let filterRequestUser = e.requestUser;
+    let url = window.$url + "/serviceRequest?status=Open&";
+    console.log(
+      filterRequestID,
+      filterStopID,
+      filterDirection,
+      filterRequestType,
+      filterRequestUser
+    );
+
+    if (filterRequestID !== "") {
+      url = url + "id=" + filterRequestID + "&";
+    }
+    if (filterStopID !== "") {
+      url = url + "stopID=" + filterStopID + "&";
+    }
+    if (filterDirection !== "") {
+      url = url + "direction=" + filterDirection + "&";
+    }
+    if (filterRequestType !== "") {
+      url = url + "type=" + filterRequestType + "&";
+    }
+    if (filterRequestUser !== "") {
+      url = url + "requestedUser=" + filterRequestUser;
     }
 
-    handleOnClick = (e) => {
-        console.log(e.requestID);
-        console.log(e.stopID);
-        let filterRequestID=e.requestID;
-        let filterStopID=e.stopID;
-        let filterDirection=e.direction;
-        let filterRequestType=e.requestType;
-        let filterRequestUser=e.requestUser;
-        let url = window.$url + "/serviceRequest?status=Open&";
-        console.log(filterRequestID, filterStopID, filterDirection, filterRequestType, filterRequestUser);
-        
-        if(filterRequestID!==""){
-            url=url+"id=" + filterRequestID + "&";
+    fetch(url, {
+      headers: {
+        Authorization: "Bearer " + cookies.get("usertoken")
+      }
+    })
+      .then(results => {
+        if (results.status === 401) {
+          this.setState({ redirect: true });
+        } else {
+          return results.json();
         }
-        if(filterStopID!==""){
-            url=url+"stopID="+filterStopID + "&";
-        }
-        if(filterDirection!==""){
-            url=url+"direction="+filterDirection + "&";
-        }
-        if(filterRequestType!==""){
-            url=url+"type="+filterRequestType + "&";
-        }
-        if(filterRequestUser!==""){
-            url=url+"requestedUser="+filterRequestUser;
-        }
+      })
+      .then(data => {
+        this.setState({
+          serviceRequests: data
+        });
+      });
 
-        fetch(url, {
-            headers: {
-              "Authorization": "Bearer "+ cookies.get('usertoken')
-            }})
+    console.log(this.state.serviceRequests);
+  };
+
+  componentDidMount() {
+    try {
+      fetch(window.$url + "/serviceRequest?status=Open", {
+        headers: {
+          Authorization: "Bearer " + cookies.get("usertoken")
+        }
+      })
         .then(results => {
-            if(results.status===401)
-            {
-                this.setState({redirect:true});
-            }
-            else{
-                return results.json();
-            }
+          if (results.status === 401) {
+            this.setState({ redirect: true });
+          } else {
+            return results.json();
+          }
         })
         .then(
-            (data) => {
-                this.setState({ 
-                    serviceRequests: data
-                });
-            }
-            )
+          data => {
+            console.log("Data", data);
+            this.setState({
+              serviceRequests: data
+            });
+          },
+          error => {
+            this.setState({
+              error: error
+            });
+          }
+        );
+    } catch (e) {
+      console.log("error", e);
+    }
+  }
 
-        console.log(this.state.serviceRequests);
+  request_id;
+  stopidFilter;
+  directionFilter;
+  request_type;
+  requested_user;
+  handleClick = () => {
+    this.request_id("");
+    this.stopidFilter("");
+    this.directionFilter("");
+    this.request_type("");
+    this.requested_user("");
+  };
+
+  caret = (order, column) => {
+    if (!order) return <span>&nbsp;&nbsp;Desc/Asc</span>;
+    else if (order === "asc")
+      return (
+        <span>
+          &nbsp;&nbsp;Desc/<font color="red">Asc</font>
+        </span>
+      );
+    else if (order === "desc")
+      return (
+        <span>
+          &nbsp;&nbsp;<font color="red">Desc</font>/Asc
+        </span>
+      );
+    return null;
+  };
+
+  columns = [
+    {
+      dataField: "request_id",
+      text: "Request ID",
+      id: "request_id",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.request_id = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "stop_id",
+      text: "StopID",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.stopidFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "direction.display_name",
+      text: "Direction",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.directionFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "request_type",
+      text: "Request Type",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.request_type = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "requested_user",
+      text: "Admin User",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.requested_user = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "transaction_no",
+      formatter: (cell, row) => {
+        return (
+          <p>
+            <a href={"/serviceRequestDetail/" + row.request_id}>View Details</a>
+          </p>
+        );
+      },
+      text: "View Details",
+      sort: false,
+      style: { color: "blue" }
+    }
+  ];
+
+  render() {
+    const { serviceRequests } = this.state;
+    console.log(this.props);
+    console.log(serviceRequests);
+
+    if (this.state.redirect) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/",
+            state: { status: "401" }
+          }}
+        />
+      );
     }
 
-    componentDidMount(){
-        try{
-        fetch(window.$url + "/serviceRequest?status=Open", {headers: {
-            "Authorization": "Bearer "+cookies.get('usertoken')
-          }})
-        .then(results => {
-            if(results.status===401)
-            {
-                this.setState({redirect:true});
-            }
-            else{
-                return results.json();
-            }
-        })
-        .then(
-            (data) => {
-                console.log("Data", data)
-                this.setState({ 
-                    serviceRequests: data
-                });
-            },
-            (error) => {
-                this.setState({
-                  error: error
-                });
-              }
-            )
-        }
-        catch(e){
-            console.log("error",e)
-        }
-    }
-        
-    render(){
-        const {serviceRequests} = this.state;
-        console.log(this.props);
-        console.log(serviceRequests);
+    return (
+      <div>
+        <FilterFormServReq handleOnClick={this.handleOnClick} />
 
-        if(this.state.redirect){
-           return <Redirect to={{
-            pathname: '/',
-            state: { status: '401' }
-        }}/>
-            
-        }
-        
-        return(
-            <div>
-                <FilterFormServReq handleOnClick={this.handleOnClick}/>
-                
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Request ID</th>
-                        <th scope="col">StopID</th>
-                        <th scope="col">Direction</th>
-                        <th scope="col">Request Type</th>
-                        <th scope="col">Admin User</th>
-                        <th></th>
-                    </tr>
-                        {serviceRequests.map(servReq => (
-                        <tr key={servReq.request_id}>
-                        <td> {servReq.request_id} </td>
-                        <td> {servReq.stop_id}</td>
-                        <td> {servReq.direction? servReq.direction.display_name: ""}</td>
-                        <td> {servReq.request_type}</td>
-                        <td> {servReq.requested_user}</td>
-                        <td> <a href={`/serviceRequestDetail/${servReq.request_id}`} id="link">View Details</a> </td>
-                        </tr>
-                        ))}
-                </thead>
-            </table>
-        </div>
+        <hr />
+        <button
+          className="btn btn-lg btn-primary align-bottom"
+          onClick={this.handleClick}
+        >
+          {/* {" "} */}
+          Clear all filters
+          {/* {" "} */}
+        </button>
+        <BootstrapTable
+          keyField="request_id"
+          data={serviceRequests}
+          columns={this.columns}
+          hover="true"
+          filter={filterFactory()}
+          pagination={paginationFactory({
+            sizePerPage: 10,
+            hideSizePerPage: true,
+            showTotal: true,
+            withFirstAndLast: true,
+            alwaysShowAllBtns: true
+          })}
+        />
+      </div>
     );
   }
 }
