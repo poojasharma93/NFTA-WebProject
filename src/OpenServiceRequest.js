@@ -6,7 +6,9 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
 import "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css";
-import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
+import filterFactory, { textFilter, dateFilter } from "react-bootstrap-table2-filter";
+import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
+import { date } from "yup";
 
 const cookies = new Cookies();
 class OpenServiceRequest extends Component {
@@ -111,12 +113,14 @@ class OpenServiceRequest extends Component {
   directionFilter;
   request_type;
   requested_user;
+  create_date_time;
   handleClick = () => {
     this.request_id("");
     this.stopidFilter("");
     this.directionFilter("");
     this.request_type("");
     this.requested_user("");
+    this.create_date_time("");
   };
 
   caret = (order, column) => {
@@ -194,6 +198,24 @@ class OpenServiceRequest extends Component {
       sortCaret: this.caret
     },
     {
+      //dataField: "create_date_time.date",
+      dataField: "create_date_time.date",
+      formatter: (value, cell, row) => {
+        //console.log('cell', cell)
+        var dateVal = cell.create_date_time? new Date(cell.create_date_time.date.year,cell.create_date_time.date.month,cell.create_date_time.date.day).toLocaleString(): "No date"
+        return dateVal;
+      },
+      type: 'date',
+      text: "Date",
+      sort: true,
+      filter: dateFilter({
+        getFilter: filter => {
+          this.create_date_time = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
       dataField: "transaction_no",
       formatter: (cell, row) => {
         return (
@@ -207,6 +229,7 @@ class OpenServiceRequest extends Component {
       style: { color: "blue" }
     }
   ];
+  
 
   render() {
     const { serviceRequests } = this.state;
