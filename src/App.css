@@ -521,3 +521,8 @@ hr.dotted {
   left: 30%;
   margin-left: -100px;
 }
+
+span::before {
+  content: "\A";
+  white-space: pre;
+}

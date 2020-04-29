@@ -214,41 +214,7 @@ class TransactionInProgress extends Component {
     return (
       <div>
         <FilterForm handleOnClick={this.handleOnClick} />
-        {/* <table id="inprogress" className="table" data-silent-sort="false">
-          <thead>
-            <tr>
-              <th scope="col">TransactionID</th>
-              <th scope="col" data-sortable="true">
-                StopID
-              </th>
-              <th scope="col">Direction</th>
-              <th scope="col">County</th>
-              <th scope="col">Request ID</th>
-              <th></th>
-            </tr>
-            {transactions.map(trans => (
-              <tr key={trans.transaction_no}>
-                <td> {trans.transaction_no} </td>
-                <td> {trans.stop_id}</td>
-                <td>{trans.direction ? trans.direction.display_name : ""}</td>
-                <td>{trans.county ? trans.county.display_name : ""}</td>
-                <td>
-                  {trans.work_request ? trans.work_request.request_id : ""}
-                </td>
-                <td>
-                  <a
-                    href={`/requestStatusDetail/${trans.transaction_no}`}
-                    exact
-                    id="link"
-                  >
-                    View Details
-                  </a>
-                </td>
-              </tr>
-            ))}
-          </thead>
-        </table> */}
-        <hr />
+                <hr />
         <button className="btn btn-lg btn-primary" onClick={this.handleClick}>
           {" "}
           Clear all filters{" "}
@@ -267,31 +233,7 @@ class TransactionInProgress extends Component {
             alwaysShowAllBtns: true
           })}
         />
-        {/* <ToolkitProvider
-          keyField="transaction_no"
-          data={transactions}
-          columns={this.columns}
-          columnToggle
-        >
-          {props => (
-            <div>
-              <ToggleList {...props.columnToggleProps} />
-              <hr />
-              <BootstrapTable
-                {...props.baseProps}
-                filter={filterFactory()}
-                hover="true"
-                pagination={paginationFactory({
-                  sizePerPage: 10,
-                  hideSizePerPage: true,
-                  showTotal: true,
-                  withFirstAndLast: true,
-                  alwaysShowAllBtns: true
-                })}
-              />
-            </div>
-          )}
-        </ToolkitProvider> */}
+
       </div>
     );
   }

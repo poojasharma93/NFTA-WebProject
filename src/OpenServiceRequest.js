@@ -6,11 +6,19 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
 import "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css";
-import filterFactory, { textFilter, dateFilter } from "react-bootstrap-table2-filter";
-import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
-import { date } from "yup";
+import filterFactory, {
+  textFilter,
+  dateFilter,
+  Comparator,
+  selectFilter
+} from "react-bootstrap-table2-filter";
+import Moment from "react-moment";
+import "moment-timezone";
+import cellEditFactory, { Type } from "react-bootstrap-table2-editor";
+// import { date } from "yup";
 
 const cookies = new Cookies();
+
 class OpenServiceRequest extends Component {
   constructor() {
     super();
@@ -114,6 +122,7 @@ class OpenServiceRequest extends Component {
   request_type;
   requested_user;
   create_date_time;
+
   handleClick = () => {
     this.request_id("");
     this.stopidFilter("");
@@ -124,21 +133,28 @@ class OpenServiceRequest extends Component {
   };
 
   caret = (order, column) => {
-    if (!order) return <span>&nbsp;&nbsp;Desc/Asc</span>;
+    if (!order) return <span>&nbsp;&nbsp;↑/↓</span>;
     else if (order === "asc")
       return (
         <span>
-          &nbsp;&nbsp;Desc/<font color="red">Asc</font>
+          &nbsp;&nbsp;↑/<font color="red">↓</font>
         </span>
       );
     else if (order === "desc")
       return (
         <span>
-          &nbsp;&nbsp;<font color="red">Desc</font>/Asc
+          &nbsp;&nbsp;<font color="red">↑</font>/↓
         </span>
       );
     return null;
   };
+
+  defaultSorted = [
+    {
+      dataField: "request_id",
+      order: "desc"
+    }
+  ];
 
   columns = [
     {
@@ -147,6 +163,7 @@ class OpenServiceRequest extends Component {
       id: "request_id",
       sort: true,
       filter: textFilter({
+        placeholder: "Req ID",
         getFilter: filter => {
           this.request_id = filter;
         }
@@ -158,6 +175,7 @@ class OpenServiceRequest extends Component {
       text: "StopID",
       sort: true,
       filter: textFilter({
+        placeholder: "Stop ID",
         getFilter: filter => {
           this.stopidFilter = filter;
         }
@@ -169,6 +187,7 @@ class OpenServiceRequest extends Component {
       text: "Direction",
       sort: true,
       filter: textFilter({
+        placeholder: "Direction",
         getFilter: filter => {
           this.directionFilter = filter;
         }
@@ -180,6 +199,7 @@ class OpenServiceRequest extends Component {
       text: "Request Type",
       sort: true,
       filter: textFilter({
+        placeholder: "Req Type",
         getFilter: filter => {
           this.request_type = filter;
         }
@@ -191,6 +211,7 @@ class OpenServiceRequest extends Component {
       text: "Admin User",
       sort: true,
       filter: textFilter({
+        placeholder: "Admin User",
         getFilter: filter => {
           this.requested_user = filter;
         }
@@ -198,17 +219,14 @@ class OpenServiceRequest extends Component {
       sortCaret: this.caret
     },
     {
-      //dataField: "create_date_time.date",
-      dataField: "create_date_time.date",
-      formatter: (value, cell, row) => {
-        //console.log('cell', cell)
-        var dateVal = cell.create_date_time? new Date(cell.create_date_time.date.year,cell.create_date_time.date.month,cell.create_date_time.date.day).toLocaleString(): "No date"
-        return dateVal;
-      },
-      type: 'date',
-      text: "Date",
+      dataField: "create_date_time",
+      text: "Request Date Time",
       sort: true,
       filter: dateFilter({
+        withoutEmptyComparatorOption: true,
+        style: { display: "flex", width: 250 },
+        dateClassName: "custom-date-class",
+        dateStyle: { backgroundColor: "white", margin: "0px" },
         getFilter: filter => {
           this.create_date_time = filter;
         }
@@ -220,7 +238,7 @@ class OpenServiceRequest extends Component {
       formatter: (cell, row) => {
         return (
           <p>
-            <a href={"/serviceRequestDetail/" + row.request_id}>View Details</a>
+            <a href={"/serviceRequestDetail/" + row.request_id}>Click</a>
           </p>
         );
       },
@@ -229,11 +247,11 @@ class OpenServiceRequest extends Component {
       style: { color: "blue" }
     }
   ];
-  
 
   render() {
     const { serviceRequests } = this.state;
-    console.log(this.props);
+
+    // console.log(this.props);
     console.log(serviceRequests);
 
     if (this.state.redirect) {
@@ -248,24 +266,24 @@ class OpenServiceRequest extends Component {
     }
 
     return (
-      <div>
-        <FilterFormServReq handleOnClick={this.handleOnClick} />
+      <div class="container-fluid">
+        {/* <FilterFormServReq handleOnClick={this.handleOnClick} /> */}
 
-        <hr />
         <button
-          className="btn btn-lg btn-primary align-bottom"
+          className="btn btn-sm-align-baseline btn-primary float-left mt-5 "
           onClick={this.handleClick}
         >
-          {/* {" "} */}
           Clear all filters
-          {/* {" "} */}
         </button>
         <BootstrapTable
+          classes="container-fluid w-100 p-3"
           keyField="request_id"
           data={serviceRequests}
           columns={this.columns}
           hover="true"
           filter={filterFactory()}
+          filterPosition="top"
+          defaultSorted={this.defaultSorted}
           pagination={paginationFactory({
             sizePerPage: 10,
             hideSizePerPage: true,
@@ -274,6 +292,7 @@ class OpenServiceRequest extends Component {
             alwaysShowAllBtns: true
           })}
         />
+        <div class="mb-5"></div>
       </div>
     );
   }

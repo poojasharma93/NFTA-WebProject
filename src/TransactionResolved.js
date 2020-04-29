@@ -186,6 +186,8 @@ class TransactionResolved extends Component {
       style: { color: "blue" }
     }
   ];
+
+  
   handleClick = () => {
     this.transactionFilter("");
     this.stopidFilter("");
