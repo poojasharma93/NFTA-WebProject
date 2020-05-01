@@ -12,9 +12,8 @@ import filterFactory, {
   Comparator,
   selectFilter
 } from "react-bootstrap-table2-filter";
-import Moment from "react-moment";
 import "moment-timezone";
-import cellEditFactory, { Type } from "react-bootstrap-table2-editor";
+
 // import { date } from "yup";
 
 const cookies = new Cookies();
@@ -220,7 +219,7 @@ class OpenServiceRequest extends Component {
     },
     {
       dataField: "create_date_time",
-      text: "Request Date Time",
+      text: "Request Date",
       sort: true,
       filter: dateFilter({
         withoutEmptyComparatorOption: true,
@@ -238,11 +237,10 @@ class OpenServiceRequest extends Component {
       formatter: (cell, row) => {
         return (
           <p>
-            <a href={"/serviceRequestDetail/" + row.request_id}>Click</a>
+            <a href={"/serviceRequestDetail/" + row.request_id}>View Details</a>
           </p>
         );
       },
-      text: "View Details",
       sort: false,
       style: { color: "blue" }
     }

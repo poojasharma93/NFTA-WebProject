@@ -6,7 +6,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
 import "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css";
-import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
+import filterFactory, { dateFilter, textFilter } from "react-bootstrap-table2-filter";
 
 const cookies = new Cookies();
 
@@ -97,18 +97,20 @@ class TransactionInProgress extends Component {
   directionFilter;
   countyFilter;
   requestFilter;
+  create_date_time;
+  request_date_time;
   caret = (order, column) => {
-    if (!order) return <span>&nbsp;&nbsp;Desc/Asc</span>;
+    if (!order) return <span>&nbsp;&nbsp;↑/↓</span>;
     else if (order === "asc")
       return (
         <span>
-          &nbsp;&nbsp;Desc/<font color="red">Asc</font>
+          &nbsp;&nbsp;↑/<font color="red">↓</font>
         </span>
       );
     else if (order === "desc")
       return (
         <span>
-          &nbsp;&nbsp;<font color="red">Desc</font>/Asc
+          &nbsp;&nbsp;<font color="red">↑</font>/↓
         </span>
       );
     return null;
@@ -172,6 +174,36 @@ class TransactionInProgress extends Component {
       sortCaret: this.caret
     },
     {
+      dataField: "work_request.create_date_time",
+      text: "Request Date",
+      sort: true,
+      filter: dateFilter({
+        withoutEmptyComparatorOption: true,
+        style: { display: "flex", width: 250 },
+        dateClassName: "custom-date-class",
+        dateStyle: { backgroundColor: "white", margin: "0px" },
+        getFilter: filter => {
+          this.request_date_time = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "create_date_time",
+      text: "Date",
+      sort: true,
+      filter: dateFilter({
+        withoutEmptyComparatorOption: true,
+        style: { display: "flex", width: 250 },
+        dateClassName: "custom-date-class",
+        dateStyle: { backgroundColor: "white", margin: "0px" },
+        getFilter: filter => {
+          this.create_date_time = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
       dataField: "transaction_no",
       formatter: (cell, row) => {
         return (
@@ -182,7 +214,6 @@ class TransactionInProgress extends Component {
           </p>
         );
       },
-      text: "View Details",
       sort: false,
       style: { color: "blue" }
     }
@@ -194,6 +225,8 @@ class TransactionInProgress extends Component {
     this.directionFilter("");
     this.countyFilter("");
     this.requestFilter("");
+    this.create_date_time("");
+    this.request_date_time("");
   };
 
   render() {
@@ -213,13 +246,14 @@ class TransactionInProgress extends Component {
 
     return (
       <div>
-        <FilterForm handleOnClick={this.handleOnClick} />
+        {/*<FilterForm handleOnClick={this.handleOnClick} />*/}
                 <hr />
         <button className="btn btn-lg btn-primary" onClick={this.handleClick}>
           {" "}
           Clear all filters{" "}
         </button>
         <BootstrapTable
+          classes="container-fluid w-100 p-3"
           keyField="transaction_no"
           data={transactions}
           columns={this.columns}
