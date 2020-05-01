@@ -266,11 +266,8 @@ class OpenServiceRequest extends Component {
     return (
       <div class="container-fluid">
         {/* <FilterFormServReq handleOnClick={this.handleOnClick} /> */}
-
-        <button
-          className="btn btn-sm-align-baseline btn-primary float-left mt-5 "
-          onClick={this.handleClick}
-        >
+        <hr />
+        <button className="btn btn-lg btn-primary" onClick={this.handleClick}>
           Clear all filters
         </button>
         <BootstrapTable
