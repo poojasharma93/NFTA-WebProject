@@ -99,6 +99,7 @@ class TransactionInProgress extends Component {
   requestFilter;
   create_date_time;
   request_date_time;
+  deviceFilter;
   caret = (order, column) => {
     if (!order) return <span>&nbsp;&nbsp;↑/↓</span>;
     else if (order === "asc")
@@ -158,6 +159,17 @@ class TransactionInProgress extends Component {
       filter: textFilter({
         getFilter: filter => {
           this.countyFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
+      dataField: "device_id",
+      text: "Device ID",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.deviceFilter = filter;
         }
       }),
       sortCaret: this.caret
@@ -227,6 +239,7 @@ class TransactionInProgress extends Component {
     this.requestFilter("");
     this.create_date_time("");
     this.request_date_time("");
+    this.deviceFilter("");
   };
 
   render() {
