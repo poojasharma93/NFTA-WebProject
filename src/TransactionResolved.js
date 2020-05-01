@@ -163,7 +163,7 @@ class TransactionResolved extends Component {
       sortCaret: this.caret
     },
     {
-      dataField: "device_id",
+      dataField: "deviceName",
       text: "Device ID",
       sort: true,
       filter: textFilter({
