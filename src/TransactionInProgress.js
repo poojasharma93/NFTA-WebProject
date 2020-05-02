@@ -6,7 +6,10 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
 import "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css";
-import filterFactory, { dateFilter, textFilter } from "react-bootstrap-table2-filter";
+import filterFactory, {
+  dateFilter,
+  textFilter
+} from "react-bootstrap-table2-filter";
 
 const cookies = new Cookies();
 
@@ -165,7 +168,7 @@ class TransactionInProgress extends Component {
     },
     {
       dataField: "deviceName",
-      text: "Device ID",
+      text: "Device Name",
       sort: true,
       filter: textFilter({
         getFilter: filter => {
@@ -259,9 +262,12 @@ class TransactionInProgress extends Component {
 
     return (
       <div>
-//         {/*<FilterForm handleOnClick={this.handleOnClick} />*/}
-//                 <hr />
-        <button className="btn btn-sm-align-baseline btn-primary float-left mt-5 " onClick={this.handleClick}>
+        {/*<FilterForm handleOnClick={this.handleOnClick} />*/}
+
+        <button
+          className="btn btn-sm-align-baseline btn-primary float-left mt-5 "
+          onClick={this.handleClick}
+        >
           {" "}
           Clear all filters{" "}
         </button>
@@ -280,7 +286,6 @@ class TransactionInProgress extends Component {
             alwaysShowAllBtns: true
           })}
         />
-
       </div>
     );
   }
