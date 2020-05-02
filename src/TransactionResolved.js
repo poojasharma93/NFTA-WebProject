@@ -260,9 +260,9 @@ class TransactionResolved extends Component {
       <div>
         {/*<FilterForm handleOnClick={this.handleOnClick} />*/}
 
-        <hr />
+//         <hr />
         <button
-          className="btn btn-lg btn-primary align-bottom"
+          className="btn btn-sm-align-baseline btn-primary float-left mt-5 "
           onClick={this.handleClick}
         >
           {/* {" "} */}
