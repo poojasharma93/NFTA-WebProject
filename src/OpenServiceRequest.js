@@ -157,6 +157,18 @@ class OpenServiceRequest extends Component {
 
   columns = [
     {
+      dataField: "stop_id",
+      text: "StopID",
+      sort: true,
+      filter: textFilter({
+        placeholder: "Stop ID",
+        getFilter: filter => {
+          this.stopidFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
       dataField: "request_id",
       text: "Request ID",
       id: "request_id",
@@ -165,18 +177,6 @@ class OpenServiceRequest extends Component {
         placeholder: "Req ID",
         getFilter: filter => {
           this.request_id = filter;
-        }
-      }),
-      sortCaret: this.caret
-    },
-    {
-      dataField: "stop_id",
-      text: "StopID",
-      sort: true,
-      filter: textFilter({
-        placeholder: "Stop ID",
-        getFilter: filter => {
-          this.stopidFilter = filter;
         }
       }),
       sortCaret: this.caret

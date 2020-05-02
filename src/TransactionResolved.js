@@ -118,6 +118,17 @@ class TransactionResolved extends Component {
 
   columns = [
     {
+      dataField: "stop_id",
+      text: "StopID",
+      sort: true,
+      filter: textFilter({
+        getFilter: filter => {
+          this.stopidFilter = filter;
+        }
+      }),
+      sortCaret: this.caret
+    },
+    {
       dataField: "transaction_no",
       text: "TransactionID",
       id: "transaction_no",
@@ -125,17 +136,6 @@ class TransactionResolved extends Component {
       filter: textFilter({
         getFilter: filter => {
           this.transactionFilter = filter;
-        }
-      }),
-      sortCaret: this.caret
-    },
-    {
-      dataField: "stop_id",
-      text: "StopID",
-      sort: true,
-      filter: textFilter({
-        getFilter: filter => {
-          this.stopidFilter = filter;
         }
       }),
       sortCaret: this.caret

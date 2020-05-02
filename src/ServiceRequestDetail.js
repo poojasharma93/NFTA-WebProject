@@ -64,6 +64,7 @@ class ServiceRequestDetail extends React.Component {
       return <Redirect to="/requestStatus" />;
     }
 
+    console.log(this.state.serviceRequest)
     const { serviceRequest } = this.state;
 
     return (
@@ -171,35 +172,28 @@ class ServiceRequestDetail extends React.Component {
                   disabled={true}
                 ></textarea>
               </div>
-              <div class="dropdown form-group col-md-6 mb-6">
-                <button
-                  class="btn btn-primary dropdown-toggle col-md-6 mb-6"
-                  type="button"
-                  id="dropdownMenu2"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Routes
-                </button>
-
-                <div
-                  class="dropdown-menu col-md-6 mb-6"
-                  aria-labelledby="dropdownMenu2 "
-                >
-                  {servReq.route
-                    ? servReq.route.map(rot => (
-                        <button
-                          class="dropdown-item "
-                          type="button"
-                          key={rot.dropdown_id}
-                        >
-                          {rot.display_name}
-                        </button>
-                      ))
-                    : ""}
+              <div class="form-group col-md-6 mb-6  ">
+                  <table className="table table-sm table-bordered w-auto mt-2">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="w-25">
+                          Route ID
+                        </th>
+                        <th scope="col" class="w-30">
+                          Route Info
+                        </th>
+                      </tr>
+                      {servReq.route
+                        ? servReq.route.map(route => (
+                            <tr key={route.dropdown_id}>
+                              <td> {route.dropdown_id} </td>
+                              <td> {route.display_name}</td>
+                            </tr>
+                          ))
+                        : ""}
+                    </thead>
+                  </table>
                 </div>
-              </div>
             </div>
 
             <div class="row">
