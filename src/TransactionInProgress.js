@@ -259,9 +259,9 @@ class TransactionInProgress extends Component {
 
     return (
       <div>
-        {/*<FilterForm handleOnClick={this.handleOnClick} />*/}
-                <hr />
-        <button className="btn btn-lg btn-primary" onClick={this.handleClick}>
+//         {/*<FilterForm handleOnClick={this.handleOnClick} />*/}
+//                 <hr />
+        <button className="btn btn-sm-align-baseline btn-primary float-left mt-5 " onClick={this.handleClick}>
           {" "}
           Clear all filters{" "}
         </button>
