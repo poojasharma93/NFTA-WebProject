@@ -44,6 +44,13 @@ class LoginPage extends React.Component {
     if (isValid) this.handleSubmit();
   };
 
+  enterPressed(event) {
+    var code = event.keyCode || event.which;
+    if(code === 13) { 
+      this.validateFields(event);
+    } 
+  }
+
   async handleSubmit() {
     try {
       await fetch(window.$url + "/authenticate", {
@@ -112,6 +119,7 @@ class LoginPage extends React.Component {
                   placeholder="Email"
                   value={this.state.email}
                   onChange={this.handleChange}
+                  onKeyPress={this.enterPressed.bind(this)}
                   required
                 />
                 <span style={{ color: "red" }}>
@@ -126,6 +134,7 @@ class LoginPage extends React.Component {
                   placeholder="Password"
                   value={this.state.password}
                   onChange={this.handleChange}
+                  onKeyPress={this.enterPressed.bind(this)}
                   required
                 />
                 <span style={{ color: "red" }}>
