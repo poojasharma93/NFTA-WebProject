@@ -50,8 +50,8 @@ class detailedForm extends React.Component {
           status: this.props.details[0]["status"],
           admin_comments: this.props.details[0]["admin_comments"],
           username: this.props.details[0]["username"]
-      })
-    });
+        })
+      });
       Alert.success("CHANGES SAVED", {
         position: "top-right",
         effect: "slide",
@@ -137,12 +137,12 @@ class detailedForm extends React.Component {
             <hr class="dotted"></hr>
             <div class="row">
               <div class="col-md-3 mb-6">
-                <label for="validationDefault02">device_id</label>
+                <label for="validationDefault02">Device Name</label>
                 <input
                   type="text"
                   class="form-control text-light bg-dark"
                   id="validationDefault02"
-                  value={trans.device_id}
+                  value={trans.deviceName}
                   disabled={true}
                 />
               </div>
@@ -305,8 +305,10 @@ class detailedForm extends React.Component {
                     <BootstrapSwitchButton
                       checked={trans.time_table}
                       onlabel="Yes"
+                      data-on="Yes"
                       onstyle="success"
                       offlabel="N0"
+                      data-off="No"
                       offstyle="danger"
                       disabled={true}
                       style="w-15 mx-3"
