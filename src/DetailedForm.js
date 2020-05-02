@@ -34,7 +34,7 @@ class detailedForm extends React.Component {
     try {
       console.log(this.props.details[0]["transaction_no"]);
       this.props.details[0]["username"] = cookies.get("username");
-      console.log(this.props.details[0]["username"]);
+      console.log(this.props.details[0]);
       const result = await fetch(window.$url + "/updateTransaction", {
         method: "POST",
         mode: "cors",
@@ -44,8 +44,14 @@ class detailedForm extends React.Component {
           Authorization: "Bearer " + cookies.get("usertoken")
         },
 
-        body: JSON.stringify(this.props.details[0])
-      });
+        body: JSON.stringify({
+          transaction_no: this.props.details[0]["transaction_no"],
+          stop_id: this.props.details[0]["stop_id"],
+          status: this.props.details[0]["status"],
+          admin_comments: this.props.details[0]["admin_comments"],
+          username: this.props.details[0]["username"]
+      })
+    });
       Alert.success("CHANGES SAVED", {
         position: "top-right",
         effect: "slide",
