@@ -262,7 +262,7 @@ class TransactionResolved extends Component {
 
         <hr />
         <button
-          className="btn btn-lg btn-primary align-bottom"
+          className="btn btn-sm-align-baseline btn-primary float-left mt-5 "
           onClick={this.handleClick}
         >
           {/* {" "} */}
@@ -276,6 +276,8 @@ class TransactionResolved extends Component {
           columns={this.columns}
           hover="true"
           filter={filterFactory()}
+          filterPosition="top"
+          defaultSorted={this.defaultSorted}
           pagination={paginationFactory({
             sizePerPage: 10,
             hideSizePerPage: true,
@@ -284,6 +286,7 @@ class TransactionResolved extends Component {
             alwaysShowAllBtns: true
           })}
         />
+        <div class="mb-5"></div>
       </div>
     );
   }

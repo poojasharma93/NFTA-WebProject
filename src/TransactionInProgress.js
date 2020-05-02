@@ -261,7 +261,7 @@ class TransactionInProgress extends Component {
       <div>
         {/*<FilterForm handleOnClick={this.handleOnClick} />*/}
                 <hr />
-        <button className="btn btn-lg btn-primary" onClick={this.handleClick}>
+        <button className="btn btn-sm-align-baseline btn-primary float-left mt-5 " onClick={this.handleClick}>
           {" "}
           Clear all filters{" "}
         </button>
@@ -272,6 +272,8 @@ class TransactionInProgress extends Component {
           columns={this.columns}
           hover="true"
           filter={filterFactory()}
+          filterPosition="top"
+          defaultSorted={this.defaultSorted}
           pagination={paginationFactory({
             sizePerPage: 10,
             hideSizePerPage: true,
@@ -280,7 +282,7 @@ class TransactionInProgress extends Component {
             alwaysShowAllBtns: true
           })}
         />
-
+      <div class="mb-5"></div>
       </div>
     );
   }
