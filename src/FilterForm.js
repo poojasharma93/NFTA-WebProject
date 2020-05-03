@@ -98,6 +98,7 @@ class FilterForm extends Component {
               showMonthDropdown
               showYearDropdown
               scrollableYearDropdown
+              dropdownMode="select"
               maxDate={new Date()}
               className="form-control ml-2 mb-2 mr-sm-4"
             />
