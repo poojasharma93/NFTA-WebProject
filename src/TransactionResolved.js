@@ -10,6 +10,7 @@ import filterFactory, {
   dateFilter,
   textFilter
 } from "react-bootstrap-table2-filter";
+import moment from 'moment';
 
 const cookies = new Cookies();
 class TransactionResolved extends Component {
@@ -22,29 +23,19 @@ class TransactionResolved extends Component {
   }
 
   handleOnClick = e => {
-    let filterTransNo = e.transactionNo;
-    let filterStopID = e.stopID;
-    let filterDirection = e.direction;
-    let filterCounty = e.county;
-    let filterRequestID = e.requestID;
+    let filterStartDate = e.startDate;
+    let filterEndDate = e.endDate;
 
     let url = window.$url + "/transaction?status=Resolved&";
-    console.log(filterRequestID, filterStopID, filterDirection);
+    console.log(moment(filterStartDate).format("YYYY-MM-DD"), filterEndDate);
 
-    if (filterTransNo !== "") {
-      url = url + "transaction_no=" + filterTransNo + "&";
+    if (filterStartDate !== null) {
+      url = url + "datefrom=" + moment(filterStartDate).format("YYYY-MM-DD") + "&";
+      if(filterEndDate==null)
+        url = url + "dateto=" + moment(new Date()).format("YYYY-MM-DD") + "&";
     }
-    if (filterStopID !== "") {
-      url = url + "id=" + filterStopID + "&";
-    }
-    if (filterDirection !== "") {
-      url = url + "direction=" + filterDirection + "&";
-    }
-    if (filterCounty !== "") {
-      url = url + "country=" + filterCounty + "&";
-    }
-    if (filterRequestID !== "") {
-      url = url + "requestID=" + filterRequestID;
+    if (filterEndDate !== null) {
+      url = url + "dateto=" + moment(filterEndDate).format("YYYY-MM-DD") + "&";
     }
 
     fetch(url, {
@@ -260,14 +251,14 @@ class TransactionResolved extends Component {
     console.log(transactions);
     return (
       <div>
-        {/*<FilterForm handleOnClick={this.handleOnClick} />*/}
-
+        <FilterForm handleOnClick={this.handleOnClick} />
+        <hr/>
         <button
           className="btn btn-sm-align-baseline btn-primary float-left mt-5 "
           onClick={this.handleClick}
         >
           {/* {" "} */}
-          Clear all filters
+          Clear Table filters
           {/* {" "} */}
         </button>
         <BootstrapTable

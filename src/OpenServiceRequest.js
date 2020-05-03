@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Cookies from "universal-cookie";
-import FilterFormServReq from "./FilterFormServReq";
+import FilterForm from "./FilterForm";
 import { Redirect, withRouter } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
@@ -13,6 +13,7 @@ import filterFactory, {
   selectFilter
 } from "react-bootstrap-table2-filter";
 import "moment-timezone";
+import moment from 'moment';
 
 // import { date } from "yup";
 
@@ -30,36 +31,18 @@ class OpenServiceRequest extends Component {
   }
 
   handleOnClick = e => {
-    console.log(e.requestID);
-    console.log(e.stopID);
-    let filterRequestID = e.requestID;
-    let filterStopID = e.stopID;
-    let filterDirection = e.direction;
-    let filterRequestType = e.requestType;
-    let filterRequestUser = e.requestUser;
+    let filterStartDate = e.startDate;
+    let filterEndDate = e.endDate;
     let url = window.$url + "/serviceRequest?status=Open&";
-    console.log(
-      filterRequestID,
-      filterStopID,
-      filterDirection,
-      filterRequestType,
-      filterRequestUser
-    );
+    console.log(moment(filterStartDate).format("YYYY-MM-DD"), filterEndDate);
 
-    if (filterRequestID !== "") {
-      url = url + "id=" + filterRequestID + "&";
+    if (filterStartDate !== null) {
+      url = url + "datefrom=" + moment(filterStartDate).format("YYYY-MM-DD") + "&";
+      if(filterEndDate==null)
+        url = url + "dateto=" + moment(new Date()).format("YYYY-MM-DD") + "&";
     }
-    if (filterStopID !== "") {
-      url = url + "stopID=" + filterStopID + "&";
-    }
-    if (filterDirection !== "") {
-      url = url + "direction=" + filterDirection + "&";
-    }
-    if (filterRequestType !== "") {
-      url = url + "type=" + filterRequestType + "&";
-    }
-    if (filterRequestUser !== "") {
-      url = url + "requestedUser=" + filterRequestUser;
+    if (filterEndDate !== null) {
+      url = url + "dateto=" + moment(filterEndDate).format("YYYY-MM-DD") + "&";
     }
 
     fetch(url, {
@@ -265,10 +248,10 @@ class OpenServiceRequest extends Component {
 
     return (
       <div class="container-fluid">
-        {/* <FilterFormServReq handleOnClick={this.handleOnClick} /> */}
+        <FilterForm handleOnClick={this.handleOnClick} />
         <hr />
         <button className="btn btn-sm-align-baseline btn-primary float-left mt-5 " onClick={this.handleClick}>
-          Clear all filters
+          Clear Table filters
         </button>
         <BootstrapTable
           classes="container-fluid w-100 p-3"

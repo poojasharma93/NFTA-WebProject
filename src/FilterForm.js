@@ -1,44 +1,59 @@
 import React, { Component } from "react";
+import DatePicker from "react-datepicker";
+import moment from 'moment';
+import "react-datepicker/dist/react-datepicker.css";
 
 class FilterForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      transactionNo: "",
-      stopID: "",
-      direction: "",
-      county: "",
-      requestID: "",
+      startDate: null,
+      endDate: null,
       filtersApplied: {},
+      fieldErrors: {},
       isFiltersApplied: false
     };
   }
 
-  handleUserInput = (e)=>{
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState({[name]: value})
+  handleStartDate = date =>{
+    this.setState({startDate: date})
+  }
+
+  handleEndDate = date =>{
+    this.setState({endDate: date})
   }
 
   validateFilters = e =>{
     let filtersApplied={};
-    if(this.state.transactionNo || this.state.stopID || this.state.direction || this.state.county || this.state.requestID){
-        filtersApplied["requestID"] = this.state.requestID;
-        filtersApplied["transactionNo"] = this.state.transactionNo;
-        filtersApplied["stopID"] = this.state.stopID;
-        filtersApplied["county"] = this.state.county;
-        filtersApplied["direction"] = this.state.direction;
+    let fieldErrors={};
+    let isValid=true;
+
+    if(this.state.endDate && !this.state.startDate){
+      isValid=false;
+      fieldErrors["startDate"] = "Please select start date"
+      this.setState({isFiltersApplied: false})
+    }
+    if(this.state.startDate){
+        filtersApplied["startDate"] = moment(this.state.startDate).format("YYYY-MM-DD");
+        if(!this.state.endDate){
+          this.setState({endDate: new Date()})
+          filtersApplied["endDate"] = moment(new Date()).format("YYYY-MM-DD");
+        }
+        else
+          filtersApplied["endDate"] = moment(this.state.endDate).format("YYYY-MM-DD");
         this.setState({isFiltersApplied: true})
     }
-    
+    this.setState({fieldErrors: fieldErrors})
     this.setState({filtersApplied: filtersApplied})
-    this.submitForm();
+    if(isValid){
+      this.submitForm();
+    } 
 
   }
 
   clearFilters = e =>{
     console.log('here')
-    this.setState({transactionNo: "", stopID:"", county:"", requestID:"", direction:"", isFiltersApplied: false});
+    this.setState({startDate: null, endDate:null, isFiltersApplied: false});
     this.validateFilters(e);
   }
 
@@ -54,73 +69,56 @@ class FilterForm extends Component {
   };
 
   render() {
+
+    console.log(this.state)
+
     return (
       <div className="filterForm">
         <form className="form-inline justify-content-center">
           <div className="row justify-content-center">
-            Transaction No
-            <input
-              name="transactionNo"
-              value={this.state.transactionNo}
-              type="text"
+           
+          <DatePicker
+              name="startDate"
+              selected={this.state.startDate}
+              onChange={this.handleStartDate}
+              placeholderText="From Date"
+              showMonthDropdown
+              showYearDropdown
+              scrollableYearDropdown
+              dropdownMode="select"
+              maxDate={new Date()}
               className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleUserInput}
             />
-            Stop ID
-            <input
-              name="stopID"
-              value={this.state.stopID}
-              type="text"
+
+            <DatePicker
+              name="endDate"
+              selected={this.state.endDate}
+              onChange={this.handleEndDate}
+              placeholderText="End Date"
+              showMonthDropdown
+              showYearDropdown
+              scrollableYearDropdown
+              maxDate={new Date()}
               className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleUserInput}
             />
-            Direction
-            <input
-              name="direction"
-              value={this.state.direction}
-              type="text"
-              className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleUserInput}
-            />
-          </div>
-          <div className="row justify-content-center">
-            County
-            <input
-              name="county"
-              value={this.state.county}
-              type="text"
-              className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleUserInput}
-            />
-            Request ID
-            <input
-              name="requestID"
-              value={this.state.requestID}
-              type="text"
-              className="form-control ml-2 mb-2 mr-sm-4"
-              onChange={this.handleUserInput}
-            />
-            </div>
-            <div className="row justify-content-center">
             <input
               type="button"
               value="Submit"
               className="form-control ml-2 mb-2 mr-sm-4"
               onClick={this.validateFilters}
             />
-          </div>
+            </div>
+            
+            <span style={{color: "red"}}>{this.state.fieldErrors["startDate"]}</span>
 
           {this.state.isFiltersApplied && 
             <div><i><b>Filters: &nbsp; </b>
             
-            {this.state.filtersApplied["transactionNo"] && this.displayFilter("Transaction No", this.state.filtersApplied["transactionNo"])}
-              {this.state.filtersApplied["stopID"] && this.displayFilter("Stop ID", this.state.filtersApplied["stopID"])}
-              {this.state.filtersApplied["direction"] && this.displayFilter("Direction", this.state.filtersApplied["direction"])}
-              {this.state.filtersApplied["county"] && this.displayFilter("County", this.state.filtersApplied["county"])}
-              {this.state.filtersApplied["requestID"] && this.displayFilter("Request ID", this.state.filtersApplied["requestID"])}
-              <button className="btn btn-link" onClick={this.clearFilters}>Clear All</button>
+            {this.state.filtersApplied["startDate"] && this.displayFilter("From Date", this.state.filtersApplied["startDate"])}
+              {this.state.filtersApplied["endDate"] && this.displayFilter("To Date", this.state.filtersApplied["endDate"])}
+              <button className="btn btn-link" onClick={this.clearFilters}>Clear Date Filter</button>
             </i></div>}
-
+          
         </form>
       </div>
     );
