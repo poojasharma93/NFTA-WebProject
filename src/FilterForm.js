@@ -34,20 +34,20 @@ class FilterForm extends Component {
       this.setState({isFiltersApplied: false})
     }
     if(this.state.startDate){
-        filtersApplied["startDate"] = moment(this.state.startDate).format("YYYY-MM-DD");
+        filtersApplied["startDate"] = moment(this.state.startDate).format("MM/DD/YYYY");
         if(this.state.endDate){
           if(this.state.endDate.getTime()<this.state.startDate.getTime()){
             isValid=false
-            fieldErrors["date"] = "From date is greater than End date"
+            fieldErrors["date"] = "Start date cannot be greater than End date"
           }
           else{
-            filtersApplied["endDate"] = moment(this.state.endDate).format("YYYY-MM-DD");
+            filtersApplied["endDate"] = moment(this.state.endDate).format("MM/DD/YYYY");
             this.setState({isFiltersApplied: true})
           }
         }
         else{
           this.setState({endDate: new Date()})
-          filtersApplied["endDate"] = moment(new Date()).format("YYYY-MM-DD");
+          filtersApplied["endDate"] = moment(new Date()).format("MM/DD/YYYY");
           this.setState({isFiltersApplied: true})
         }
         
@@ -61,7 +61,6 @@ class FilterForm extends Component {
   }
 
   clearFilters = e =>{
-    console.log('here')
     this.setState({startDate: null, endDate:null, isFiltersApplied: false});
     this.validateFilters(e);
   }
@@ -125,8 +124,8 @@ class FilterForm extends Component {
           {this.state.isFiltersApplied && 
             <div><i><b>Filters: &nbsp; </b>
             
-            {this.state.filtersApplied["startDate"] && this.displayFilter("From Date", this.state.filtersApplied["startDate"])}
-              {this.state.filtersApplied["endDate"] && this.displayFilter("To Date", this.state.filtersApplied["endDate"])}
+            {this.state.filtersApplied["startDate"] && this.displayFilter("From", this.state.filtersApplied["startDate"])}
+              {this.state.filtersApplied["endDate"] && this.displayFilter("To", this.state.filtersApplied["endDate"])}
               <button className="btn btn-link" onClick={this.clearFilters}>Clear Date Filter</button>
             </i></div>}
           

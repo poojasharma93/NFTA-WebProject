@@ -182,7 +182,7 @@ class TransactionResolved extends Component {
       dataField: "work_request.create_date_time",
       text: "Request Date",
       sort: true,
-      filter: dateFilter({
+      /*filter: dateFilter({
         withoutEmptyComparatorOption: true,
         style: { display: "flex", width: 250 },
         dateClassName: "custom-date-class",
@@ -190,14 +190,14 @@ class TransactionResolved extends Component {
         getFilter: filter => {
           this.request_date_time = filter;
         }
-      }),
+      }),*/
       sortCaret: this.caret
     },
     {
       dataField: "create_date_time",
       text: "Date",
       sort: true,
-      filter: dateFilter({
+      /*filter: dateFilter({
         withoutEmptyComparatorOption: true,
         style: { display: "flex", width: 250 },
         dateClassName: "custom-date-class",
@@ -205,7 +205,7 @@ class TransactionResolved extends Component {
         getFilter: filter => {
           this.create_date_time = filter;
         }
-      }),
+      }),*/
       sortCaret: this.caret
     },
     {

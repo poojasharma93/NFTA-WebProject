@@ -204,7 +204,7 @@ class OpenServiceRequest extends Component {
       dataField: "create_date_time",
       text: "Request Date",
       sort: true,
-      filter: dateFilter({
+      /*filter: dateFilter({
         withoutEmptyComparatorOption: true,
         style: { display: "flex", width: 250 },
         dateClassName: "custom-date-class",
@@ -212,7 +212,7 @@ class OpenServiceRequest extends Component {
         getFilter: filter => {
           this.create_date_time = filter;
         }
-      }),
+      }),*/
       sortCaret: this.caret
     },
     {
