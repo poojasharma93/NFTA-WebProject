@@ -35,13 +35,22 @@ class FilterForm extends Component {
     }
     if(this.state.startDate){
         filtersApplied["startDate"] = moment(this.state.startDate).format("YYYY-MM-DD");
-        if(!this.state.endDate){
+        if(this.state.endDate){
+          if(this.state.endDate.getTime()<this.state.startDate.getTime()){
+            isValid=false
+            fieldErrors["date"] = "From date is greater than End date"
+          }
+          else{
+            filtersApplied["endDate"] = moment(this.state.endDate).format("YYYY-MM-DD");
+            this.setState({isFiltersApplied: true})
+          }
+        }
+        else{
           this.setState({endDate: new Date()})
           filtersApplied["endDate"] = moment(new Date()).format("YYYY-MM-DD");
+          this.setState({isFiltersApplied: true})
         }
-        else
-          filtersApplied["endDate"] = moment(this.state.endDate).format("YYYY-MM-DD");
-        this.setState({isFiltersApplied: true})
+        
     }
     this.setState({fieldErrors: fieldErrors})
     this.setState({filtersApplied: filtersApplied})
@@ -111,6 +120,7 @@ class FilterForm extends Component {
             </div>
             
             <span style={{color: "red"}}>{this.state.fieldErrors["startDate"]}</span>
+            <span style={{color: "red"}}>{this.state.fieldErrors["date"]}</span>
 
           {this.state.isFiltersApplied && 
             <div><i><b>Filters: &nbsp; </b>
