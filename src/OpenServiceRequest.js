@@ -13,7 +13,7 @@ import filterFactory, {
   selectFilter
 } from "react-bootstrap-table2-filter";
 import "moment-timezone";
-import moment from 'moment';
+import moment from "moment";
 
 // import { date } from "yup";
 
@@ -37,8 +37,9 @@ class OpenServiceRequest extends Component {
     console.log(moment(filterStartDate).format("YYYY-MM-DD"), filterEndDate);
 
     if (filterStartDate !== null) {
-      url = url + "datefrom=" + moment(filterStartDate).format("YYYY-MM-DD") + "&";
-      if(filterEndDate==null)
+      url =
+        url + "datefrom=" + moment(filterStartDate).format("YYYY-MM-DD") + "&";
+      if (filterEndDate == null)
         url = url + "dateto=" + moment(new Date()).format("YYYY-MM-DD") + "&";
     }
     if (filterEndDate !== null) {
@@ -111,7 +112,7 @@ class OpenServiceRequest extends Component {
     this.directionFilter("");
     this.request_type("");
     this.requested_user("");
-    this.create_date_time("");
+    // this.create_date_time("");
   };
 
   caret = (order, column) => {
@@ -204,15 +205,15 @@ class OpenServiceRequest extends Component {
       dataField: "create_date_time",
       text: "Request Date",
       sort: true,
-      /*filter: dateFilter({
-        withoutEmptyComparatorOption: true,
-        style: { display: "flex", width: 250 },
-        dateClassName: "custom-date-class",
-        dateStyle: { backgroundColor: "white", margin: "0px" },
-        getFilter: filter => {
-          this.create_date_time = filter;
-        }
-      }),*/
+      // filter: dateFilter({
+      //   // withoutEmptyComparatorOption: true,
+      //   // style: { display: "flex", width: 250 },
+      //   // dateClassName: "custom-date-class",
+      //   // dateStyle: { backgroundColor: "white", margin: "0px" },
+      //   getFilter: filter => {
+      //     this.create_date_time = filter;
+      //   }
+      // }),
       sortCaret: this.caret
     },
     {
@@ -250,7 +251,10 @@ class OpenServiceRequest extends Component {
       <div class="container-fluid">
         <FilterForm handleOnClick={this.handleOnClick} />
         <hr />
-        <button className="btn btn-sm-align-baseline btn-primary float-left mt-5 " onClick={this.handleClick}>
+        <button
+          className="btn btn-sm-align-baseline btn-primary float-left mt-5 "
+          onClick={this.handleClick}
+        >
           Clear Table filters
         </button>
         <BootstrapTable

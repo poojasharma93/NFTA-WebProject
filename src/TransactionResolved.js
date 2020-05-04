@@ -10,7 +10,7 @@ import filterFactory, {
   dateFilter,
   textFilter
 } from "react-bootstrap-table2-filter";
-import moment from 'moment';
+import moment from "moment";
 
 const cookies = new Cookies();
 class TransactionResolved extends Component {
@@ -30,8 +30,9 @@ class TransactionResolved extends Component {
     console.log(moment(filterStartDate).format("YYYY-MM-DD"), filterEndDate);
 
     if (filterStartDate !== null) {
-      url = url + "datefrom=" + moment(filterStartDate).format("YYYY-MM-DD") + "&";
-      if(filterEndDate==null)
+      url =
+        url + "datefrom=" + moment(filterStartDate).format("YYYY-MM-DD") + "&";
+      if (filterEndDate == null)
         url = url + "dateto=" + moment(new Date()).format("YYYY-MM-DD") + "&";
     }
     if (filterEndDate !== null) {
@@ -182,30 +183,30 @@ class TransactionResolved extends Component {
       dataField: "work_request.create_date_time",
       text: "Request Date",
       sort: true,
-      /*filter: dateFilter({
-        withoutEmptyComparatorOption: true,
-        style: { display: "flex", width: 250 },
-        dateClassName: "custom-date-class",
-        dateStyle: { backgroundColor: "white", margin: "0px" },
-        getFilter: filter => {
-          this.request_date_time = filter;
-        }
-      }),*/
+      // filter: dateFilter({
+      //   // withoutEmptyComparatorOption: true,
+      //   // style: { display: "flex", width: 250 },
+      //   // dateClassName: "custom-date-class",
+      //   // dateStyle: { backgroundColor: "white", margin: "0px" },
+      //   getFilter: filter => {
+      //     this.request_date_time = filter;
+      //   }
+      // }),
       sortCaret: this.caret
     },
     {
       dataField: "create_date_time",
       text: "Date",
       sort: true,
-      /*filter: dateFilter({
-        withoutEmptyComparatorOption: true,
-        style: { display: "flex", width: 250 },
-        dateClassName: "custom-date-class",
-        dateStyle: { backgroundColor: "white", margin: "0px" },
-        getFilter: filter => {
-          this.create_date_time = filter;
-        }
-      }),*/
+      // filter: dateFilter({
+      //   // withoutEmptyComparatorOption: true,
+      //   // style: { display: "flex", width: 250 },
+      //   // dateClassName: "custom-date-class",
+      //   // dateStyle: { backgroundColor: "white", margin: "0px" },
+      //   getFilter: filter => {
+      //     this.create_date_time = filter;
+      //   }
+      // }),
       sortCaret: this.caret
     },
     {
@@ -230,8 +231,8 @@ class TransactionResolved extends Component {
     this.directionFilter("");
     this.countyFilter("");
     this.requestFilter("");
-    this.create_date_time("");
-    this.request_date_time("");
+    // this.create_date_time("");
+    // this.request_date_time("");
     this.deviceFilter("");
   };
 
@@ -252,7 +253,7 @@ class TransactionResolved extends Component {
     return (
       <div>
         <FilterForm handleOnClick={this.handleOnClick} />
-        <hr/>
+        <hr />
         <button
           className="btn btn-sm-align-baseline btn-primary float-left mt-5 "
           onClick={this.handleClick}
