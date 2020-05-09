@@ -12,24 +12,24 @@ class ServiceRequest extends React.Component {
   constructor() {
     super();
     this.modalButton = React.createRef();
-    this.state={
-      stop_id:"",
-      direction:"",
-      location:"",
-      request_type:"",
-      reason:"",
-      route:{},
-      routeArray:[],
-      additional_information:"",
-      status:"Open",
-      requested_user: cookies.get('username'),
+    this.state = {
+      stop_id: "",
+      direction: "",
+      location: "",
+      request_type: "",
+      reason: "",
+      route: {},
+      routeArray: [],
+      additional_information: "",
+      status: "Open",
+      requested_user: cookies.get("username"),
       fieldErrors: {},
       redirect: false,
-      addServiceRequestResult: '',
-      modalMessage: '',
-      modalStatus:'',
+      addServiceRequestResult: "",
+      modalMessage: "",
+      modalStatus: "",
       redirectToTransactions: false,
-      routeOptions:[],
+      routeOptions: [],
       directionOptions: [],
       image: [],
       loading: false,
@@ -39,38 +39,53 @@ class ServiceRequest extends React.Component {
     };
   }
 
-  componentDidMount(){
-    try{
-      fetch(window.$url + "/dropdown?dropdownType=Route", {headers: {
-          "Authorization": "Bearer "+cookies.get('usertoken')
-        }})
-      .then(results => {
-          if(results.status===401){this.setState({redirect:true});}
-          else{return results.json();}
+  componentDidMount() {
+    try {
+      fetch(window.$url + "/dropdown?dropdownType=Route", {
+        headers: {
+          Authorization: "Bearer " + cookies.get("usertoken")
+        }
       })
-      .then(
-          (data) => {this.setState({ routeOptions: data});},
-          (error) => {this.setState({error: error});}
-        )
+        .then(results => {
+          if (results.status === 401) {
+            this.setState({ redirect: true });
+          } else {
+            return results.json();
+          }
+        })
+        .then(
+          data => {
+            this.setState({ routeOptions: data });
+          },
+          error => {
+            this.setState({ error: error });
+          }
+        );
 
-      fetch(window.$url + "/dropdown?dropdownType=Direction", {headers: {
-        "Authorization": "Bearer "+cookies.get('usertoken')
-      }})
-    .then(results => {
-        if(results.status===401){this.setState({redirect:true});}
-        else{return results.json();}
+      fetch(window.$url + "/dropdown?dropdownType=Direction", {
+        headers: {
+          Authorization: "Bearer " + cookies.get("usertoken")
+        }
       })
-      .then(
-          (data) => {this.setState({directionOptions: data})},
-          (error) => {this.setState({error: error});}
-        )
-      }
-      catch(e){
-          console.log("error",e)
-      }
-      
+        .then(results => {
+          if (results.status === 401) {
+            this.setState({ redirect: true });
+          } else {
+            return results.json();
+          }
+        })
+        .then(
+          data => {
+            this.setState({ directionOptions: data });
+          },
+          error => {
+            this.setState({ error: error });
+          }
+        );
+    } catch (e) {
+      console.log("error", e);
     }
-
+  }
 
   handleUserInput = e => {
     const name = e.target.name;
@@ -78,12 +93,12 @@ class ServiceRequest extends React.Component {
     this.setState({ [name]: value });
   };
 
-  handleDirectionChange = e =>{
-    let value=JSON.parse(e.target.value)
-    this.setState({direction: value})
-  }
+  handleDirectionChange = e => {
+    let value = JSON.parse(e.target.value);
+    this.setState({ direction: value });
+  };
 
-  handleRouteChange = e =>{
+  handleRouteChange = e => {
     var options = e.target.options;
     var value = [];
     for (var i = 0, l = options.length; i < l; i++) {
@@ -91,39 +106,44 @@ class ServiceRequest extends React.Component {
         value.push(JSON.parse(options[i].value));
       }
     }
-    this.setState({routeArray: value});
-  }
+    this.setState({ routeArray: value });
+  };
 
-  validateFields = (e) =>{
-      e.preventDefault();
-      console.log(this.state)
-      let fieldErrors={};
-      let isValid=true;
-      if(!this.state.request_type){
-        isValid=false;
-        fieldErrors["request_type"] = "Please select request type"
-      }
-      if((this.state.request_type==="Update"||this.state.request_type==="Remove") && !this.state.stop_id){
-        isValid=false;
-        fieldErrors["stop_id"] = "Stop ID cannot be empty for Request Type: " + this.state.request_type
-      }
-      if(!this.state.direction){
-        isValid=false;
-        fieldErrors["direction"] = "Direction cannot be empty"
-      }
-      if(!this.state.location){
-        isValid=false;
-        fieldErrors["location"] = "Location cannot be empty"
-      }
-      if(this.state.routeArray.length===0){
-        isValid=false;
-        fieldErrors["route"] = "Please select a route"
-      }
-      this.setState({fieldErrors: fieldErrors})
-      if(isValid){
-          this.postData();
-      }
-  }
+  validateFields = e => {
+    e.preventDefault();
+    console.log(this.state);
+    let fieldErrors = {};
+    let isValid = true;
+    if (!this.state.request_type) {
+      isValid = false;
+      fieldErrors["request_type"] = "Please select request type";
+    }
+    if (
+      (this.state.request_type === "Update" ||
+        this.state.request_type === "Remove") &&
+      !this.state.stop_id
+    ) {
+      isValid = false;
+      fieldErrors["stop_id"] =
+        "Stop ID cannot be empty for Request Type: " + this.state.request_type;
+    }
+    if (!this.state.direction) {
+      isValid = false;
+      fieldErrors["direction"] = "Direction cannot be empty";
+    }
+    if (!this.state.location) {
+      isValid = false;
+      fieldErrors["location"] = "Location cannot be empty";
+    }
+    if (this.state.routeArray.length === 0) {
+      isValid = false;
+      fieldErrors["route"] = "Please select a route";
+    }
+    this.setState({ fieldErrors: fieldErrors });
+    if (isValid) {
+      this.postData();
+    }
+  };
 
   handleSubmit = async (files, allFiles) => {
     for (var i = 0; i < allFiles.length; i++) {
@@ -131,7 +151,7 @@ class ServiceRequest extends React.Component {
       data.append("file", allFiles[i].file);
       data.append("upload_preset", "nftafolder");
       this.setState({ loading: false });
-
+      // Buffalo1#
       const res = await fetch(
         "https://api.cloudinary.com/v1_1/nftaproject/image/upload",
         {
@@ -171,7 +191,7 @@ class ServiceRequest extends React.Component {
       image0: this.state.image0,
       image1: this.state.image1,
       image2: this.state.image2
-    })
+    });
 
     try {
       await fetch(window.$url + "/addServiceRequest", {
@@ -185,30 +205,32 @@ class ServiceRequest extends React.Component {
 
         body: srbody
       })
-      .then(response => response.json())
-      .then(result => this.setState({addServiceRequestResult: result}))
-      .catch(error => this.setState({error: error}));
-      } catch (e) {
-          this.setState({error:e});
-      }
-      console.log(this.state.addServiceRequestResult)
-      if(this.state.addServiceRequestResult.status === undefined)
-      {
-        this.setState({modalMessage: "Request successfully added with ID: " + this.state.addServiceRequestResult.serviceRequestID,
-                      modalStatus: 'success'});
-      }
-      else if(this.state.addServiceRequestResult.status===401)
-      {
-          this.setState({redirect:true});
-      }
-      else{
-        this.setState({modalMessage:"Some error occurred. Please try again later",
-                      modalStatus: 'error'});
-      }
-      this.showPopup();
+        .then(response => response.json())
+        .then(result => this.setState({ addServiceRequestResult: result }))
+        .catch(error => this.setState({ error: error }));
+    } catch (e) {
+      this.setState({ error: e });
+    }
+    console.log(this.state.addServiceRequestResult);
+    if (this.state.addServiceRequestResult.status === undefined) {
+      this.setState({
+        modalMessage:
+          "Request successfully added with ID: " +
+          this.state.addServiceRequestResult.serviceRequestID,
+        modalStatus: "success"
+      });
+    } else if (this.state.addServiceRequestResult.status === 401) {
+      this.setState({ redirect: true });
+    } else {
+      this.setState({
+        modalMessage: "Some error occurred. Please try again later",
+        modalStatus: "error"
+      });
+    }
+    this.showPopup();
   }
 
-  showPopup(){
+  showPopup() {
     this.modalButton.current.click();
   }
 
@@ -219,7 +241,6 @@ class ServiceRequest extends React.Component {
   };
 
   render() {
-
     if (this.state.redirect) {
       return (
         <Redirect
@@ -234,111 +255,121 @@ class ServiceRequest extends React.Component {
     if (this.state.redirectToTransactions) {
       return <Redirect to="/requestStatus" />;
     }
-    
-    console.log('routeOptions', this.state.routeOptions)
 
-    return(
+    console.log("routeOptions", this.state.routeOptions);
+
+    return (
       <div className="container-fluid selector-for-some-widget">
-      <h3 className="heading">New Service Request</h3>
-    <form className="formDetail">
-      <div className="row">
-        <div className="col-md-4 mb-6">
-          Stop ID
-          <input
-            type="text"
-            className="form-control"
-            name="stop_id"
-            value={this.state.stop_id}
-            onChange={this.handleUserInput}
-          />
-          <span style={{color: "red"}}>{this.state.fieldErrors["stop_id"]}</span>
-        </div>
-        <div className="col-md-4 mb-6">
-          Direction
-          <select
-            className="col-md-12 mb-6 "
-            name="direction"
-            value={this.state.direction}
-            onChange={this.handleUserInput}
-          >
-            <option></option>
-            {this.state.directionOptions.map((direction,index) => (
-              <option key={index} value={JSON.stringify(direction)}>
-                {direction.display_name}</option>
-            ))}
-          </select>
-          <span style={{color: "red"}}>{this.state.fieldErrors["direction"]}</span>
-        </div>
-      {/*street_on,nearest_cross_street,position
-       */}
-        <div className="col-md-4 mb-6">
-          Location
-          <input
-            type="text"
-            className="form-control"
-            name="location"
-            value={this.state.location}
-            onChange={this.handleUserInput}
-          />
-          <span style={{color: "red"}}>{this.state.fieldErrors["location"]}</span>
-        </div>
-        </div>
-        <div className="row">
-        <div className="col-md-4 mb-6">
-          Request Type
-          <select
-            className="col-md-12 mb-6 "
-            name="request_type"
-            value={this.state.request_type}
-            onChange={this.handleUserInput}
-          >
-            <option></option>
-            <option>New</option>
-            <option>Repair</option>
-            <option>Remove</option>
-          </select>
-          <span style={{color: "red"}}>{this.state.fieldErrors["request_type"]}</span>
-        </div>
-        <div className="col-md-4 mb-6">
-          Reason
-          <input
-            type="text"
-            className="form-control"
-            name="reason"
-            value={this.state.reason}
-            onChange={this.handleUserInput}
-          />
-        </div>
-        <div className="col-md-4 mb-6">
-          Route
-          <select multiple
-            className="col-md-12 mb-6 "
-            name="route"
-            onChange={this.handleRouteChange}
-          >
-            {this.state.routeOptions.map((route,index) => (
-              <option key={index} value={JSON.stringify(route)}>
-                {route.display_name}
-              </option>
-            ))}
-          </select>
-          <span style={{color: "red"}}>{this.state.fieldErrors["route"]}</span>
-        </div>
-        </div>
-        <div className="row">
-        <div className="form-group col-md-6 mb-6">
-          
-            Additional Information
-         
-          <textarea
-            className="form-control"
-            name="additional_information"
-            rows="3"
-            value={this.state.additional_information}
-            onChange={this.handleUserInput}
-          ></textarea>
-        </div>
-        </div>
+        <h3 className="heading">New Service Request</h3>
+        <form className="formDetail">
+          <div className="row">
+            <div className="col-md-4 mb-6">
+              Stop ID
+              <input
+                type="text"
+                className="form-control"
+                name="stop_id"
+                value={this.state.stop_id}
+                onChange={this.handleUserInput}
+              />
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["stop_id"]}
+              </span>
+            </div>
+            <div className="col-md-4 mb-6">
+              Direction
+              <select
+                className="col-md-12 mb-6 "
+                name="direction"
+                value={this.state.direction}
+                onChange={this.handleUserInput}
+              >
+                <option></option>
+                {this.state.directionOptions.map((direction, index) => (
+                  <option key={index} value={JSON.stringify(direction)}>
+                    {direction.display_name}
+                  </option>
+                ))}
+              </select>
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["direction"]}
+              </span>
+            </div>
+            {/*street_on,nearest_cross_street,position
+             */}
+            <div className="col-md-4 mb-6">
+              Location
+              <input
+                type="text"
+                className="form-control"
+                name="location"
+                value={this.state.location}
+                onChange={this.handleUserInput}
+              />
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["location"]}
+              </span>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-4 mb-6">
+              Request Type
+              <select
+                className="col-md-12 mb-6 "
+                name="request_type"
+                value={this.state.request_type}
+                onChange={this.handleUserInput}
+              >
+                <option></option>
+                <option>New</option>
+                <option>Repair</option>
+                <option>Remove</option>
+              </select>
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["request_type"]}
+              </span>
+            </div>
+            <div className="col-md-4 mb-6">
+              Reason
+              <input
+                type="text"
+                className="form-control"
+                name="reason"
+                value={this.state.reason}
+                onChange={this.handleUserInput}
+              />
+            </div>
+            <div className="col-md-4 mb-6">
+              Route
+              <select
+                multiple
+                className="col-md-12 mb-6 "
+                name="route"
+                onChange={this.handleRouteChange}
+              >
+                {this.state.routeOptions.map((route, index) => (
+                  <option key={index} value={JSON.stringify(route)}>
+                    {route.display_name}
+                  </option>
+                ))}
+              </select>
+              <span style={{ color: "red" }}>
+                {this.state.fieldErrors["route"]}
+              </span>
+            </div>
+          </div>
+          <div className="row">
+            <div className="form-group col-md-6 mb-6">
+              Additional Information
+              <textarea
+                className="form-control"
+                name="additional_information"
+                rows="3"
+                value={this.state.additional_information}
+                onChange={this.handleUserInput}
+              ></textarea>
+            </div>
+          </div>
         </form>
         <div className="ImageUpload">
           <Dropzone
@@ -362,8 +393,22 @@ class ServiceRequest extends React.Component {
         </div>
         <h3></h3>
         <div className="divider" />
-          <button type="submit" className="btn btn-primary" onClick={this.validateFields}> Submit </button>
-          <input type="button"  value="Button" hidden ref={this.modalButton} data-toggle="modal" data-target="#responseServiceRequest"/>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          onClick={this.validateFields}
+        >
+          {" "}
+          Submit{" "}
+        </button>
+        <input
+          type="button"
+          value="Button"
+          hidden
+          ref={this.modalButton}
+          data-toggle="modal"
+          data-target="#responseServiceRequest"
+        />
 
         <div
           className="modal fade"

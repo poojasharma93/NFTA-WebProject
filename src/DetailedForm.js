@@ -561,7 +561,7 @@ class detailedForm extends React.Component {
                   id="map-test"
                   align="middle"
                   src={
-                    "https://www.google.com/maps/embed/v1/place?key=AIzaSyAv0zyP8tzjgAiAMRXiUuzM05obKYSKrvc&q=" +
+                    "https://www.google.com/maps/embed/v1/place?key=AIzaSyD9TimkBKOZk5xSbKETWW34QFRr2OCvwHE&q=" +
                     trans.latitude +
                     "," +
                     trans.longitude +
@@ -642,7 +642,7 @@ class detailedForm extends React.Component {
         ))}
         <script>
           document.getElementById("map-test").src =
-          "https://www.google.com/maps/embed/v1/place?key=AIzaSyAv0zyP8tzjgAiAMRXiUuzM05obKYSKrvc&q="
+          "https://www.google.com/maps/embed/v1/place?key=AIzaSyD9TimkBKOZk5xSbKETWW34QFRr2OCvwHE&q="
           + this.probs.details.latitude + "," + this.probs.details.longitude +
           "&zoom=15";
         </script>
